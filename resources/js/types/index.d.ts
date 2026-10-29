@@ -3,6 +3,9 @@ export interface User {
     name: string;
     email: string;
     email_verified_at?: string;
+    timezone?: string;
+    theme?: 'light' | 'dark' | 'system';
+    ai_consent?: boolean;
 }
 
 export type PageProps<
