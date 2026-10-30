@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\HabitController;
 use App\Http\Controllers\HabitLogController;
+use App\Http\Controllers\MoodLogController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -30,6 +31,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('/habits/{habit}/logs', [HabitLogController::class, 'store'])->name('habits.logs.store');
     Route::delete('/habits/{habit}/logs/{date}', [HabitLogController::class, 'destroy'])->name('habits.logs.destroy');
+
+    Route::get('/moods', [MoodLogController::class, 'index'])->name('moods.index');
+    Route::post('/moods', [MoodLogController::class, 'store'])->name('moods.store');
+    Route::put('/moods/{moodLog}', [MoodLogController::class, 'update'])->name('moods.update');
+    Route::delete('/moods/{moodLog}', [MoodLogController::class, 'destroy'])->name('moods.destroy');
 });
 
 Route::middleware('auth')->group(function () {
