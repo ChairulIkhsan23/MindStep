@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\HabitController;
 use App\Http\Controllers\HabitLogController;
+use App\Http\Controllers\JournalController;
 use App\Http\Controllers\MoodLogController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -36,6 +37,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/moods', [MoodLogController::class, 'store'])->name('moods.store');
     Route::put('/moods/{moodLog}', [MoodLogController::class, 'update'])->name('moods.update');
     Route::delete('/moods/{moodLog}', [MoodLogController::class, 'destroy'])->name('moods.destroy');
+
+    Route::resource('journals', JournalController::class);
 });
 
 Route::middleware('auth')->group(function () {
