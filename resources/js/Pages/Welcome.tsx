@@ -1,6 +1,7 @@
 import { Head, Link } from '@inertiajs/react';
 import { PageProps } from '@/types';
 import LandingNavbar from '@/Components/Landing/LandingNavbar';
+import MarkerHighlight from '@/Components/Landing/MarkerHighlight';
 import EmoticonJourneyIllustration from '@/Components/Landing/EmoticonJourneyIllustration';
 import ProblemSolutionGrid from '@/Components/Landing/ProblemSolutionGrid';
 import FeaturesBentoGrid from '@/Components/Landing/FeaturesBentoGrid';
@@ -24,11 +25,13 @@ export default function Welcome({
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center w-full">
                         {/* Hero Text */}
                         <div className="lg:col-span-6 text-center lg:text-left">
-                            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-stone-900 dark:text-stone-100 leading-[1.15]">
+                            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-stone-900 dark:text-stone-100 leading-[1.16]">
                                 Bangun rutinitas, pantau mood, dan dokumentasikan{' '}
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-rose-500 to-amber-700 dark:from-amber-400 dark:via-rose-400 dark:to-amber-300">
-                                    aktivitas harianmu.
-                                </span>
+                                <MarkerHighlight
+                                    highlight="aktivitas harianmu."
+                                    markerColor="bg-gradient-to-r from-amber-400/40 via-rose-400/35 to-amber-400/40 dark:from-amber-500/30 dark:via-rose-500/25 dark:to-amber-500/30"
+                                    className="text-stone-900 dark:text-stone-100"
+                                />
                             </h1>
 
                             <p className="mt-6 text-sm sm:text-base text-stone-600 dark:text-stone-300 max-w-xl mx-auto lg:mx-0 leading-relaxed">
