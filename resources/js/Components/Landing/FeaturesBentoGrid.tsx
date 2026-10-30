@@ -20,7 +20,7 @@ export default function FeaturesBentoGrid() {
                     <div className="md:col-span-2 rounded-3xl bg-gradient-to-br from-stone-50 to-amber-50/40 dark:from-stone-900 dark:to-stone-900/60 border border-stone-200 dark:border-stone-800 p-8 flex flex-col justify-between">
                         <div>
                             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 text-xs font-semibold mb-4">
-                                🔥 Modul 01 • Habit Engine
+                                Modul 01 • Habit Engine
                             </div>
                             <h4 className="text-2xl font-bold text-stone-900 dark:text-stone-100 mb-3">
                                 Lacak Berbagai Jenis Target Sesuai Kebutuhan Nyata
@@ -50,7 +50,7 @@ export default function FeaturesBentoGrid() {
                     <div className="rounded-3xl bg-gradient-to-br from-stone-50 to-rose-50/40 dark:from-stone-900 dark:to-stone-900/60 border border-stone-200 dark:border-stone-800 p-8 flex flex-col justify-between">
                         <div>
                             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-100 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300 text-xs font-semibold mb-4">
-                                💖 Modul 02 • Mood Check-in
+                                Modul 02 • Mood Check-in
                             </div>
                             <h4 className="text-xl font-bold text-stone-900 dark:text-stone-100 mb-2">
                                 Skala Emosi Tanpa Bias
@@ -65,7 +65,7 @@ export default function FeaturesBentoGrid() {
                             <span>😕</span>
                             <span>😐</span>
                             <span>🙂</span>
-                            <span className="scale-125">✨</span>
+                            <span className="scale-125">😊</span>
                         </div>
                     </div>
 
@@ -73,7 +73,7 @@ export default function FeaturesBentoGrid() {
                     <div className="rounded-3xl bg-gradient-to-br from-stone-50 to-indigo-50/40 dark:from-stone-900 dark:to-stone-900/60 border border-stone-200 dark:border-stone-800 p-8 flex flex-col justify-between">
                         <div>
                             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-100 dark:bg-indigo-950/60 text-indigo-800 dark:text-indigo-300 text-xs font-semibold mb-4">
-                                ✍️ Modul 03 • Jurnal Dinamis
+                                Modul 03 • Jurnal Dinamis
                             </div>
                             <h4 className="text-xl font-bold text-stone-900 dark:text-stone-100 mb-2">
                                 Template Refleksi Terarah
@@ -85,10 +85,10 @@ export default function FeaturesBentoGrid() {
 
                         <div className="mt-6 space-y-2">
                             <div className="text-xs p-2.5 rounded-xl bg-white dark:bg-stone-800/80 border border-stone-200/60 dark:border-stone-700 font-medium text-stone-800 dark:text-stone-200">
-                                🏛️ Stoic: Apa yang di luar kendaliku?
+                                Stoic: Apa yang di luar kendaliku?
                             </div>
                             <div className="text-xs p-2.5 rounded-xl bg-white dark:bg-stone-800/80 border border-stone-200/60 dark:border-stone-700 font-medium text-stone-800 dark:text-stone-200">
-                                🌿 Gratitude: 3 Hal patut disyukuri
+                                Gratitude: 3 Hal patut disyukuri
                             </div>
                         </div>
                     </div>
@@ -97,7 +97,7 @@ export default function FeaturesBentoGrid() {
                     <div className="md:col-span-2 rounded-3xl bg-gradient-to-br from-stone-50 to-emerald-50/40 dark:from-stone-900 dark:to-stone-900/60 border border-stone-200 dark:border-stone-800 p-8 flex flex-col justify-between">
                         <div>
                             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 text-xs font-semibold mb-4">
-                                📊 Modul 04 • Korelasi Silang Analitik
+                                Modul 04 • Korelasi Silang Analitik
                             </div>
                             <h4 className="text-2xl font-bold text-stone-900 dark:text-stone-100 mb-3">
                                 Temukan Hubungan Riil Antara Kebiasaan dan Suasana Hati

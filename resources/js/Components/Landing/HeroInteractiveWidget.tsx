@@ -39,17 +39,14 @@ export default function HeroInteractiveWidget() {
         { score: 2, emoji: '😕', label: 'Cemas' },
         { score: 3, emoji: '😐', label: 'Netral' },
         { score: 4, emoji: '🙂', label: 'Tenang' },
-        { score: 5, emoji: '✨', label: 'Penuh Energi' },
+        { score: 5, emoji: '😊', label: 'Penuh Energi' },
     ];
 
     const emotionPills = ['Fokus', 'Bersyukur', 'Lelah', 'Optimis', 'Reflektif'];
 
     return (
         <div className="relative mx-auto w-full max-w-md">
-            {/* Ambient decorative glow */}
-            <div className="absolute -inset-1.5 bg-gradient-to-r from-amber-500/20 to-rose-500/20 rounded-3xl blur-xl opacity-75 dark:opacity-40" />
-
-            <div className="relative rounded-2xl bg-white/90 dark:bg-stone-900/90 border border-stone-200/80 dark:border-stone-800 backdrop-blur-xl p-5 sm:p-6 shadow-xl shadow-stone-900/5">
+            <div className="relative rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 p-5 sm:p-6 shadow-lg shadow-stone-900/5">
                 {/* Header status */}
                 <div className="flex items-center justify-between pb-4 border-b border-stone-100 dark:border-stone-800">
                     <div>
@@ -60,10 +57,9 @@ export default function HeroInteractiveWidget() {
                             Beranda Harian Anda
                         </h4>
                     </div>
-                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 text-xs font-medium">
-                        <span className="w-2 h-2 rounded-full bg-amber-500" />
+                    <span className="px-2.5 py-1 rounded-full bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 text-xs font-medium">
                         Demo Langsung
-                    </div>
+                    </span>
                 </div>
 
                 {/* Section 1: Mood check-in */}

@@ -5,7 +5,7 @@ export default function AiAssistantSpotlight() {
                 {/* Header Section */}
                 <div className="max-w-3xl mb-16">
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-semibold mb-4">
-                        🛡️ Prinsip AI Non-Klinis
+                        Prinsip AI Non-Klinis
                     </div>
                     <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl text-white">
                         AI Sebagai Mitra Pemantul Pikiran. Bukan Penasihat Medis.

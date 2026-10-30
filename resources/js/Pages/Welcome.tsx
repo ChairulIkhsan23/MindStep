@@ -20,18 +20,10 @@ export default function Welcome({
 
             {/* 2. Hero Section */}
             <section className="relative pt-12 pb-20 sm:pt-20 sm:pb-28 overflow-hidden">
-                {/* Background decorative gradient */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-gradient-to-tr from-amber-400/10 via-rose-400/10 to-indigo-400/10 blur-3xl -z-10 pointer-events-none" />
-
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
                         {/* Hero Text */}
                         <div className="lg:col-span-7 text-center lg:text-left">
-                            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-50 dark:bg-amber-950/50 border border-amber-200/80 dark:border-amber-800 text-amber-800 dark:text-amber-300 text-xs font-semibold mb-6 shadow-sm">
-                                <span className="w-2 h-2 rounded-full bg-amber-500" />
-                                Mindstep: Habit Tracker & Journaling Platform
-                            </div>
-
                             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-stone-900 dark:text-stone-100 leading-[1.15]">
                                 Bangun Kebiasaan Baik, Pahami Diri Lebih Dalam{' '}
                                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-rose-500 to-amber-700 dark:from-amber-400 dark:via-rose-400 dark:to-amber-300">
