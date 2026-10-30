@@ -18,31 +18,31 @@ export default function Welcome({
             {/* 1. Sticky Navigation */}
             <LandingNavbar user={auth.user} />
 
-            {/* 2. Hero Section */}
-            <section className="relative pt-10 pb-16 sm:pt-16 sm:pb-24 overflow-hidden">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+            {/* 2. Hero Section (Full Viewport Height) */}
+            <section className="relative min-h-[calc(100vh-4rem)] flex items-center justify-center py-12 lg:py-0 overflow-hidden">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center w-full">
                         {/* Hero Text */}
                         <div className="lg:col-span-6 text-center lg:text-left">
-                            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-stone-900 dark:text-stone-100 leading-[1.18]">
+                            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-stone-900 dark:text-stone-100 leading-[1.14]">
                                 Bangun Kebiasaan Baik, Pahami Diri Lebih Dalam{' '}
                                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-rose-500 to-amber-700 dark:from-amber-400 dark:via-rose-400 dark:to-amber-300">
                                     Tanpa Rasa Bersalah.
                                 </span>
                             </h1>
 
-                            <p className="mt-5 text-sm sm:text-base text-stone-600 dark:text-stone-300 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                            <p className="mt-6 text-base sm:text-lg text-stone-600 dark:text-stone-300 max-w-xl mx-auto lg:mx-0 leading-relaxed">
                                 Platform terpadu pelacak kebiasaan fleksibel dan jurnal refleksi harian bertenaga AI etis. Selesaikan seluruh check-in harian dalam waktu kurang dari 10 detik.
                             </p>
 
-                            <div className="mt-7 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5">
+                            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
                                 {auth.user ? (
                                     <Link
                                         href={route('dashboard')}
-                                        className="w-full sm:w-auto px-6 py-3 rounded-xl text-sm font-bold text-white bg-amber-600 hover:bg-amber-700 shadow-sm shadow-amber-600/25 transition-all active:scale-95 flex items-center justify-center gap-2"
+                                        className="w-full sm:w-auto px-7 py-3.5 rounded-xl text-base font-bold text-white bg-amber-600 hover:bg-amber-700 shadow-sm shadow-amber-600/25 transition-all active:scale-95 flex items-center justify-center gap-2"
                                     >
                                         Buka Dashboard Saya
-                                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                                         </svg>
                                     </Link>
@@ -50,13 +50,13 @@ export default function Welcome({
                                     <>
                                         <Link
                                             href={route('register')}
-                                            className="w-full sm:w-auto px-6 py-3 rounded-xl text-sm font-bold text-white bg-stone-900 hover:bg-stone-800 dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-white shadow-sm transition-all active:scale-95 text-center"
+                                            className="w-full sm:w-auto px-7 py-3.5 rounded-xl text-base font-bold text-white bg-stone-900 hover:bg-stone-800 dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-white shadow-sm transition-all active:scale-95 text-center"
                                         >
                                             Mulai Sekarang, Gratis
                                         </Link>
                                         <a
                                             href="#features"
-                                            className="w-full sm:w-auto px-5 py-3 rounded-xl text-sm font-semibold text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors text-center"
+                                            className="w-full sm:w-auto px-6 py-3.5 rounded-xl text-base font-semibold text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors text-center"
                                         >
                                             Pelajari Fitur
                                         </a>
