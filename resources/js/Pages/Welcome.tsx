@@ -24,15 +24,15 @@ export default function Welcome({
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center w-full">
                         {/* Hero Text */}
                         <div className="lg:col-span-6 text-center lg:text-left">
-                            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-stone-900 dark:text-stone-100 leading-[1.14]">
-                                Bangun Kebiasaan Baik, Pahami Diri Lebih Dalam{' '}
+                            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-stone-900 dark:text-stone-100 leading-[1.15]">
+                                Bangun rutinitas, pantau mood, dan dokumentasikan{' '}
                                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-rose-500 to-amber-700 dark:from-amber-400 dark:via-rose-400 dark:to-amber-300">
-                                    Tanpa Rasa Bersalah.
+                                    aktivitas harianmu.
                                 </span>
                             </h1>
 
-                            <p className="mt-6 text-base sm:text-lg text-stone-600 dark:text-stone-300 max-w-xl mx-auto lg:mx-0 leading-relaxed">
-                                Platform terpadu pelacak kebiasaan fleksibel dan jurnal refleksi harian bertenaga AI etis. Selesaikan seluruh check-in harian dalam waktu kurang dari 10 detik.
+                            <p className="mt-6 text-sm sm:text-base text-stone-600 dark:text-stone-300 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                                Kelola kebiasaan harian, catat suasana hati, dan tulis jurnal dengan mudah. Semua fitur yang kamu butuhkan untuk mengatur rutinitas dan memantau progres sudah siap digunakan. Dilengkapi AI reflektif yang membantu merapikan tulisan dan memberikan pertanyaan untuk refleksi harian.
                             </p>
 
                             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
