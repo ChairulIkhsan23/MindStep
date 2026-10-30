@@ -19,30 +19,30 @@ export default function Welcome({
             <LandingNavbar user={auth.user} />
 
             {/* 2. Hero Section */}
-            <section className="relative pt-12 pb-20 sm:pt-20 sm:pb-28 overflow-hidden">
+            <section className="relative pt-10 pb-16 sm:pt-16 sm:pb-24 overflow-hidden">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
                         {/* Hero Text */}
-                        <div className="lg:col-span-7 text-center lg:text-left">
-                            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-stone-900 dark:text-stone-100 leading-[1.15]">
+                        <div className="lg:col-span-6 text-center lg:text-left">
+                            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-stone-900 dark:text-stone-100 leading-[1.18]">
                                 Bangun Kebiasaan Baik, Pahami Diri Lebih Dalam{' '}
                                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-rose-500 to-amber-700 dark:from-amber-400 dark:via-rose-400 dark:to-amber-300">
                                     Tanpa Rasa Bersalah.
                                 </span>
                             </h1>
 
-                            <p className="mt-6 text-base sm:text-lg text-stone-600 dark:text-stone-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                            <p className="mt-5 text-sm sm:text-base text-stone-600 dark:text-stone-300 max-w-xl mx-auto lg:mx-0 leading-relaxed">
                                 Platform terpadu pelacak kebiasaan fleksibel dan jurnal refleksi harian bertenaga AI etis. Selesaikan seluruh check-in harian dalam waktu kurang dari 10 detik.
                             </p>
 
-                            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                            <div className="mt-7 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5">
                                 {auth.user ? (
                                     <Link
                                         href={route('dashboard')}
-                                        className="w-full sm:w-auto px-7 py-3.5 rounded-2xl text-base font-bold text-white bg-amber-600 hover:bg-amber-700 shadow-lg shadow-amber-600/25 transition-all active:scale-95 flex items-center justify-center gap-2"
+                                        className="w-full sm:w-auto px-6 py-3 rounded-xl text-sm font-bold text-white bg-amber-600 hover:bg-amber-700 shadow-sm shadow-amber-600/25 transition-all active:scale-95 flex items-center justify-center gap-2"
                                     >
                                         Buka Dashboard Saya
-                                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                                         </svg>
                                     </Link>
@@ -50,13 +50,13 @@ export default function Welcome({
                                     <>
                                         <Link
                                             href={route('register')}
-                                            className="w-full sm:w-auto px-7 py-3.5 rounded-2xl text-base font-bold text-white bg-stone-900 hover:bg-stone-800 dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-white shadow-lg transition-all active:scale-95 text-center"
+                                            className="w-full sm:w-auto px-6 py-3 rounded-xl text-sm font-bold text-white bg-stone-900 hover:bg-stone-800 dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-white shadow-sm transition-all active:scale-95 text-center"
                                         >
                                             Mulai Sekarang, Gratis
                                         </Link>
                                         <a
                                             href="#features"
-                                            className="w-full sm:w-auto px-6 py-3.5 rounded-2xl text-base font-semibold text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors text-center"
+                                            className="w-full sm:w-auto px-5 py-3 rounded-xl text-sm font-semibold text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors text-center"
                                         >
                                             Pelajari Fitur
                                         </a>
@@ -66,7 +66,7 @@ export default function Welcome({
                         </div>
 
                         {/* Emoticon Journey Illustration */}
-                        <div className="lg:col-span-5">
+                        <div className="lg:col-span-6 flex justify-center">
                             <EmoticonJourneyIllustration />
                         </div>
                     </div>
