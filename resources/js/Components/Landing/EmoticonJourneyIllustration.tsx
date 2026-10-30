@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { Sprout, BookOpen, Smile, Target } from 'lucide-react';
 
 export default function EmoticonJourneyIllustration() {
     return (
@@ -32,9 +33,9 @@ export default function EmoticonJourneyIllustration() {
                             },
                         }}
                         whileHover={{ scale: 1.06, rotate: [0, -3, 3, 0] }}
-                        className="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-gradient-to-tr from-amber-500/15 via-rose-500/10 to-amber-500/20 flex items-center justify-center mb-5 border border-amber-500/20 cursor-default"
+                        className="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-gradient-to-tr from-amber-500/15 via-rose-500/10 to-amber-500/20 flex items-center justify-center mb-5 border border-amber-500/20 cursor-default text-amber-600 dark:text-amber-400"
                     >
-                        <span className="text-4xl sm:text-5xl">🌱</span>
+                        <Sprout className="w-10 h-10 sm:w-12 sm:h-12 stroke-[1.8]" />
                     </motion.div>
 
                     {/* Main Title & Subtitle */}
@@ -60,8 +61,8 @@ export default function EmoticonJourneyIllustration() {
                     whileHover={{ y: -3, scale: 1.02 }}
                     className="absolute -top-5 sm:-top-6 -right-2 sm:-right-4 z-10 flex items-center gap-3 bg-white dark:bg-stone-850 border border-stone-200/90 dark:border-stone-700/80 rounded-2xl p-2.5 sm:p-3.5 shadow-lg shadow-stone-900/10 cursor-default"
                 >
-                    <div className="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-950/60 flex items-center justify-center text-lg sm:text-xl text-emerald-700 dark:text-emerald-300 flex-shrink-0">
-                        📖
+                    <div className="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-950/60 flex items-center justify-center text-emerald-700 dark:text-emerald-300 flex-shrink-0">
+                        <BookOpen className="w-5 h-5 stroke-[2]" />
                     </div>
                     <div className="text-left pr-2">
                         <div className="text-xs sm:text-sm font-bold text-stone-900 dark:text-stone-100 leading-tight">
@@ -87,8 +88,8 @@ export default function EmoticonJourneyIllustration() {
                     whileHover={{ y: -3, scale: 1.02 }}
                     className="absolute top-1/2 translate-y-6 sm:translate-y-8 -right-2 sm:-right-6 z-10 flex items-center gap-3 bg-white dark:bg-stone-850 border border-stone-200/90 dark:border-stone-700/80 rounded-2xl p-2.5 sm:p-3.5 shadow-lg shadow-stone-900/10 cursor-default"
                 >
-                    <div className="w-10 h-10 rounded-xl bg-rose-100 dark:bg-rose-950/60 flex items-center justify-center text-lg sm:text-xl text-rose-700 dark:text-rose-300 flex-shrink-0">
-                        🙂
+                    <div className="w-10 h-10 rounded-xl bg-rose-100 dark:bg-rose-950/60 flex items-center justify-center text-rose-700 dark:text-rose-300 flex-shrink-0">
+                        <Smile className="w-5 h-5 stroke-[2]" />
                     </div>
                     <div className="text-left pr-2">
                         <div className="text-xs sm:text-sm font-bold text-stone-900 dark:text-stone-100 leading-tight">
@@ -114,8 +115,8 @@ export default function EmoticonJourneyIllustration() {
                     whileHover={{ y: -3, scale: 1.02 }}
                     className="absolute -bottom-5 sm:-bottom-6 -left-2 sm:-left-4 z-10 flex items-center gap-3 bg-white dark:bg-stone-850 border border-stone-200/90 dark:border-stone-700/80 rounded-2xl p-2.5 sm:p-3.5 shadow-lg shadow-stone-900/10 cursor-default"
                 >
-                    <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-950/60 flex items-center justify-center text-lg sm:text-xl text-amber-700 dark:text-amber-300 flex-shrink-0">
-                        🎯
+                    <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-950/60 flex items-center justify-center text-amber-700 dark:text-amber-300 flex-shrink-0">
+                        <Target className="w-5 h-5 stroke-[2]" />
                     </div>
                     <div className="text-left pr-2">
                         <div className="text-xs sm:text-sm font-bold text-stone-900 dark:text-stone-100 leading-tight">
