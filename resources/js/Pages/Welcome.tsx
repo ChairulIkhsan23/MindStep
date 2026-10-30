@@ -63,28 +63,6 @@ export default function Welcome({
                                     </>
                                 )}
                             </div>
-
-                            {/* Trust micro-badges */}
-                            <div className="mt-10 pt-6 border-t border-stone-200/80 dark:border-stone-800 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-xs text-stone-500 dark:text-stone-400">
-                                <div className="flex items-center gap-1.5">
-                                    <svg className="w-4 h-4 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    <span>Tanpa Kartu Kredit</span>
-                                </div>
-                                <div className="flex items-center gap-1.5">
-                                    <svg className="w-4 h-4 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    <span>AI Reflektif Non-Klinis</span>
-                                </div>
-                                <div className="flex items-center gap-1.5">
-                                    <svg className="w-4 h-4 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    <span>Ekspor Format Universal (JSON & CSV)</span>
-                                </div>
-                            </div>
                         </div>
 
                         {/* Interactive Widget Demo */}
