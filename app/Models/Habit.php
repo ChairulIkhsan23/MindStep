@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Database\Factories\HabitFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
@@ -64,5 +65,15 @@ class Habit extends Model
     public function scopeArchived(Builder $query): Builder
     {
         return $query->where('is_archived', true);
+    }
+
+    public function setStartDateAttribute($value): void
+    {
+        $this->attributes['start_date'] = Carbon::parse($value)->toDateString();
+    }
+
+    public function setEndDateAttribute($value): void
+    {
+        $this->attributes['end_date'] = $value ? Carbon::parse($value)->toDateString() : null;
     }
 }

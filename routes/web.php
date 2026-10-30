@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\HabitController;
+use App\Http\Controllers\HabitLogController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -17,6 +19,18 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/habits', [HabitController::class, 'index'])->name('habits.index');
+    Route::post('/habits', [HabitController::class, 'store'])->name('habits.store');
+    Route::put('/habits/{habit}', [HabitController::class, 'update'])->name('habits.update');
+    Route::delete('/habits/{habit}', [HabitController::class, 'destroy'])->name('habits.destroy');
+    Route::post('/habits/{habit}/archive', [HabitController::class, 'archive'])->name('habits.archive');
+    Route::post('/habits/{habit}/unarchive', [HabitController::class, 'unarchive'])->name('habits.unarchive');
+
+    Route::post('/habits/{habit}/logs', [HabitLogController::class, 'store'])->name('habits.logs.store');
+    Route::delete('/habits/{habit}/logs/{date}', [HabitLogController::class, 'destroy'])->name('habits.logs.destroy');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
