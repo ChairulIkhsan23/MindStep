@@ -5,7 +5,7 @@ export default function DataPortabilityBanner() {
                 <div className="rounded-3xl bg-white dark:bg-stone-850 border border-stone-200 dark:border-stone-700/80 p-8 sm:p-12 shadow-sm">
                     <div className="max-w-3xl">
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 text-xs font-semibold mb-4">
-                            🔒 Kedaulatan Data & GDPR Compliance
+                            🔒 Kedaulatan & Portabilitas Data Penuh
                         </div>
                         <h3 className="text-2xl sm:text-3xl font-extrabold text-stone-900 dark:text-stone-100 tracking-tight">
                             Data Anda Milik Anda Sepenuhnya. Tanpa Penguncian Vendor.

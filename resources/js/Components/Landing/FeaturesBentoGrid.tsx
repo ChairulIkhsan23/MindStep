@@ -114,7 +114,7 @@ export default function FeaturesBentoGrid() {
                                 </div>
                                 <div className="text-xl font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-2 mt-0.5">
                                     <span>4.6 / 5.0</span>
-                                    <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 font-semibold">+35% Lebih Tenang</span>
+                                    <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 font-semibold">Korelasi Positif</span>
                                 </div>
                             </div>
                             <div>

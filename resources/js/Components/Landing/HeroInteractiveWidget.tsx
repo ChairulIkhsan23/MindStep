@@ -61,8 +61,8 @@ export default function HeroInteractiveWidget() {
                         </h4>
                     </div>
                     <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 text-xs font-medium">
-                        <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
-                        8 Detik Selesai
+                        <span className="w-2 h-2 rounded-full bg-amber-500" />
+                        Demo Langsung
                     </div>
                 </div>
 
@@ -171,7 +171,7 @@ export default function HeroInteractiveWidget() {
 
                                 {habit.completed && (
                                     <span className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-400">
-                                        +1 Streak 🔥
+                                        +1 Streak
                                     </span>
                                 )}
                             </button>
@@ -181,8 +181,8 @@ export default function HeroInteractiveWidget() {
 
                 {/* Instant congratulation footer */}
                 <div className="mt-4 pt-3 border-t border-stone-100 dark:border-stone-800 flex items-center justify-between text-[11px] text-stone-500 dark:text-stone-400">
-                    <span>✨ Tidak ada data tersimpan sampai Anda mendaftar</span>
-                    <span className="font-semibold text-stone-700 dark:text-stone-300">Coba klik!</span>
+                    <span>Data demo client-side: tersimpan lokal saat mencoba</span>
+                    <span className="font-semibold text-stone-700 dark:text-stone-300">Coba klik checklist</span>
                 </div>
             </div>
         </div>

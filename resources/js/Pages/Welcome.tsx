@@ -28,8 +28,8 @@ export default function Welcome({
                         {/* Hero Text */}
                         <div className="lg:col-span-7 text-center lg:text-left">
                             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-50 dark:bg-amber-950/50 border border-amber-200/80 dark:border-amber-800 text-amber-800 dark:text-amber-300 text-xs font-semibold mb-6 shadow-sm">
-                                <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping" />
-                                Mindstep • Habit Tracker & Journaling Platform
+                                <span className="w-2 h-2 rounded-full bg-amber-500" />
+                                Mindstep: Habit Tracker & Journaling Platform
                             </div>
 
                             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-stone-900 dark:text-stone-100 leading-[1.15]">
@@ -60,13 +60,13 @@ export default function Welcome({
                                             href={route('register')}
                                             className="w-full sm:w-auto px-7 py-3.5 rounded-2xl text-base font-bold text-white bg-stone-900 hover:bg-stone-800 dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-white shadow-lg transition-all active:scale-95 text-center"
                                         >
-                                            Mulai Sekarang — Gratis
+                                            Mulai Sekarang, Gratis
                                         </Link>
                                         <a
                                             href="#features"
                                             className="w-full sm:w-auto px-6 py-3.5 rounded-2xl text-base font-semibold text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors text-center"
                                         >
-                                            Pelajari Fitur ↓
+                                            Pelajari Fitur
                                         </a>
                                     </>
                                 )}
@@ -90,7 +90,7 @@ export default function Welcome({
                                     <svg className="w-4 h-4 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                                     </svg>
-                                    <span>Ekspor Data Lengkap (GDPR)</span>
+                                    <span>Ekspor Format Universal (JSON & CSV)</span>
                                 </div>
                             </div>
                         </div>
@@ -130,7 +130,7 @@ export default function Welcome({
                             href={auth.user ? route('dashboard') : route('register')}
                             className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-base font-bold text-stone-950 bg-amber-400 hover:bg-amber-300 shadow-xl shadow-amber-400/20 transition-all active:scale-95"
                         >
-                            {auth.user ? 'Buka Dashboard Anda →' : 'Daftar Gratis Sekarang →'}
+                            {auth.user ? 'Buka Dashboard Anda' : 'Daftar Akun Gratis'}
                         </Link>
                     </div>
                 </div>
