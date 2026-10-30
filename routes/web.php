@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\HabitController;
 use App\Http\Controllers\HabitLogController;
 use App\Http\Controllers\JournalController;
@@ -39,6 +40,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/moods/{moodLog}', [MoodLogController::class, 'destroy'])->name('moods.destroy');
 
     Route::resource('journals', JournalController::class);
+
+    Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
 });
 
 Route::middleware('auth')->group(function () {
