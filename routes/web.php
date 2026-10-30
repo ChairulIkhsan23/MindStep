@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AnalyticsController;
+use App\Http\Controllers\DataExportController;
 use App\Http\Controllers\HabitController;
 use App\Http\Controllers\HabitLogController;
 use App\Http\Controllers\JournalController;
@@ -42,6 +43,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('journals', JournalController::class);
 
     Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
+
+    Route::get('/export/json', [DataExportController::class, 'exportJson'])->name('export.json');
+    Route::get('/export/csv', [DataExportController::class, 'exportCsv'])->name('export.csv');
 });
 
 Route::middleware('auth')->group(function () {
