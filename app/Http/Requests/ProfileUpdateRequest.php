@@ -26,6 +26,9 @@ class ProfileUpdateRequest extends FormRequest
                 'max:255',
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
+            'timezone' => ['sometimes', 'required', 'string', 'timezone:all'],
+            'theme' => ['sometimes', 'required', 'string', 'in:light,dark,system'],
+            'ai_consent' => ['sometimes', 'required', 'boolean'],
         ];
     }
 }
