@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AiAssistantController;
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\DataExportController;
 use App\Http\Controllers\HabitController;
@@ -46,6 +47,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/export/json', [DataExportController::class, 'exportJson'])->name('export.json');
     Route::get('/export/csv', [DataExportController::class, 'exportCsv'])->name('export.csv');
+
+    Route::prefix('ai')->name('ai.')->group(function () {
+        Route::post('/polish', [AiAssistantController::class, 'polish'])->name('polish');
+        Route::post('/deepening-prompts', [AiAssistantController::class, 'deepeningPrompts'])->name('prompts');
+        Route::post('/summary', [AiAssistantController::class, 'periodicSummary'])->name('summary');
+    });
 });
 
 Route::middleware('auth')->group(function () {

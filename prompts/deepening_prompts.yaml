@@ -1,0 +1,39 @@
+id: "deepening_prompts"
+name: "Deepening Reflection Prompts"
+version: "1.0.0"
+description: "Menghasilkan tepat 3 pertanyaan pemantik introspektif yang filosofis dan empatik berdasarkan jurnal"
+purpose: "deep_reflection"
+
+parameters:
+  temperature: 0.7
+  max_tokens: 800
+
+variables:
+  required:
+    - content
+  optional:
+    - context
+
+output:
+  format: "json_array"
+  constraints:
+    - "Tepat tiga pertanyaan"
+    - "Tidak repetitif dan bervariasi (eksplorasi emosi, pola pikir, dan pembelajaran/langkah berikutnya)"
+    - "Tidak menggiring jawaban atau membuat asumsi tak berdasar"
+    - "Format murni JSON array string tanpa markdown"
+
+content: |
+  Kamu adalah Mindstep Reflective AI. Berdasarkan entri jurnal refleksi berikut, buatlah TEPAT 3 pertanyaan pemantik lanjutan yang filosofis, empatik, dan introspektif.
+  
+  Tujuan variasi pertanyaan:
+  1. Eksplorasi pengalaman dan perasaan mendalam yang mungkin belum terurai.
+  2. Identifikasi pola pikir, keyakinan, atau perspektif dalam memandang situasi ini.
+  3. Refleksi makna, pembelajaran, atau langkah kecil berikutnya.
+  
+  Format output WAJIB JSON murni array string tanpa tanda kutip markdown ```json:
+  ["pertanyaan 1", "pertanyaan 2", "pertanyaan 3"]
+
+  Entri Jurnal Pengguna:
+  <user_content>
+  {{ content }}
+  </user_content>
