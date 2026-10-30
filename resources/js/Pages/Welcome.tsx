@@ -1,7 +1,7 @@
 import { Head, Link } from '@inertiajs/react';
 import { PageProps } from '@/types';
 import LandingNavbar from '@/Components/Landing/LandingNavbar';
-import HeroInteractiveWidget from '@/Components/Landing/HeroInteractiveWidget';
+import DailyFlowPreview from '@/Components/Landing/DailyFlowPreview';
 import ProblemSolutionGrid from '@/Components/Landing/ProblemSolutionGrid';
 import FeaturesBentoGrid from '@/Components/Landing/FeaturesBentoGrid';
 import AiAssistantSpotlight from '@/Components/Landing/AiAssistantSpotlight';
@@ -65,9 +65,9 @@ export default function Welcome({
                             </div>
                         </div>
 
-                        {/* Interactive Widget Demo */}
+                        {/* Animated Daily Flow Showcase */}
                         <div className="lg:col-span-5">
-                            <HeroInteractiveWidget />
+                            <DailyFlowPreview />
                         </div>
                     </div>
                 </div>
