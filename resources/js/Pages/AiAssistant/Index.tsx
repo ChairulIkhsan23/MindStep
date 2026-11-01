@@ -1,12 +1,8 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import {
-    Bot,
-    Compass,
-    HelpCircle,
     Lightbulb,
     Lock,
-    MessageSquare,
     Send,
     Sparkles,
 } from 'lucide-react';
@@ -28,45 +24,45 @@ export default function AiAssistantIndex() {
 
             <div className="max-w-4xl mx-auto space-y-6">
                 {/* Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-[#E2E8F0]">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-stone-200/90 dark:border-stone-800">
                     <div>
                         <div className="flex items-center gap-2">
-                            <span className="px-2 py-0.5 rounded-md text-[10px] font-extrabold tracking-wider uppercase bg-[#EFF6FF] text-[#1D63ED] border border-[#DBEAFE]">
+                            <span className="px-2 py-0.5 rounded-md text-[10px] font-extrabold tracking-wider uppercase bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800/60">
                                 AI Coach & Refleksi
                             </span>
                         </div>
-                        <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-[#0F172A]">
+                        <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-stone-900 dark:text-stone-100">
                             MindStep AI Assistant
                         </h1>
-                        <p className="mt-1 text-xs sm:text-sm text-[#64748B]">
+                        <p className="mt-1 text-xs sm:text-sm text-stone-500 dark:text-stone-400">
                             Mitra cerdas untuk membantu mengevaluasi kebiasaan, merapikan tulisan jurnal, dan memberikan dorongan positif.
                         </p>
                     </div>
 
-                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-[#E2E8F0] text-xs font-semibold text-[#64748B]">
-                        <Lock className="w-3.5 h-3.5 text-emerald-600" />
+                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-stone-900 border border-stone-200/90 dark:border-stone-800 text-xs font-semibold text-stone-500 dark:text-stone-400">
+                        <Lock className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                         <span>Data Terenkripsi & Privat</span>
                     </div>
                 </div>
 
                 {/* AI Welcome Card */}
-                <div className="bg-white rounded-2xl border border-[#E2E8F0] p-6 shadow-sm space-y-4">
+                <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200/90 dark:border-stone-800 p-6 shadow-sm space-y-4">
                     <div className="flex items-start gap-4">
-                        <div className="w-12 h-12 rounded-2xl bg-[#EFF6FF] text-[#1D63ED] flex items-center justify-center shrink-0 border border-[#DBEAFE]">
+                        <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 border border-amber-200 dark:border-amber-800">
                             <Sparkles className="w-6 h-6" />
                         </div>
                         <div>
-                            <h3 className="text-base font-bold text-[#0F172A]">
+                            <h3 className="text-base font-bold text-stone-900 dark:text-stone-100">
                                 Halo! Saya MindStep AI Coach siap membantumu hari ini.
                             </h3>
-                            <p className="mt-1 text-xs sm:text-sm text-[#475569] leading-relaxed">
+                            <p className="mt-1 text-xs sm:text-sm text-stone-600 dark:text-stone-400 leading-relaxed">
                                 Saya dapat menganalisis korelasi antara rutinitas harian dan skor mood Anda, membantu memperdalam catatan jurnal refleksi, atau merancang strategi perbaikan kebiasaan yang realistis.
                             </p>
                         </div>
                     </div>
 
-                    <div className="pt-2 border-t border-[#E2E8F0]">
-                        <p className="text-xs font-bold text-[#64748B] mb-2.5">
+                    <div className="pt-2 border-t border-stone-200/90 dark:border-stone-800">
+                        <p className="text-xs font-bold text-stone-500 dark:text-stone-400 mb-2.5">
                             Coba tanyakan atau pilih topik di bawah ini:
                         </p>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -74,9 +70,9 @@ export default function AiAssistantIndex() {
                                 <button
                                     key={idx}
                                     onClick={() => setPrompt(item)}
-                                    className="p-3 text-left rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] hover:border-[#DBEAFE] hover:bg-[#EFF6FF] text-xs font-semibold text-[#334155] transition-all flex items-start gap-2"
+                                    className="p-3 text-left rounded-xl bg-stone-50 dark:bg-stone-850 border border-stone-200/90 dark:border-stone-800 hover:border-amber-300 dark:hover:border-amber-800 hover:bg-amber-50/50 dark:hover:bg-amber-950/20 text-xs font-semibold text-stone-700 dark:text-stone-300 transition-all flex items-start gap-2"
                                 >
-                                    <Lightbulb className="w-3.5 h-3.5 text-[#1D63ED] shrink-0 mt-0.5" />
+                                    <Lightbulb className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
                                     <span>{item}</span>
                                 </button>
                             ))}
@@ -85,19 +81,19 @@ export default function AiAssistantIndex() {
                 </div>
 
                 {/* Interactive Prompt Input Box */}
-                <div className="bg-white rounded-2xl border border-[#E2E8F0] p-4 shadow-sm space-y-3">
+                <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200/90 dark:border-stone-800 p-4 shadow-sm space-y-3">
                     <div className="relative">
                         <textarea
                             rows={3}
                             value={prompt}
                             onChange={(e) => setPrompt(e.target.value)}
                             placeholder="Tuliskan pertanyaan, keluhan kebiasaan, atau draf jurnal yang ingin dibedah..."
-                            className="w-full p-3.5 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-xs sm:text-sm text-[#0F172A] placeholder:text-[#94A3B8] focus:outline-none focus:border-[#1D63ED] focus:ring-2 focus:ring-[#1D63ED]/15 transition-all resize-none"
+                            className="w-full p-3.5 rounded-xl bg-stone-50 dark:bg-stone-850 border border-stone-200 dark:border-stone-700 text-xs sm:text-sm text-stone-900 dark:text-stone-100 placeholder:text-stone-400 focus:outline-none focus:border-amber-600 focus:ring-2 focus:ring-amber-500/20 transition-all resize-none"
                         />
                     </div>
 
                     <div className="flex items-center justify-between text-xs">
-                        <span className="text-[#64748B] text-[11px]">
+                        <span className="text-stone-500 dark:text-stone-400 text-[11px]">
                             Didukung model bahasa cerdas dengan konteks jurnal lokal
                         </span>
 
@@ -108,7 +104,7 @@ export default function AiAssistantIndex() {
                                     setPrompt('');
                                 }
                             }}
-                            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#1D63ED] text-white font-bold text-xs hover:bg-[#1E40AF] transition-colors shadow-sm"
+                            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-600 text-white font-bold text-xs hover:bg-amber-700 transition-colors shadow-sm"
                         >
                             <span>Kirim ke AI</span>
                             <Send className="w-3.5 h-3.5" />
