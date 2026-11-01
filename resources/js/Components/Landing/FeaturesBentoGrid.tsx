@@ -16,10 +16,10 @@ export default function FeaturesBentoGrid() {
                         Fitur Utama
                     </span>
                     <h2 className="mt-3 text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-stone-900 dark:text-stone-100 leading-snug">
-                        Kelola rutinitas dan refleksikan hari dalam satu alur.
+                        Semua fitur yang kamu butuhkan untuk rutinitas harian.
                     </h2>
                     <p className="mt-4 text-base sm:text-lg text-stone-600 dark:text-stone-300 leading-relaxed">
-                        Empat fitur yang saling terhubung untuk membantumu menata kebiasaan, mencatat suasana hati, dan mengenali pola keseharian.
+                        Atur kebiasaan, catat suasana hati, dan tulis jurnal dengan mudah dalam satu tempat.
                     </p>
                 </motion.div>
 
@@ -41,7 +41,7 @@ export default function FeaturesBentoGrid() {
                                 Atur dan pantau kebiasaan harian dengan mudah.
                             </h3>
                             <p className="mt-3 text-sm sm:text-base text-stone-600 dark:text-stone-300 max-w-xl leading-relaxed">
-                                Buat kebiasaan baru dengan target penyelesaian, jumlah hitungan, atau durasi waktu. Pantau jadwal, riwayat pencatatan, dan konsistensi harianmu dalam satu tampilan.
+                                Buat kebiasaan baru dengan target centang, hitungan jumlah, atau durasi waktu. Cek jadwal dan lihat riwayat aktivitas harianmu kapan saja dengan mudah.
                             </p>
                         </div>
 
@@ -108,7 +108,7 @@ export default function FeaturesBentoGrid() {
                                 Tulis catatan harian dengan panduan terarah.
                             </h3>
                             <p className="mt-3 text-sm text-stone-600 dark:text-stone-300 leading-relaxed">
-                                Tulis pikiranmu secara bebas atau gunakan template jurnal yang telah disediakan. Tersedia panduan seperti Gratitude, Stoic Reflection, CBT Reframe, dan Weekly Review.
+                                Tulis apa saja yang ada di pikiranmu atau pilih template jurnal yang sudah disiapkan. Ada panduan seperti Gratitude, Stoic Reflection, CBT Reframe, dan Weekly Review.
                             </p>
                         </div>
 
@@ -139,7 +139,7 @@ export default function FeaturesBentoGrid() {
                                 Pahami pola aktivitas dan suasana hatimu.
                             </h3>
                             <p className="mt-3 text-sm sm:text-base text-stone-600 dark:text-stone-300 max-w-xl leading-relaxed">
-                                Lihat ringkasan kebiasaan dan perhatikan kecenderungan suasana hati berdasarkan aktivitas yang telah tercatat. Temukan pola keseharian tanpa penilaian atau target yang menekan.
+                                Lihat ringkasan kebiasaan dan bagaimana suasana hatimu bergerak seiring rutinitas harian. Kenali polamu sendiri dengan santai tanpa harus merasa terbebani.
                             </p>
                         </div>
 
@@ -147,7 +147,7 @@ export default function FeaturesBentoGrid() {
                         <div className="mt-8 p-4 rounded-xl bg-white dark:bg-stone-850 border border-stone-200/80 dark:border-stone-800 flex flex-col sm:flex-row items-center justify-between gap-4">
                             <div>
                                 <div className="text-xs font-medium text-stone-500 dark:text-stone-400">
-                                    Rata-rata Suasana Hati Saat Kebiasaan Tuntas:
+                                    Rata-rata mood saat kebiasaan selesai:
                                 </div>
                                 <div className="text-xl font-bold text-emerald-700 dark:text-emerald-400 flex items-center gap-2 mt-0.5">
                                     <span>4.5 / 5.0</span>
@@ -158,7 +158,7 @@ export default function FeaturesBentoGrid() {
                             </div>
                             <div className="w-full sm:w-auto sm:border-l sm:border-stone-200 sm:dark:border-stone-800 sm:pl-6">
                                 <div className="text-xs font-medium text-stone-500 dark:text-stone-400">
-                                    Rata-rata Suasana Hati Saat Kebiasaan Terlewat:
+                                    Rata-rata mood saat kebiasaan terlewat:
                                 </div>
                                 <div className="text-xl font-bold text-stone-700 dark:text-stone-300 mt-0.5">
                                     3.2 / 5.0

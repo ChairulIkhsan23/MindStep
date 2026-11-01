@@ -66,7 +66,7 @@ export default function EmoticonJourneyIllustration() {
                     </div>
                     <div className="text-left pr-2">
                         <div className="text-xs sm:text-sm font-bold text-stone-900 dark:text-stone-100 leading-tight">
-                            Jurnal Refleksi
+                            Jurnal Harian
                         </div>
                         <div className="text-[10px] sm:text-xs text-stone-500 dark:text-stone-400 mt-0.5">
                             Ceritakan Harimu
@@ -123,7 +123,7 @@ export default function EmoticonJourneyIllustration() {
                             Kebiasaan Harian
                         </div>
                         <div className="text-[10px] sm:text-xs text-stone-500 dark:text-stone-400 mt-0.5">
-                            Sedikit Demi Sedikit
+                            Pantau Tiap Hari
                         </div>
                     </div>
                 </motion.div>

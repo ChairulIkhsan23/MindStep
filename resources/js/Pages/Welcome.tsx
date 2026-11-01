@@ -33,7 +33,7 @@ export default function Welcome({
                             </h1>
 
                             <p className="mt-6 text-sm sm:text-base text-stone-600 dark:text-stone-300 max-w-xl mx-auto lg:mx-0 leading-relaxed">
-                                Kelola kebiasaan harian, catat suasana hati, dan tulis jurnal dengan mudah. Semua fitur yang kamu butuhkan untuk mengatur rutinitas dan memantau progres sudah siap digunakan. Dilengkapi AI reflektif yang membantu merapikan tulisan dan memberikan pertanyaan untuk refleksi harian.
+                                Kelola kebiasaan harian, catat perasaanmu, dan simpan ceritamu dalam satu tempat. Mindstep membantumu mengatur rutinitas secara fleksibel, tanpa ribet dan tanpa tekanan.
                             </p>
 
                             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
@@ -42,7 +42,7 @@ export default function Welcome({
                                         href={route('dashboard')}
                                         className="w-full sm:w-auto px-7 py-3.5 rounded-xl text-base font-bold text-white bg-amber-600 hover:bg-amber-700 transition-all active:scale-95 flex items-center justify-center gap-2"
                                     >
-                                        Buka Dashboard Saya
+                                        Buka Dashboard Kamu
                                         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                                         </svg>
@@ -59,7 +59,7 @@ export default function Welcome({
                                             href="#features"
                                             className="w-full sm:w-auto px-6 py-3.5 rounded-xl text-base font-semibold text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors text-center"
                                         >
-                                            Pelajari Fitur
+                                            Lihat Fitur
                                         </a>
                                     </>
                                 )}
@@ -85,17 +85,17 @@ export default function Welcome({
                 <div className="absolute inset-0 bg-gradient-to-r from-amber-600/20 to-rose-600/20 -z-10" />
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                     <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
-                        Mulai langkah kecil menuju hidup yang lebih berkesadaran.
+                        Mulai rapikan rutinitas dan catatan harianmu.
                     </h2>
                     <p className="mt-4 text-base text-stone-300 max-w-xl mx-auto">
-                        Tidak perlu mengubah seluruh hidup dalam semalam. Cukup 10 detik hari ini untuk mencatat langkah pertamamu.
+                        Buat kebiasaan baru, catat apa yang kamu rasakan, dan simpan ceritamu hari ini. Kamu bisa mulai kapan saja dengan ritmemu sendiri.
                     </p>
                     <div className="mt-8">
                         <Link
                             href={auth.user ? route('dashboard') : route('register')}
                             className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-base font-bold text-stone-950 bg-amber-400 hover:bg-amber-300 transition-all active:scale-95"
                         >
-                            {auth.user ? 'Buka Dashboard Anda' : 'Daftar Akun Gratis'}
+                            {auth.user ? 'Buka Dashboard Kamu' : 'Daftar Akun Gratis'}
                         </Link>
                     </div>
                 </div>

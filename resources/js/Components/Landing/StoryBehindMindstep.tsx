@@ -19,7 +19,7 @@ export default function StoryBehindMindstep() {
                         Menyatukan rutinitas, suasana hati, dan cerita harian dalam satu tempat.
                     </h2>
                     <p className="mt-5 text-base sm:text-lg text-stone-600 dark:text-stone-300 leading-relaxed">
-                        Setiap hari membawa ritme yang berbeda. Ada kebiasaan yang ingin dijaga, suasana hati yang naik turun, dan berbagai momen yang ingin diingat. Namun sering kali, hal-hal tersebut tercecer di berbagai catatan terpisah atau terlewat begitu saja tanpa sempat dirangkum.
+                        Setiap hari, ada saja hal yang ingin kita lakukan, rasakan, atau ceritakan. Tapi sering kali catatan kebiasaan ada di satu aplikasi, catatan perasaan ada di tempat lain, dan cerita harian tercecer begitu saja tanpa sempat dirangkum.
                     </p>
                 </motion.div>
 
@@ -41,7 +41,7 @@ export default function StoryBehindMindstep() {
                             Keseharian yang tersebar di banyak tempat
                         </h3>
                         <p className="mt-3 text-sm sm:text-base text-stone-600 dark:text-stone-300 leading-relaxed">
-                            Mengelola aktivitas harian biasanya membutuhkan beberapa tempat berbeda: satu untuk memeriksa kebiasaan, satu untuk mencatat suasana hati, dan tempat lain untuk menuliskan kejadian penting. Ketika pencatatan terpecah-pecah, kita kehilangan gambaran utuh tentang apa yang sebenarnya terjadi dalam keseharian kita.
+                            Mencatat keseharian terasa merepotkan kalau harus membuka banyak tempat berbeda. Satu untuk melihat kebiasaan, satu untuk mencatat suasana hati, dan satu lagi untuk menulis jurnal. Akhirnya, banyak catatan yang terbengkalai.
                         </p>
                     </motion.div>
 
@@ -58,10 +58,10 @@ export default function StoryBehindMindstep() {
                             <span className="italic">Pendekatan</span>
                         </span>
                         <h3 className="mt-2 text-lg font-bold text-stone-900 dark:text-stone-100">
-                            Satu ruang terpadu yang fleksibel
+                            Satu ruang yang sederhana dan fleksibel
                         </h3>
                         <p className="mt-3 text-sm sm:text-base text-stone-600 dark:text-stone-300 leading-relaxed">
-                            Mindstep dirancang untuk menyatukan ketiga hal tersebut dalam alur yang sederhana dan praktis. Kamu memiliki kebebasan untuk mengatur rutinitas, mendokumentasikan apa yang dirasakan, dan melihat kembali progres harian sesuai kebutuhan dan ritme pribadimu.
+                            Mindstep menggabungkan semuanya ke dalam satu tempat yang rapi dan mudah dipakai. Kamu bebas mengatur rutinitas, mencatat suasana hati, dan menyimpan ceritamu sesuai kebutuhan dan ritmemu sendiri.
                         </p>
                     </motion.div>
                 </div>
