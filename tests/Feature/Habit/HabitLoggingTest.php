@@ -164,6 +164,8 @@ class HabitLoggingTest extends TestCase
 
     public function test_user_cannot_apply_streak_freeze_when_monthly_credits_exhausted(): void
     {
+        Carbon::setTestNow(Carbon::create(2026, 5, 20, 12, 0, 0));
+
         $user = User::factory()->create();
         $habit = Habit::factory()->create([
             'user_id' => $user->id,
@@ -196,6 +198,8 @@ class HabitLoggingTest extends TestCase
             'log_date' => now()->toDateString(),
             'status' => 'freeze',
         ]);
+
+        Carbon::setTestNow();
     }
 
     public function test_user_can_delete_habit_log(): void
