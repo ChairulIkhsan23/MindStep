@@ -39,29 +39,29 @@ export default function AuthSplitLayout({ children, mode }: AuthSplitLayoutProps
                 <aside className="lg:col-span-6 flex flex-col justify-center gap-3.5 xl:gap-4 order-2 lg:order-1 select-none">
                     {/* A. Hero / Daily Reflection Card */}
                     <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden border border-stone-200/90 dark:border-stone-800 text-white p-5 sm:p-6 shadow-sm min-h-[170px] sm:min-h-[190px] flex flex-col justify-between">
-                        {/* Realistic Peaceful Landscape Background Image */}
+                        {/* High-res peaceful journaling & plant desk directly from Unsplash CDN */}
                         <img
-                            src="/images/daily-reflection.jpg"
-                            alt="Suasana tenang refleksi dan kebiasaan harian"
-                            className="absolute inset-0 w-full h-full object-cover object-center -z-20"
+                            src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=1200&q=80"
+                            alt="Suasana tenang meja baca refleksi dan kebiasaan harian"
+                            className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none"
                         />
-                        {/* Dark Gradient Overlay to guarantee text legibility */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-stone-950/90 via-stone-950/70 to-stone-950/40 -z-10" />
+                        {/* Soft subtle gradient overlay so image shines through while text stays crisp */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/25 pointer-events-none" />
 
                         {/* Top Label */}
-                        <div>
-                            <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-stone-900/70 backdrop-blur-sm border border-white/10 text-[10px] sm:text-[11px] font-bold tracking-wider uppercase text-stone-200">
+                        <div className="relative z-10">
+                            <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-black/50 backdrop-blur-md border border-white/20 text-[10px] sm:text-[11px] font-bold tracking-wider uppercase text-white shadow-sm">
                                 Refleksi Harian
                             </span>
                         </div>
 
                         {/* Quote & Attribution */}
-                        <div className="mt-3">
-                            <blockquote className="text-base sm:text-lg font-bold tracking-tight text-white leading-snug drop-shadow-sm">
+                        <div className="relative z-10 mt-3">
+                            <blockquote className="text-base sm:text-lg font-bold tracking-tight text-white leading-snug drop-shadow-md">
                                 &ldquo;Kemajuan bukanlah lompatan raksasa, melainkan satu langkah sadar yang diulang setiap hari.&rdquo;
                             </blockquote>
 
-                            <p className="mt-2 text-xs text-stone-300 font-medium drop-shadow-sm">
+                            <p className="mt-2 text-xs text-stone-200 font-medium drop-shadow-md">
                                 &mdash; James Clear, Filosofi Kaizen
                             </p>
                         </div>
