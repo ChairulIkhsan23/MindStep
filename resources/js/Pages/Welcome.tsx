@@ -59,7 +59,7 @@ export default function Welcome({
             <LandingNavbar user={auth.user} />
 
             {/* 2. Hero Section (Full Viewport Height) */}
-            <section className="relative min-h-[calc(100vh-4rem)] flex items-center justify-center py-12 lg:py-0 overflow-hidden">
+            <section className="relative min-h-[calc(100vh-4rem)] flex items-center justify-center pt-20 pb-16 sm:pt-24 sm:pb-20 lg:py-0 overflow-hidden">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center w-full">
                         {/* Hero Text */}
@@ -68,9 +68,9 @@ export default function Welcome({
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: false, amount: 0.2 }}
                             transition={{ duration: 0.5, ease: 'easeOut' }}
-                            className="lg:col-span-6 text-center lg:text-left"
+                            className="lg:col-span-6 text-center lg:text-left pt-6 sm:pt-10 lg:pt-0"
                         >
-                            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-stone-900 dark:text-stone-100 leading-[1.16]">
+                            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-stone-900 dark:text-stone-100 leading-[1.2] sm:leading-[1.16]">
                                 Bangun rutinitas, pantau mood, dan dokumentasikan{' '}
                                 <MarkerHighlight
                                     highlight="aktivitas harianmu."
@@ -79,11 +79,11 @@ export default function Welcome({
                                 />
                             </h1>
 
-                            <p className="mt-6 text-sm sm:text-base text-stone-600 dark:text-stone-300 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                            <p className="mt-5 sm:mt-6 text-sm sm:text-base text-stone-600 dark:text-stone-300 max-w-xl mx-auto lg:mx-0 leading-relaxed px-1 sm:px-0">
                                 Kelola kebiasaan harian, catat perasaanmu, dan simpan ceritamu dalam satu tempat. Mindstep membantumu mengatur rutinitas secara fleksibel, tanpa ribet dan tanpa tekanan.
                             </p>
 
-                            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                            <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 sm:gap-4">
                                 {auth.user ? (
                                     <Link
                                         href={route('dashboard')}
