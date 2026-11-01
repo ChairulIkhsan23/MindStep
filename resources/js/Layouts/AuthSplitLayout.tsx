@@ -1,5 +1,6 @@
 import ApplicationLogo from '@/Components/ApplicationLogo';
 import { Link } from '@inertiajs/react';
+import { motion } from 'framer-motion';
 import { CheckCircle2, Flame, Lock, ShieldCheck, Sparkles } from 'lucide-react';
 import { ReactNode } from 'react';
 
@@ -35,8 +36,13 @@ export default function AuthSplitLayout({ children, mode }: AuthSplitLayoutProps
 
             {/* Split Content Area */}
             <div className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 min-h-0 py-6 lg:py-4 items-center">
-                {/* Left Column: Brand Experience */}
-                <aside className="lg:col-span-6 flex flex-col justify-center gap-3.5 xl:gap-4 order-2 lg:order-1 select-none">
+                {/* Left Column: Brand Experience (Animated Fade In) */}
+                <motion.aside
+                    initial={{ opacity: 0, x: -16 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.5, ease: 'easeOut' }}
+                    className="lg:col-span-6 flex flex-col justify-center gap-3.5 xl:gap-4 order-2 lg:order-1 select-none"
+                >
                     {/* A. Hero / Daily Reflection Card */}
                     <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden border border-stone-200/90 dark:border-stone-800 text-white p-5 sm:p-6 shadow-sm min-h-[170px] sm:min-h-[190px] flex flex-col justify-between">
                         {/* High-res peaceful journaling & plant desk directly from Unsplash CDN */}
@@ -141,7 +147,7 @@ export default function AuthSplitLayout({ children, mode }: AuthSplitLayoutProps
                             </p>
                         </div>
                     </div>
-                </aside>
+                </motion.aside>
 
                 {/* Right Column: Scrollable Form Area */}
                 <main className="lg:col-span-6 w-full order-1 lg:order-2 lg:h-full lg:overflow-y-auto py-2 lg:py-3 flex flex-col justify-center">
