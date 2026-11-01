@@ -33,8 +33,8 @@ export default function StoryBehindMindstep() {
                         transition={{ duration: 0.5, delay: 0.1, ease: 'easeOut' }}
                         className="rounded-2xl border border-stone-200/80 dark:border-stone-800 bg-white dark:bg-stone-900 p-6 sm:p-8"
                     >
-                        <span className="text-xs font-mono text-stone-400 dark:text-stone-500">
-                            01 / Latar Belakang
+                        <span className="text-xs font-mono italic text-stone-400 dark:text-stone-500">
+                            [01] Latar Belakang
                         </span>
                         <h3 className="mt-2 text-lg font-bold text-stone-900 dark:text-stone-100">
                             Keseharian yang tersebar di banyak tempat
@@ -52,8 +52,8 @@ export default function StoryBehindMindstep() {
                         transition={{ duration: 0.5, delay: 0.2, ease: 'easeOut' }}
                         className="rounded-2xl border border-stone-200/80 dark:border-stone-800 bg-white dark:bg-stone-900 p-6 sm:p-8"
                     >
-                        <span className="text-xs font-mono text-amber-600 dark:text-amber-400">
-                            02 / Pendekatan
+                        <span className="text-xs font-mono italic text-amber-600 dark:text-amber-400">
+                            [02] Pendekatan
                         </span>
                         <h3 className="mt-2 text-lg font-bold text-stone-900 dark:text-stone-100">
                             Satu ruang terpadu yang fleksibel
