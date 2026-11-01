@@ -3,7 +3,7 @@ import { PageProps } from '@/types';
 import LandingNavbar from '@/Components/Landing/LandingNavbar';
 import MarkerHighlight from '@/Components/Landing/MarkerHighlight';
 import EmoticonJourneyIllustration from '@/Components/Landing/EmoticonJourneyIllustration';
-import ProblemSolutionGrid from '@/Components/Landing/ProblemSolutionGrid';
+import StoryBehindMindstep from '@/Components/Landing/StoryBehindMindstep';
 import FeaturesBentoGrid from '@/Components/Landing/FeaturesBentoGrid';
 import AiAssistantSpotlight from '@/Components/Landing/AiAssistantSpotlight';
 import DataPortabilityBanner from '@/Components/Landing/DataPortabilityBanner';
@@ -76,8 +76,8 @@ export default function Welcome({
                 </div>
             </section>
 
-            {/* 3. Problem vs Solution Grid */}
-            <ProblemSolutionGrid />
+            {/* 3. The Story Behind Mindstep */}
+            <StoryBehindMindstep />
 
             {/* 4. Core Features Bento Grid */}
             <FeaturesBentoGrid />
