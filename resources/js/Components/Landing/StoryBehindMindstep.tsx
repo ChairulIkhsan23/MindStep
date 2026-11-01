@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 
 export default function StoryBehindMindstep() {
     return (
-        <section className="relative py-20 sm:py-28 bg-stone-50/70 dark:bg-stone-900/30 border-y border-stone-200/70 dark:border-stone-800/80">
+        <section id="story" className="relative py-20 sm:py-28 bg-stone-50/70 dark:bg-stone-900/30 border-y border-stone-200/70 dark:border-stone-800/80">
             <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Section Header */}
                 <motion.div

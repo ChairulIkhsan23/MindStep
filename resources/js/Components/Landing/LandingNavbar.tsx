@@ -67,14 +67,11 @@ export default function LandingNavbar({ user }: Props) {
 
                     {/* Nav Links */}
                     <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-stone-600 dark:text-stone-400">
+                        <a href="#story" className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
+                            Cerita
+                        </a>
                         <a href="#features" className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
                             Fitur Utama
-                        </a>
-                        <a href="#ai-partner" className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
-                            Reflective AI
-                        </a>
-                        <a href="#privacy" className="hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
-                            Kedaulatan Data
                         </a>
                     </nav>
 
@@ -100,7 +97,7 @@ export default function LandingNavbar({ user }: Props) {
                         {user ? (
                             <Link
                                 href={route('dashboard')}
-                                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white bg-amber-600 hover:bg-amber-700 dark:bg-amber-500 dark:hover:bg-amber-600 shadow-sm shadow-amber-600/30 transition-all active:scale-95"
+                                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white bg-amber-600 hover:bg-amber-700 dark:bg-amber-500 dark:hover:bg-amber-600 transition-all active:scale-95"
                             >
                                 Dashboard
                                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

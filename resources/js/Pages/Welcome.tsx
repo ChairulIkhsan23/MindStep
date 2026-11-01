@@ -5,8 +5,6 @@ import MarkerHighlight from '@/Components/Landing/MarkerHighlight';
 import EmoticonJourneyIllustration from '@/Components/Landing/EmoticonJourneyIllustration';
 import StoryBehindMindstep from '@/Components/Landing/StoryBehindMindstep';
 import FeaturesBentoGrid from '@/Components/Landing/FeaturesBentoGrid';
-import AiAssistantSpotlight from '@/Components/Landing/AiAssistantSpotlight';
-import DataPortabilityBanner from '@/Components/Landing/DataPortabilityBanner';
 import LandingFooter from '@/Components/Landing/LandingFooter';
 
 export default function Welcome({
@@ -42,7 +40,7 @@ export default function Welcome({
                                 {auth.user ? (
                                     <Link
                                         href={route('dashboard')}
-                                        className="w-full sm:w-auto px-7 py-3.5 rounded-xl text-base font-bold text-white bg-amber-600 hover:bg-amber-700 shadow-sm shadow-amber-600/25 transition-all active:scale-95 flex items-center justify-center gap-2"
+                                        className="w-full sm:w-auto px-7 py-3.5 rounded-xl text-base font-bold text-white bg-amber-600 hover:bg-amber-700 transition-all active:scale-95 flex items-center justify-center gap-2"
                                     >
                                         Buka Dashboard Saya
                                         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -53,7 +51,7 @@ export default function Welcome({
                                     <>
                                         <Link
                                             href={route('register')}
-                                            className="w-full sm:w-auto px-7 py-3.5 rounded-xl text-base font-bold text-white bg-stone-900 hover:bg-stone-800 dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-white shadow-sm transition-all active:scale-95 text-center"
+                                            className="w-full sm:w-auto px-7 py-3.5 rounded-xl text-base font-bold text-white bg-stone-900 hover:bg-stone-800 dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-white transition-all active:scale-95 text-center"
                                         >
                                             Mulai Sekarang, Gratis
                                         </Link>
@@ -82,13 +80,7 @@ export default function Welcome({
             {/* 4. Core Features Bento Grid */}
             <FeaturesBentoGrid />
 
-            {/* 5. Safe AI Spotlight */}
-            <AiAssistantSpotlight />
-
-            {/* 6. Data Portability Banner */}
-            <DataPortabilityBanner />
-
-            {/* 7. Final Conversion Banner */}
+            {/* 5. Final Conversion Banner */}
             <section className="py-20 bg-stone-900 text-white relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-r from-amber-600/20 to-rose-600/20 -z-10" />
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -101,7 +93,7 @@ export default function Welcome({
                     <div className="mt-8">
                         <Link
                             href={auth.user ? route('dashboard') : route('register')}
-                            className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-base font-bold text-stone-950 bg-amber-400 hover:bg-amber-300 shadow-xl shadow-amber-400/20 transition-all active:scale-95"
+                            className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-base font-bold text-stone-950 bg-amber-400 hover:bg-amber-300 transition-all active:scale-95"
                         >
                             {auth.user ? 'Buka Dashboard Anda' : 'Daftar Akun Gratis'}
                         </Link>
