@@ -1,132 +1,171 @@
+import { motion } from 'framer-motion';
+
 export default function FeaturesBentoGrid() {
     return (
-        <section id="features" className="py-24 bg-white dark:bg-stone-950">
+        <section id="features" className="py-20 sm:py-28 bg-white dark:bg-stone-950">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center max-w-3xl mx-auto mb-16">
-                    <h2 className="text-xs font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400 mb-2">
-                        Pilar Arsitektur Produk
+                {/* Section Header */}
+                <motion.div
+                    initial={{ opacity: 0, y: 16 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: '-60px' }}
+                    transition={{ duration: 0.5, ease: 'easeOut' }}
+                    className="text-center max-w-3xl mx-auto mb-14 sm:mb-16"
+                >
+                    <span className="text-xs font-semibold tracking-wider uppercase text-amber-700 dark:text-amber-400">
+                        Fitur Utama
+                    </span>
+                    <h2 className="mt-3 text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-stone-900 dark:text-stone-100 leading-snug">
+                        Kelola rutinitas dan refleksikan hari dalam satu alur.
                     </h2>
-                    <h3 className="text-3xl font-extrabold tracking-tight text-stone-900 dark:text-stone-100 sm:text-4xl">
-                        Empat modul terpadu dalam satu alur kerja harmonis.
-                    </h3>
-                    <p className="mt-4 text-base text-stone-600 dark:text-stone-400">
-                        Tidak ada lagi aplikasi terpisah antara catatan kebiasaan dan buku jurnal refleksi harian Anda.
+                    <p className="mt-4 text-base sm:text-lg text-stone-600 dark:text-stone-300 leading-relaxed">
+                        Empat fitur yang saling terhubung untuk membantumu menata kebiasaan, mencatat suasana hati, dan mengenali pola keseharian.
                     </p>
-                </div>
+                </motion.div>
 
-                {/* Bento Grid */}
+                {/* Grid Modules */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {/* Card 1: Habit Engine (Col-span 2) */}
-                    <div className="md:col-span-2 rounded-3xl bg-gradient-to-br from-stone-50 to-amber-50/40 dark:from-stone-900 dark:to-stone-900/60 border border-stone-200 dark:border-stone-800 p-8 flex flex-col justify-between">
+                    {/* Module 01: Habit Tracker (Col-span 2) */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 16 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: '-60px' }}
+                        transition={{ duration: 0.45, ease: 'easeOut' }}
+                        className="md:col-span-2 rounded-2xl bg-stone-50 dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 p-6 sm:p-8 flex flex-col justify-between"
+                    >
                         <div>
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 text-xs font-semibold mb-4">
-                                Modul 01 • Habit Engine
-                            </div>
-                            <h4 className="text-2xl font-bold text-stone-900 dark:text-stone-100 mb-3">
-                                Lacak Berbagai Jenis Target Sesuai Kebutuhan Nyata
-                            </h4>
-                            <p className="text-sm text-stone-600 dark:text-stone-400 max-w-xl leading-relaxed">
-                                Mendukung tipe target <strong>Boolean (ya/tidak)</strong>, <strong>Kuantitatif (misal: 8 gelas air)</strong>, dan <strong>Durasi (misal: 30 menit meditasi)</strong>. Lengkap dengan riwayat log backdating dan kalkulasi streak akurat.
+                            <span className="text-xs font-mono text-amber-700 dark:text-amber-400 font-semibold tracking-wide">
+                                01 • Habit Tracker
+                            </span>
+                            <h3 className="mt-2 text-xl sm:text-2xl font-bold text-stone-900 dark:text-stone-100">
+                                Atur dan pantau kebiasaan harian dengan mudah.
+                            </h3>
+                            <p className="mt-3 text-sm sm:text-base text-stone-600 dark:text-stone-300 max-w-xl leading-relaxed">
+                                Buat kebiasaan baru dengan target penyelesaian, jumlah hitungan, atau durasi waktu. Pantau jadwal, riwayat pencatatan, dan konsistensi harianmu dalam satu tampilan.
                             </p>
                         </div>
 
-                        <div className="mt-8 grid grid-cols-3 gap-3">
-                            <div className="p-3.5 rounded-2xl bg-white dark:bg-stone-800/80 border border-stone-200/60 dark:border-stone-700">
-                                <div className="text-xs font-semibold text-stone-500 dark:text-stone-400">Boolean</div>
+                        {/* Visual Preview */}
+                        <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div className="p-3.5 rounded-xl bg-white dark:bg-stone-850 border border-stone-200/80 dark:border-stone-800">
+                                <div className="text-xs text-stone-500 dark:text-stone-400 font-medium">Penyelesaian</div>
                                 <div className="text-sm font-bold text-stone-900 dark:text-stone-100 mt-1">1-Tap Selesai</div>
                             </div>
-                            <div className="p-3.5 rounded-2xl bg-white dark:bg-stone-800/80 border border-stone-200/60 dark:border-stone-700">
-                                <div className="text-xs font-semibold text-stone-500 dark:text-stone-400">Kuantitatif</div>
-                                <div className="text-sm font-bold text-stone-900 dark:text-stone-100 mt-1">Target Angka</div>
+                            <div className="p-3.5 rounded-xl bg-white dark:bg-stone-850 border border-stone-200/80 dark:border-stone-800">
+                                <div className="text-xs text-stone-500 dark:text-stone-400 font-medium">Target Jumlah</div>
+                                <div className="text-sm font-bold text-stone-900 dark:text-stone-100 mt-1">Misal: 8 Gelas Air</div>
                             </div>
-                            <div className="p-3.5 rounded-2xl bg-white dark:bg-stone-800/80 border border-stone-200/60 dark:border-stone-700">
-                                <div className="text-xs font-semibold text-stone-500 dark:text-stone-400">Durasi</div>
-                                <div className="text-sm font-bold text-stone-900 dark:text-stone-100 mt-1">Waktu Menit</div>
+                            <div className="p-3.5 rounded-xl bg-white dark:bg-stone-850 border border-stone-200/80 dark:border-stone-800">
+                                <div className="text-xs text-stone-500 dark:text-stone-400 font-medium">Target Durasi</div>
+                                <div className="text-sm font-bold text-stone-900 dark:text-stone-100 mt-1">Misal: 30 Menit Baca</div>
                             </div>
                         </div>
-                    </div>
+                    </motion.div>
 
-                    {/* Card 2: Mood & Emotion Tracking (Col-span 1) */}
-                    <div className="rounded-3xl bg-gradient-to-br from-stone-50 to-rose-50/40 dark:from-stone-900 dark:to-stone-900/60 border border-stone-200 dark:border-stone-800 p-8 flex flex-col justify-between">
+                    {/* Module 02: Mood Tracker (Col-span 1) */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 16 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: '-60px' }}
+                        transition={{ duration: 0.45, delay: 0.1, ease: 'easeOut' }}
+                        className="rounded-2xl bg-stone-50 dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 p-6 sm:p-8 flex flex-col justify-between"
+                    >
                         <div>
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-100 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300 text-xs font-semibold mb-4">
-                                Modul 02 • Mood Check-in
-                            </div>
-                            <h4 className="text-xl font-bold text-stone-900 dark:text-stone-100 mb-2">
-                                Skala Emosi Tanpa Bias
-                            </h4>
-                            <p className="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
-                                Catat suasana hati dalam skala 1–5 lengkap dengan pilihan emotion tags. Terhubung opsional ke jurnal untuk memahami pemicu emosi.
+                            <span className="text-xs font-mono text-rose-600 dark:text-rose-400 font-semibold tracking-wide">
+                                02 • Mood Tracker
+                            </span>
+                            <h3 className="mt-2 text-xl font-bold text-stone-900 dark:text-stone-100">
+                                Catat dan amati perubahan suasana hatimu.
+                            </h3>
+                            <p className="mt-3 text-sm text-stone-600 dark:text-stone-300 leading-relaxed">
+                                Pilih skala suasana hati dan tentukan emosi yang paling mewakili harimu. Hubungkan catatan ini dengan jurnal untuk melihat kembali momen yang kamu rasakan.
                             </p>
                         </div>
 
-                        <div className="mt-6 flex items-center justify-around py-3 px-2 rounded-2xl bg-white dark:bg-stone-800/80 border border-stone-200/60 dark:border-stone-700 text-lg">
-                            <span>😔</span>
-                            <span>😕</span>
-                            <span>😐</span>
-                            <span>🙂</span>
-                            <span className="scale-125">😊</span>
+                        {/* Visual Preview */}
+                        <div className="mt-6 flex items-center justify-between py-3.5 px-4 rounded-xl bg-white dark:bg-stone-850 border border-stone-200/80 dark:border-stone-800 text-lg">
+                            <span title="Sangat Buruk">😔</span>
+                            <span title="Kurang Baik">😕</span>
+                            <span title="Biasa Saja">😐</span>
+                            <span title="Baik">🙂</span>
+                            <span title="Sangat Baik">😊</span>
                         </div>
-                    </div>
+                    </motion.div>
 
-                    {/* Card 3: Dynamic Journaling (Col-span 1) */}
-                    <div className="rounded-3xl bg-gradient-to-br from-stone-50 to-indigo-50/40 dark:from-stone-900 dark:to-stone-900/60 border border-stone-200 dark:border-stone-800 p-8 flex flex-col justify-between">
+                    {/* Module 03: Daily Journal (Col-span 1) */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 16 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: '-60px' }}
+                        transition={{ duration: 0.45, delay: 0.15, ease: 'easeOut' }}
+                        className="rounded-2xl bg-stone-50 dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 p-6 sm:p-8 flex flex-col justify-between"
+                    >
                         <div>
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-100 dark:bg-indigo-950/60 text-indigo-800 dark:text-indigo-300 text-xs font-semibold mb-4">
-                                Modul 03 • Jurnal Dinamis
-                            </div>
-                            <h4 className="text-xl font-bold text-stone-900 dark:text-stone-100 mb-2">
-                                Template Refleksi Terarah
-                            </h4>
-                            <p className="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
-                                Dikelola admin sistem dengan metode teruji: Gratitude Journal, Stoic Evening, CBT Cognitive Reframe, dan Weekly Review.
+                            <span className="text-xs font-mono text-amber-700 dark:text-amber-400 font-semibold tracking-wide">
+                                03 • Daily Journal
+                            </span>
+                            <h3 className="mt-2 text-xl font-bold text-stone-900 dark:text-stone-100">
+                                Tulis catatan harian dengan panduan terarah.
+                            </h3>
+                            <p className="mt-3 text-sm text-stone-600 dark:text-stone-300 leading-relaxed">
+                                Tulis pikiranmu secara bebas atau gunakan template jurnal yang telah disediakan. Tersedia panduan seperti Gratitude, Stoic Reflection, CBT Reframe, dan Weekly Review.
                             </p>
                         </div>
 
+                        {/* Visual Preview */}
                         <div className="mt-6 space-y-2">
-                            <div className="text-xs p-2.5 rounded-xl bg-white dark:bg-stone-800/80 border border-stone-200/60 dark:border-stone-700 font-medium text-stone-800 dark:text-stone-200">
-                                Stoic: Apa yang di luar kendaliku?
+                            <div className="text-xs p-3 rounded-xl bg-white dark:bg-stone-850 border border-stone-200/80 dark:border-stone-800 font-medium text-stone-800 dark:text-stone-200">
+                                Gratitude: 3 Hal yang Disyukuri Hari Ini
                             </div>
-                            <div className="text-xs p-2.5 rounded-xl bg-white dark:bg-stone-800/80 border border-stone-200/60 dark:border-stone-700 font-medium text-stone-800 dark:text-stone-200">
-                                Gratitude: 3 Hal patut disyukuri
+                            <div className="text-xs p-3 rounded-xl bg-white dark:bg-stone-850 border border-stone-200/80 dark:border-stone-800 font-medium text-stone-800 dark:text-stone-200">
+                                Stoic: Apa yang Berada dalam Kendaliku?
                             </div>
                         </div>
-                    </div>
+                    </motion.div>
 
-                    {/* Card 4: Cross-Correlation Analytics (Col-span 2) */}
-                    <div className="md:col-span-2 rounded-3xl bg-gradient-to-br from-stone-50 to-emerald-50/40 dark:from-stone-900 dark:to-stone-900/60 border border-stone-200 dark:border-stone-800 p-8 flex flex-col justify-between">
+                    {/* Module 04: Mood & Habit Insights (Col-span 2) */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 16 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: '-60px' }}
+                        transition={{ duration: 0.45, delay: 0.2, ease: 'easeOut' }}
+                        className="md:col-span-2 rounded-2xl bg-stone-50 dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 p-6 sm:p-8 flex flex-col justify-between"
+                    >
                         <div>
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 text-xs font-semibold mb-4">
-                                Modul 04 • Korelasi Silang Analitik
-                            </div>
-                            <h4 className="text-2xl font-bold text-stone-900 dark:text-stone-100 mb-3">
-                                Temukan Hubungan Riil Antara Kebiasaan dan Suasana Hati
-                            </h4>
-                            <p className="text-sm text-stone-600 dark:text-stone-400 max-w-xl leading-relaxed">
-                                Bukan sekadar grafik biasa. Mindstep membandingkan rata-rata skor mood pada hari saat kebiasaan Anda tuntas 100% vs saat ada kebiasaan yang terlewatkan.
+                            <span className="text-xs font-mono text-emerald-700 dark:text-emerald-400 font-semibold tracking-wide">
+                                04 • Mood & Habit Insights
+                            </span>
+                            <h3 className="mt-2 text-xl sm:text-2xl font-bold text-stone-900 dark:text-stone-100">
+                                Pahami pola aktivitas dan suasana hatimu.
+                            </h3>
+                            <p className="mt-3 text-sm sm:text-base text-stone-600 dark:text-stone-300 max-w-xl leading-relaxed">
+                                Lihat ringkasan kebiasaan dan perhatikan kecenderungan suasana hati berdasarkan aktivitas yang telah tercatat. Temukan pola keseharian tanpa penilaian atau target yang menekan.
                             </p>
                         </div>
 
-                        <div className="mt-8 p-4 rounded-2xl bg-white dark:bg-stone-800/80 border border-stone-200/60 dark:border-stone-700 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        {/* Visual Preview */}
+                        <div className="mt-8 p-4 rounded-xl bg-white dark:bg-stone-850 border border-stone-200/80 dark:border-stone-800 flex flex-col sm:flex-row items-center justify-between gap-4">
                             <div>
                                 <div className="text-xs font-medium text-stone-500 dark:text-stone-400">
-                                    Rata-rata Mood Saat Habit 100% Tuntas:
+                                    Rata-rata Suasana Hati Saat Kebiasaan Tuntas:
                                 </div>
-                                <div className="text-xl font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-2 mt-0.5">
-                                    <span>4.6 / 5.0</span>
-                                    <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 font-semibold">Korelasi Positif</span>
+                                <div className="text-xl font-bold text-emerald-700 dark:text-emerald-400 flex items-center gap-2 mt-0.5">
+                                    <span>4.5 / 5.0</span>
+                                    <span className="text-xs px-2 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-950/70 text-emerald-800 dark:text-emerald-300 font-medium">
+                                        Pola Positif
+                                    </span>
                                 </div>
                             </div>
-                            <div>
+                            <div className="w-full sm:w-auto sm:border-l sm:border-stone-200 sm:dark:border-stone-800 sm:pl-6">
                                 <div className="text-xs font-medium text-stone-500 dark:text-stone-400">
-                                    Rata-rata Mood Saat Habit Terlewat:
+                                    Rata-rata Suasana Hati Saat Kebiasaan Terlewat:
                                 </div>
                                 <div className="text-xl font-bold text-stone-700 dark:text-stone-300 mt-0.5">
-                                    3.1 / 5.0
+                                    3.2 / 5.0
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </motion.div>
                 </div>
             </div>
         </section>
