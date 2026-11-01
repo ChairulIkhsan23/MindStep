@@ -1,8 +1,15 @@
 import { Link } from '@inertiajs/react';
+import { motion } from 'framer-motion';
 
 export default function LandingFooter() {
     return (
-        <footer className="bg-white dark:bg-stone-950 text-stone-600 dark:text-stone-400 border-t border-stone-200 dark:border-stone-800">
+        <motion.footer
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: false, amount: 0.2 }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
+            className="bg-white dark:bg-stone-950 text-stone-600 dark:text-stone-400 border-t border-stone-200 dark:border-stone-800"
+        >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
                     <div className="flex items-center gap-2">
@@ -21,6 +28,6 @@ export default function LandingFooter() {
                     </div>
                 </div>
             </div>
-        </footer>
+        </motion.footer>
     );
 }

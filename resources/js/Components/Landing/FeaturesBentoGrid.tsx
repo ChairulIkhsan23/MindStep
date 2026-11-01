@@ -6,9 +6,9 @@ export default function FeaturesBentoGrid() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Section Header */}
                 <motion.div
-                    initial={{ opacity: 0, y: 16 }}
+                    initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: '-60px' }}
+                    viewport={{ once: false, amount: 0.2 }}
                     transition={{ duration: 0.5, ease: 'easeOut' }}
                     className="text-center max-w-3xl mx-auto mb-14 sm:mb-16"
                 >
@@ -27,9 +27,9 @@ export default function FeaturesBentoGrid() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {/* Module 01: Habit Tracker (Col-span 2) */}
                     <motion.div
-                        initial={{ opacity: 0, y: 16 }}
+                        initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: '-60px' }}
+                        viewport={{ once: false, amount: 0.2 }}
                         transition={{ duration: 0.45, ease: 'easeOut' }}
                         className="md:col-span-2 rounded-2xl bg-stone-50 dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 p-6 sm:p-8 flex flex-col justify-between"
                     >
@@ -64,9 +64,9 @@ export default function FeaturesBentoGrid() {
 
                     {/* Module 02: Mood Tracker (Col-span 1) */}
                     <motion.div
-                        initial={{ opacity: 0, y: 16 }}
+                        initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: '-60px' }}
+                        viewport={{ once: false, amount: 0.2 }}
                         transition={{ duration: 0.45, delay: 0.1, ease: 'easeOut' }}
                         className="rounded-2xl bg-stone-50 dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 p-6 sm:p-8 flex flex-col justify-between"
                     >
@@ -94,9 +94,9 @@ export default function FeaturesBentoGrid() {
 
                     {/* Module 03: Daily Journal (Col-span 1) */}
                     <motion.div
-                        initial={{ opacity: 0, y: 16 }}
+                        initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: '-60px' }}
+                        viewport={{ once: false, amount: 0.2 }}
                         transition={{ duration: 0.45, delay: 0.15, ease: 'easeOut' }}
                         className="rounded-2xl bg-stone-50 dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 p-6 sm:p-8 flex flex-col justify-between"
                     >
@@ -125,9 +125,9 @@ export default function FeaturesBentoGrid() {
 
                     {/* Module 04: Mood & Habit Insights (Col-span 2) */}
                     <motion.div
-                        initial={{ opacity: 0, y: 16 }}
+                        initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: '-60px' }}
+                        viewport={{ once: false, amount: 0.2 }}
                         transition={{ duration: 0.45, delay: 0.2, ease: 'easeOut' }}
                         className="md:col-span-2 rounded-2xl bg-stone-50 dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 p-6 sm:p-8 flex flex-col justify-between"
                     >

@@ -6,9 +6,9 @@ export default function StoryBehindMindstep() {
             <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Section Header */}
                 <motion.div
-                    initial={{ opacity: 0, y: 16 }}
+                    initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: '-60px' }}
+                    viewport={{ once: false, amount: 0.2 }}
                     transition={{ duration: 0.5, ease: 'easeOut' }}
                     className="max-w-3xl"
                 >
@@ -27,9 +27,9 @@ export default function StoryBehindMindstep() {
                 <div className="mt-12 sm:mt-16 grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-14">
                     {/* Point 01: Latar Belakang */}
                     <motion.div
-                        initial={{ opacity: 0, y: 16 }}
+                        initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: '-60px' }}
+                        viewport={{ once: false, amount: 0.2 }}
                         transition={{ duration: 0.5, delay: 0.1, ease: 'easeOut' }}
                         className="rounded-2xl border border-stone-200/80 dark:border-stone-800 bg-white dark:bg-stone-900 p-6 sm:p-8"
                     >
@@ -47,9 +47,9 @@ export default function StoryBehindMindstep() {
 
                     {/* Point 02: Pendekatan */}
                     <motion.div
-                        initial={{ opacity: 0, y: 16 }}
+                        initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: '-60px' }}
+                        viewport={{ once: false, amount: 0.2 }}
                         transition={{ duration: 0.5, delay: 0.2, ease: 'easeOut' }}
                         className="rounded-2xl border border-stone-200/80 dark:border-stone-800 bg-white dark:bg-stone-900 p-6 sm:p-8"
                     >

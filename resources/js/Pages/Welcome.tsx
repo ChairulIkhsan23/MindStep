@@ -1,4 +1,8 @@
+import { useEffect } from 'react';
 import { Head, Link } from '@inertiajs/react';
+import { motion } from 'framer-motion';
+import Lenis from 'lenis';
+import 'lenis/dist/lenis.css';
 import { PageProps } from '@/types';
 import LandingNavbar from '@/Components/Landing/LandingNavbar';
 import MarkerHighlight from '@/Components/Landing/MarkerHighlight';
@@ -10,6 +14,43 @@ import LandingFooter from '@/Components/Landing/LandingFooter';
 export default function Welcome({
     auth,
 }: PageProps<{ laravelVersion?: string; phpVersion?: string }>) {
+    useEffect(() => {
+        const lenis = new Lenis({
+            duration: 1.1,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            smoothWheel: true,
+        });
+
+        let rafId: number;
+        function raf(time: number) {
+            lenis.raf(time);
+            rafId = requestAnimationFrame(raf);
+        }
+        rafId = requestAnimationFrame(raf);
+
+        const handleAnchorClick = (e: MouseEvent) => {
+            const target = (e.target as HTMLElement).closest('a[href^="#"]');
+            if (target) {
+                const href = target.getAttribute('href');
+                if (href && href.startsWith('#') && href.length > 1) {
+                    const el = document.querySelector(href);
+                    if (el) {
+                        e.preventDefault();
+                        lenis.scrollTo(el as HTMLElement, { offset: -64 });
+                    }
+                }
+            }
+        };
+
+        document.addEventListener('click', handleAnchorClick);
+
+        return () => {
+            document.removeEventListener('click', handleAnchorClick);
+            cancelAnimationFrame(rafId);
+            lenis.destroy();
+        };
+    }, []);
+
     return (
         <div className="min-h-screen bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100 antialiased selection:bg-amber-500 selection:text-white transition-colors duration-200">
             <Head title="Mindstep - Habit Tracker & Journaling Platform" />
@@ -22,7 +63,13 @@ export default function Welcome({
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center w-full">
                         {/* Hero Text */}
-                        <div className="lg:col-span-6 text-center lg:text-left">
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: false, amount: 0.2 }}
+                            transition={{ duration: 0.5, ease: 'easeOut' }}
+                            className="lg:col-span-6 text-center lg:text-left"
+                        >
                             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-stone-900 dark:text-stone-100 leading-[1.16]">
                                 Bangun rutinitas, pantau mood, dan dokumentasikan{' '}
                                 <MarkerHighlight
@@ -64,12 +111,18 @@ export default function Welcome({
                                     </>
                                 )}
                             </div>
-                        </div>
+                        </motion.div>
 
                         {/* Emoticon Journey Illustration */}
-                        <div className="lg:col-span-6 flex justify-center">
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: false, amount: 0.2 }}
+                            transition={{ duration: 0.5, delay: 0.1, ease: 'easeOut' }}
+                            className="lg:col-span-6 flex justify-center"
+                        >
                             <EmoticonJourneyIllustration />
-                        </div>
+                        </motion.div>
                     </div>
                 </div>
             </section>
@@ -83,7 +136,13 @@ export default function Welcome({
             {/* 5. Final Conversion Banner */}
             <section className="py-16 sm:py-24 bg-white dark:bg-stone-950">
                 <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="relative rounded-3xl bg-stone-900 text-white px-6 py-12 sm:px-12 sm:py-16 text-center overflow-hidden border border-stone-800 shadow-xl">
+                    <motion.div
+                        initial={{ opacity: 0, y: 24 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: false, amount: 0.2 }}
+                        transition={{ duration: 0.5, ease: 'easeOut' }}
+                        className="relative rounded-3xl bg-stone-900 text-white px-6 py-12 sm:px-12 sm:py-16 text-center overflow-hidden border border-stone-800 shadow-xl"
+                    >
                         <div className="absolute inset-0 bg-gradient-to-r from-amber-600/15 via-rose-600/10 to-amber-600/15 -z-10" />
                         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight leading-snug">
                             Mulai rapikan rutinitas dan catatan harianmu.
@@ -99,7 +158,7 @@ export default function Welcome({
                                 {auth.user ? 'Buka Dashboard Kamu' : 'Daftar Akun Gratis'}
                             </Link>
                         </div>
-                    </div>
+                    </motion.div>
                 </div>
             </section>
 
