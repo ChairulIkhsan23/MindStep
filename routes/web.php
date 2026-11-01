@@ -46,6 +46,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
 
+    Route::get('/ai-assistant', function () {
+        return Inertia::render('AiAssistant/Index');
+    })->name('ai-assistant.index');
+
     Route::get('/export/json', [DataExportController::class, 'exportJson'])->name('export.json');
     Route::get('/export/csv', [DataExportController::class, 'exportCsv'])->name('export.csv');
 
