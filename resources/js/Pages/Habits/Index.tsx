@@ -67,12 +67,12 @@ interface Props {
 }
 
 const COLOR_OPTIONS = [
-    { label: 'Amber', value: 'amber', bg: 'bg-amber-500', ring: 'ring-amber-500' },
-    { label: 'Emerald', value: 'emerald', bg: 'bg-emerald-500', ring: 'ring-emerald-500' },
-    { label: 'Rose', value: 'rose', bg: 'bg-rose-500', ring: 'ring-rose-500' },
-    { label: 'Sky', value: 'sky', bg: 'bg-sky-500', ring: 'ring-sky-500' },
-    { label: 'Indigo', value: 'indigo', bg: 'bg-indigo-500', ring: 'ring-indigo-500' },
-    { label: 'Violet', value: 'violet', bg: 'bg-violet-500', ring: 'ring-violet-500' },
+    { label: 'Amber', value: '#d97706', bg: 'bg-amber-500', ring: 'ring-amber-500' },
+    { label: 'Emerald', value: '#10b981', bg: 'bg-emerald-500', ring: 'ring-emerald-500' },
+    { label: 'Rose', value: '#f43f5e', bg: 'bg-rose-500', ring: 'ring-rose-500' },
+    { label: 'Sky', value: '#0284c7', bg: 'bg-sky-500', ring: 'ring-sky-500' },
+    { label: 'Indigo', value: '#6366f1', bg: 'bg-indigo-500', ring: 'ring-indigo-500' },
+    { label: 'Violet', value: '#8b5cf6', bg: 'bg-violet-500', ring: 'ring-violet-500' },
 ];
 
 const DAYS_OF_WEEK = [
@@ -110,7 +110,7 @@ export default function HabitsIndex({
         scheduled_days: [1, 2, 3, 4, 5, 6, 7] as number[],
         weekly_target_days: 5,
         start_date: filter_date,
-        color: 'amber',
+        color: '#d97706',
         icon: 'check',
     });
 
@@ -128,7 +128,7 @@ export default function HabitsIndex({
             scheduled_days: [1, 2, 3, 4, 5, 6, 7],
             weekly_target_days: 5,
             start_date: filter_date,
-            color: 'amber',
+            color: '#d97706',
             icon: 'check',
         });
         setIsModalOpen(true);
@@ -147,7 +147,7 @@ export default function HabitsIndex({
             scheduled_days: habit.scheduled_days ?? [1, 2, 3, 4, 5, 6, 7],
             weekly_target_days: habit.weekly_target_days ?? 5,
             start_date: habit.start_date,
-            color: habit.color ?? 'amber',
+            color: habit.color ?? '#d97706',
             icon: habit.icon ?? 'check',
         });
         setActiveMenuId(null);
@@ -455,19 +455,6 @@ export default function HabitsIndex({
                             const targetVal = Number(habit.target_value);
                             const percent = Math.min(100, Math.round((actualVal / targetVal) * 100));
 
-                            const colorStyle =
-                                habit.color === 'emerald'
-                                    ? 'bg-emerald-500'
-                                    : habit.color === 'rose'
-                                    ? 'bg-rose-500'
-                                    : habit.color === 'sky'
-                                    ? 'bg-sky-500'
-                                    : habit.color === 'indigo'
-                                    ? 'bg-indigo-500'
-                                    : habit.color === 'violet'
-                                    ? 'bg-violet-500'
-                                    : 'bg-amber-500';
-
                             return (
                                 <div
                                     key={habit.id}
@@ -483,7 +470,10 @@ export default function HabitsIndex({
                                     <div>
                                         <div className="flex items-start justify-between gap-2">
                                             <div className="flex items-center gap-2">
-                                                <span className={`w-2.5 h-2.5 rounded-full ${colorStyle}`} />
+                                                <span
+                                                    className="w-2.5 h-2.5 rounded-full"
+                                                    style={{ backgroundColor: habit.color || '#d97706' }}
+                                                />
                                                 <span className="text-[11px] font-semibold text-stone-500 dark:text-stone-400 capitalize">
                                                     {habit.frequency_type === 'daily'
                                                         ? 'Harian'
