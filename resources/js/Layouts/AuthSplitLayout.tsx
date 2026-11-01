@@ -6,10 +6,10 @@ import { ReactNode } from 'react';
 
 interface AuthSplitLayoutProps {
     children: ReactNode;
-    mode: 'login' | 'register';
+    mode?: 'login' | 'register' | 'forgot-password' | 'reset-password';
 }
 
-export default function AuthSplitLayout({ children, mode }: AuthSplitLayoutProps) {
+export default function AuthSplitLayout({ children, mode = 'login' }: AuthSplitLayoutProps) {
     return (
         <div className="min-h-screen lg:h-screen w-full bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100 antialiased selection:bg-amber-500 selection:text-white flex flex-col justify-between overflow-x-hidden lg:overflow-hidden">
             {/* Top Bar */}
@@ -23,13 +23,39 @@ export default function AuthSplitLayout({ children, mode }: AuthSplitLayoutProps
                     </Link>
 
                     <div className="flex items-center gap-2 text-xs sm:text-sm text-stone-600 dark:text-stone-400">
-                        <span>{mode === 'login' ? 'Belum punya akun?' : 'Sudah punya akun?'}</span>
-                        <Link
-                            href={mode === 'login' ? route('register') : route('login')}
-                            className="font-semibold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 underline underline-offset-4 transition-colors"
-                        >
-                            {mode === 'login' ? 'Daftar' : 'Masuk'}
-                        </Link>
+                        {mode === 'login' && (
+                            <>
+                                <span>Belum punya akun?</span>
+                                <Link
+                                    href={route('register')}
+                                    className="font-semibold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 underline underline-offset-4 transition-colors"
+                                >
+                                    Daftar
+                                </Link>
+                            </>
+                        )}
+                        {mode === 'register' && (
+                            <>
+                                <span>Sudah punya akun?</span>
+                                <Link
+                                    href={route('login')}
+                                    className="font-semibold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 underline underline-offset-4 transition-colors"
+                                >
+                                    Masuk
+                                </Link>
+                            </>
+                        )}
+                        {(mode === 'forgot-password' || mode === 'reset-password') && (
+                            <>
+                                <span>Ingat kata sandi?</span>
+                                <Link
+                                    href={route('login')}
+                                    className="font-semibold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 underline underline-offset-4 transition-colors"
+                                >
+                                    Masuk Sekarang
+                                </Link>
+                            </>
+                        )}
                     </div>
                 </div>
             </header>
