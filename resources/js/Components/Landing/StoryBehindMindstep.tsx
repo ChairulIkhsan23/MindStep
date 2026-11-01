@@ -65,19 +65,6 @@ export default function StoryBehindMindstep() {
                         </p>
                     </motion.div>
                 </div>
-
-                {/* Closing Quote */}
-                <motion.div
-                    initial={{ opacity: 0, y: 16 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: '-60px' }}
-                    transition={{ duration: 0.5, delay: 0.3, ease: 'easeOut' }}
-                    className="mt-8 sm:mt-10 p-6 sm:p-8 rounded-2xl bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-900/40 text-stone-700 dark:text-stone-300"
-                >
-                    <p className="text-sm sm:text-base leading-relaxed italic text-stone-800 dark:text-stone-200">
-                        &ldquo;Mindstep hadir untuk memberikan satu ruang terpadu yang tenang, agar kamu dapat menata aktivitas hari ini dan mengingat kembali pengalaman hidupmu dengan lebih jernih.&rdquo;
-                    </p>
-                </motion.div>
             </div>
         </section>
     );
