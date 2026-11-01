@@ -53,7 +53,7 @@ export default function Welcome({
 
     return (
         <div className="min-h-screen bg-white dark:bg-stone-950 text-stone-900 dark:text-stone-100 antialiased selection:bg-amber-500 selection:text-white transition-colors duration-200">
-            <Head title="Mindstep - Habit Tracker & Journaling Platform" />
+            <Head title="MindStep - Habit Tracker & Journaling Platform" />
 
             {/* 1. Sticky Navigation */}
             <LandingNavbar user={auth.user} />

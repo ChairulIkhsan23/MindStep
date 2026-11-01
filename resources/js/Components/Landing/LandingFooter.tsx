@@ -13,7 +13,7 @@ export default function LandingFooter() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
                     <div className="flex items-center gap-2">
-                        <span className="font-bold text-stone-900 dark:text-stone-100">Mindstep</span>
+                        <span className="font-bold text-stone-900 dark:text-stone-100">MindStep</span>
                         <span>•</span>
                         <span>© {new Date().getFullYear()} Hak Cipta Dilindungi.</span>
                     </div>

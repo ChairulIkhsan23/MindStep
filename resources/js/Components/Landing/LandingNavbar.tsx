@@ -1,4 +1,5 @@
 import { Link } from '@inertiajs/react';
+import ApplicationLogo from '@/Components/ApplicationLogo';
 import { User } from '@/types';
 import { useEffect, useState } from 'react';
 
@@ -28,14 +29,10 @@ export default function LandingNavbar({ user }: Props) {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     {/* Brand */}
-                    <Link href="/" className="flex items-center gap-3 group">
-                        <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-600 to-rose-500 flex items-center justify-center text-white shadow-sm shadow-amber-500/20 group-hover:scale-105 transition-transform">
-                            <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
-                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-                            </svg>
-                        </div>
+                    <Link href="/" className="flex items-center gap-2.5 group">
+                        <ApplicationLogo className="w-8 h-8 group-hover:scale-105 transition-transform" />
                         <span className="font-bold text-xl tracking-tight text-stone-900 dark:text-stone-100">
-                            Mind<span className="text-amber-600 dark:text-amber-400">step</span>
+                            Mind<span className="text-amber-600 dark:text-amber-400">Step</span>
                         </span>
                     </Link>
 
