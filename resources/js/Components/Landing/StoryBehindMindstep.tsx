@@ -16,16 +16,16 @@ export default function StoryBehindMindstep() {
                         Cerita di Balik Mindstep
                     </span>
                     <h2 className="mt-3 text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-stone-900 dark:text-stone-100 leading-snug">
-                        Karena keseharian tidak selalu berjalan sesuai rencana.
+                        Menyatukan rutinitas, suasana hati, dan cerita harian dalam satu tempat.
                     </h2>
                     <p className="mt-5 text-base sm:text-lg text-stone-600 dark:text-stone-300 leading-relaxed">
-                        Menjaga kebiasaan, mengatur aktivitas, dan mencatat apa yang dirasakan terdengar sederhana di atas kertas. Namun dalam realitas sehari-hari, ada hari yang berjalan lancar, dan ada pula hari ketika banyak hal terasa melelahkan.
+                        Setiap hari membawa ritme yang berbeda. Ada kebiasaan yang ingin dijaga, suasana hati yang naik turun, dan berbagai momen yang ingin diingat. Namun sering kali, hal-hal tersebut tercecer di berbagai catatan terpisah atau terlewat begitu saja tanpa sempat dirangkum.
                     </p>
                 </motion.div>
 
                 {/* Editorial Narrative Split */}
                 <div className="mt-12 sm:mt-16 grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-14">
-                    {/* Perspective 1: Realita Tekanan Produktivitas */}
+                    {/* Point 01: Latar Belakang */}
                     <motion.div
                         initial={{ opacity: 0, y: 16 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -34,17 +34,17 @@ export default function StoryBehindMindstep() {
                         className="rounded-2xl border border-stone-200/80 dark:border-stone-800 bg-white dark:bg-stone-900 p-6 sm:p-8"
                     >
                         <span className="text-xs font-mono text-stone-400 dark:text-stone-500">
-                            01 / Realitas
+                            01 / Latar Belakang
                         </span>
                         <h3 className="mt-2 text-lg font-bold text-stone-900 dark:text-stone-100">
-                            Tekanan untuk selalu konsisten
+                            Keseharian yang tersebar di banyak tempat
                         </h3>
                         <p className="mt-3 text-sm sm:text-base text-stone-600 dark:text-stone-300 leading-relaxed">
-                            Banyak aplikasi produktivitas berfokus pada target tanpa henti dan hitungan streak yang kaku. Ketika satu hari terlewat karena kesibukan atau kondisi tubuh yang menurun, yang muncul sering kali bukan motivasi, melainkan rasa bersalah.
+                            Mengelola aktivitas harian biasanya membutuhkan beberapa tempat berbeda: satu untuk memeriksa kebiasaan, satu untuk mencatat suasana hati, dan tempat lain untuk menuliskan kejadian penting. Ketika pencatatan terpecah-pecah, kita kehilangan gambaran utuh tentang apa yang sebenarnya terjadi dalam keseharian kita.
                         </p>
                     </motion.div>
 
-                    {/* Perspective 2: Ruang yang Disediakan Mindstep */}
+                    {/* Point 02: Pendekatan */}
                     <motion.div
                         initial={{ opacity: 0, y: 16 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -56,15 +56,15 @@ export default function StoryBehindMindstep() {
                             02 / Pendekatan
                         </span>
                         <h3 className="mt-2 text-lg font-bold text-stone-900 dark:text-stone-100">
-                            Satu tempat tenang untuk kembali
+                            Satu ruang terpadu yang fleksibel
                         </h3>
                         <p className="mt-3 text-sm sm:text-base text-stone-600 dark:text-stone-300 leading-relaxed">
-                            Mindstep dibuat dari kebutuhan sederhana: ruang yang tidak menuntut kesempurnaan. Tempat terpadu untuk merapikan rutinitas harian, mencatat suasana hati, dan menuliskan apa yang dialami tanpa keharusan memenuhi ekspektasi siapa pun.
+                            Mindstep dirancang untuk menyatukan ketiga hal tersebut dalam alur yang sederhana dan praktis. Kamu memiliki kebebasan untuk mengatur rutinitas, mendokumentasikan apa yang dirasakan, dan melihat kembali progres harian sesuai kebutuhan dan ritme pribadimu.
                         </p>
                     </motion.div>
                 </div>
 
-                {/* Editorial Closing Note */}
+                {/* Closing Quote */}
                 <motion.div
                     initial={{ opacity: 0, y: 16 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -73,7 +73,7 @@ export default function StoryBehindMindstep() {
                     className="mt-8 sm:mt-10 p-6 sm:p-8 rounded-2xl bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-900/40 text-stone-700 dark:text-stone-300"
                 >
                     <p className="text-sm sm:text-base leading-relaxed italic text-stone-800 dark:text-stone-200">
-                        &ldquo;Bukan tentang mengejar catatan tanpa cela setiap hari, melainkan memiliki wadah yang nyaman untuk memahami ritme diri sendiri dan melanjutkan langkah kapan pun kamu siap.&rdquo;
+                        &ldquo;Mindstep hadir untuk memberikan satu ruang terpadu yang tenang, agar kamu dapat menata aktivitas hari ini dan mengingat kembali pengalaman hidupmu dengan lebih jernih.&rdquo;
                     </p>
                 </motion.div>
             </div>
