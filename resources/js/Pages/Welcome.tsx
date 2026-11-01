@@ -81,22 +81,24 @@ export default function Welcome({
             <FeaturesBentoGrid />
 
             {/* 5. Final Conversion Banner */}
-            <section className="py-20 bg-stone-900 text-white relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-r from-amber-600/20 to-rose-600/20 -z-10" />
-                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
-                        Mulai rapikan rutinitas dan catatan harianmu.
-                    </h2>
-                    <p className="mt-4 text-base text-stone-300 max-w-xl mx-auto">
-                        Buat kebiasaan baru, catat apa yang kamu rasakan, dan simpan ceritamu hari ini. Kamu bisa mulai kapan saja dengan ritmemu sendiri.
-                    </p>
-                    <div className="mt-8">
-                        <Link
-                            href={auth.user ? route('dashboard') : route('register')}
-                            className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-base font-bold text-stone-950 bg-amber-400 hover:bg-amber-300 transition-all active:scale-95"
-                        >
-                            {auth.user ? 'Buka Dashboard Kamu' : 'Daftar Akun Gratis'}
-                        </Link>
+            <section className="py-16 sm:py-24 bg-white dark:bg-stone-950">
+                <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="relative rounded-3xl bg-stone-900 text-white px-6 py-12 sm:px-12 sm:py-16 text-center overflow-hidden border border-stone-800 shadow-xl">
+                        <div className="absolute inset-0 bg-gradient-to-r from-amber-600/15 via-rose-600/10 to-amber-600/15 -z-10" />
+                        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight leading-snug">
+                            Mulai rapikan rutinitas dan catatan harianmu.
+                        </h2>
+                        <p className="mt-4 text-sm sm:text-base text-stone-300 max-w-xl mx-auto leading-relaxed">
+                            Buat kebiasaan baru, catat apa yang kamu rasakan, dan simpan ceritamu hari ini. Kamu bisa mulai kapan saja dengan ritmemu sendiri.
+                        </p>
+                        <div className="mt-8 flex justify-center">
+                            <Link
+                                href={auth.user ? route('dashboard') : route('register')}
+                                className="inline-flex items-center gap-2 px-7 py-3.5 sm:px-8 sm:py-4 rounded-2xl text-base font-bold text-stone-950 bg-amber-400 hover:bg-amber-300 transition-all active:scale-95"
+                            >
+                                {auth.user ? 'Buka Dashboard Kamu' : 'Daftar Akun Gratis'}
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </section>

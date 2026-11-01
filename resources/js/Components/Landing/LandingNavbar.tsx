@@ -7,41 +7,15 @@ interface Props {
 }
 
 export default function LandingNavbar({ user }: Props) {
-    const [isDark, setIsDark] = useState<boolean>(false);
     const [scrolled, setScrolled] = useState<boolean>(false);
 
     useEffect(() => {
-        const root = document.documentElement;
-        if (
-            localStorage.theme === 'dark' ||
-            (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
-        ) {
-            root.classList.add('dark');
-            setIsDark(true);
-        } else {
-            root.classList.remove('dark');
-            setIsDark(false);
-        }
-
         const handleScroll = () => {
             setScrolled(window.scrollY > 20);
         };
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
-
-    const toggleTheme = () => {
-        const root = document.documentElement;
-        if (isDark) {
-            root.classList.remove('dark');
-            localStorage.setItem('theme', 'light');
-            setIsDark(false);
-        } else {
-            root.classList.add('dark');
-            localStorage.setItem('theme', 'dark');
-            setIsDark(true);
-        }
-    };
 
     return (
         <header
@@ -78,25 +52,8 @@ export default function LandingNavbar({ user }: Props) {
                         </a>
                     </nav>
 
-                    {/* Action & Theme */}
+                    {/* Action */}
                     <div className="flex items-center gap-3">
-                        <button
-                            type="button"
-                            onClick={toggleTheme}
-                            aria-label="Toggle theme"
-                            className="p-2 rounded-lg text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
-                        >
-                            {isDark ? (
-                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                                </svg>
-                            ) : (
-                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                                </svg>
-                            )}
-                        </button>
-
                         {user ? (
                             <Link
                                 href={route('dashboard')}
