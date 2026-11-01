@@ -38,23 +38,32 @@ export default function AuthSplitLayout({ children, mode }: AuthSplitLayoutProps
                 {/* Left Column: Brand Experience */}
                 <aside className="lg:col-span-6 flex flex-col justify-center gap-3.5 xl:gap-4 order-2 lg:order-1 select-none">
                     {/* A. Hero / Daily Reflection Card */}
-                    <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden border border-stone-200/90 dark:border-stone-800 bg-stone-900 text-white p-5 sm:p-6 shadow-sm">
-                        <div className="absolute inset-0 bg-gradient-to-br from-stone-900 via-stone-850 to-stone-950 -z-10" />
-                        <div className="absolute -top-24 -right-24 w-72 h-72 rounded-full bg-amber-500/10 blur-3xl pointer-events-none -z-10" />
-                        <div className="absolute -bottom-24 -left-24 w-72 h-72 rounded-full bg-rose-500/10 blur-3xl pointer-events-none -z-10" />
+                    <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden border border-stone-200/90 dark:border-stone-800 text-white p-5 sm:p-6 shadow-sm min-h-[170px] sm:min-h-[190px] flex flex-col justify-between">
+                        {/* Realistic Peaceful Landscape Background Image */}
+                        <img
+                            src="/images/daily-reflection.jpg"
+                            alt="Suasana tenang refleksi dan kebiasaan harian"
+                            className="absolute inset-0 w-full h-full object-cover object-center -z-20"
+                        />
+                        {/* Dark Gradient Overlay to guarantee text legibility */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-stone-950/90 via-stone-950/70 to-stone-950/40 -z-10" />
 
-                        <div className="flex items-center gap-2 text-[10px] sm:text-[11px] font-bold tracking-wider uppercase text-amber-400">
-                            <Sparkles className="w-3.5 h-3.5" />
-                            <span>Refleksi Harian</span>
+                        {/* Top Label */}
+                        <div>
+                            <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-stone-900/70 backdrop-blur-sm border border-white/10 text-[10px] sm:text-[11px] font-bold tracking-wider uppercase text-stone-200">
+                                Refleksi Harian
+                            </span>
                         </div>
 
-                        <blockquote className="mt-2.5 text-base sm:text-lg font-bold tracking-tight text-stone-100 leading-snug">
-                            &ldquo;Langkah kecil yang diulang setiap hari jauh lebih bermakna daripada lompatan besar yang hanya bertahan sesaat.&rdquo;
-                        </blockquote>
+                        {/* Quote & Attribution */}
+                        <div className="mt-3">
+                            <blockquote className="text-base sm:text-lg font-bold tracking-tight text-white leading-snug drop-shadow-sm">
+                                &ldquo;Kemajuan bukanlah lompatan raksasa, melainkan satu langkah sadar yang diulang setiap hari.&rdquo;
+                            </blockquote>
 
-                        <div className="mt-3 pt-3 border-t border-stone-800/80 flex items-center justify-between text-xs text-stone-400">
-                            <span>Kunci Konsistensi Rutinitas</span>
-                            <span className="font-mono text-stone-500">MindStep Focus</span>
+                            <p className="mt-2 text-xs text-stone-300 font-medium drop-shadow-sm">
+                                &mdash; James Clear, Filosofi Kaizen
+                            </p>
                         </div>
                     </div>
 
