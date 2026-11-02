@@ -111,9 +111,6 @@ export default function HabitsIndex({
     showing_archived,
 }: Props) {
     const [searchQuery, setSearchQuery] = useState('');
-    const [selectedTab, setSelectedTab] = useState<'all' | 'active' | 'archived'>(
-        showing_archived ? 'archived' : 'all'
-    );
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingHabit, setEditingHabit] = useState<HabitItem | null>(null);
     const [activeMenuId, setActiveMenuId] = useState<number | null>(null);
@@ -340,17 +337,13 @@ export default function HabitsIndex({
 
     const filteredHabits = useMemo(() => {
         return habits.filter((h) => {
-            if (selectedTab === 'active' && h.is_archived) return false;
-            if (selectedTab === 'archived' && !h.is_archived) return false;
             if (searchQuery.trim() === '') return true;
             return (
                 h.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 (h.description && h.description.toLowerCase().includes(searchQuery.toLowerCase()))
             );
         });
-    }, [habits, selectedTab, searchQuery]);
-
-    const activeCount = habits.filter((h) => !h.is_archived).length;
+    }, [habits, searchQuery]);
 
     const formattedRange = useMemo(() => {
         if (!week_start || !week_end) return '';
@@ -412,50 +405,8 @@ export default function HabitsIndex({
                     </div>
                 </div>
 
-                {/* Filter Tabs & Search */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div className="flex items-center gap-2 text-xs font-semibold">
-                        <button
-                            onClick={() => {
-                                setSelectedTab('all');
-                                if (showing_archived) toggleArchivedView(false);
-                            }}
-                            className={`px-3 py-1.5 rounded-full transition-all ${
-                                selectedTab === 'all'
-                                    ? 'bg-amber-600 text-white shadow-sm'
-                                    : 'bg-white dark:bg-stone-900 border border-stone-200/90 dark:border-stone-800 text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-850'
-                            }`}
-                        >
-                            Semua ({habits.length})
-                        </button>
-                        <button
-                            onClick={() => {
-                                setSelectedTab('active');
-                                if (showing_archived) toggleArchivedView(false);
-                            }}
-                            className={`px-3 py-1.5 rounded-full transition-all ${
-                                selectedTab === 'active'
-                                    ? 'bg-amber-600 text-white shadow-sm'
-                                    : 'bg-white dark:bg-stone-900 border border-stone-200/90 dark:border-stone-800 text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-850'
-                            }`}
-                        >
-                            Aktif ({activeCount})
-                        </button>
-                        <button
-                            onClick={() => {
-                                setSelectedTab('archived');
-                                toggleArchivedView(true);
-                            }}
-                            className={`px-3 py-1.5 rounded-full transition-all ${
-                                selectedTab === 'archived'
-                                    ? 'bg-amber-600 text-white shadow-sm'
-                                    : 'bg-white dark:bg-stone-900 border border-stone-200/90 dark:border-stone-800 text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-850'
-                            }`}
-                        >
-                            Arsip ({archived_count})
-                        </button>
-                    </div>
-
+                {/* Search */}
+                <div className="flex justify-end">
                     <div className="relative w-full sm:w-64">
                         <Search className="w-3.5 h-3.5 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
                         <input
