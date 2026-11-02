@@ -1,24 +1,38 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, router, useForm } from '@inertiajs/react';
 import {
+    Activity,
     AlertCircle,
+    Apple,
     Archive,
     ArchiveRestore,
+    BookOpen,
+    Brain,
     Check,
     ChevronLeft,
     ChevronRight,
     Clock,
+    Coffee,
+    Droplets,
+    Dumbbell,
     Edit3,
     Flame,
+    Footprints,
     Hash,
+    Heart,
     Minus,
+    Moon,
     MoreVertical,
+    PenLine,
     Plus,
     Search,
+    Smile,
     Snowflake,
     Sparkles,
+    Sun,
     Trash2,
     X,
+    Zap,
 } from 'lucide-react';
 import { FormEvent, useMemo, useState } from 'react';
 
@@ -89,6 +103,25 @@ const COLOR_OPTIONS = [
     { label: 'Violet', value: '#8b5cf6', bg: 'bg-violet-500', ring: 'ring-violet-500' },
 ];
 
+const LUCIDE_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
+    check: Check,
+    droplets: Droplets,
+    book: BookOpen,
+    dumbbell: Dumbbell,
+    brain: Brain,
+    moon: Moon,
+    sun: Sun,
+    heart: Heart,
+    apple: Apple,
+    sparkles: Sparkles,
+    zap: Zap,
+    coffee: Coffee,
+    footprints: Footprints,
+    pen: PenLine,
+    smile: Smile,
+    activity: Activity,
+};
+
 const DAYS_OF_WEEK = [
     { value: 1, label: 'Sen' },
     { value: 2, label: 'Sel' },
@@ -116,6 +149,12 @@ export default function HabitsIndex({
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingHabit, setEditingHabit] = useState<HabitItem | null>(null);
     const [activeMenuId, setActiveMenuId] = useState<number | null>(null);
+
+    // Inline Editing states
+    const [inlineNameId, setInlineNameId] = useState<number | null>(null);
+    const [inlineNameValue, setInlineNameValue] = useState<string>('');
+    const [activeStylePopoverId, setActiveStylePopoverId] = useState<number | null>(null);
+    const [activeTypePopoverId, setActiveTypePopoverId] = useState<number | null>(null);
 
     // Quick popover cell editor for quantitative / duration
     const [activeCellEdit, setActiveCellEdit] = useState<{
@@ -197,6 +236,49 @@ export default function HabitsIndex({
         }
     };
 
+    // Inline updates
+    const saveInlineName = (habit: HabitItem) => {
+        const trimmed = inlineNameValue.trim();
+        if (trimmed && trimmed !== habit.name) {
+            router.put(
+                route('habits.update', habit.id),
+                { name: trimmed },
+                { preserveScroll: true, preserveState: true }
+            );
+        }
+        setInlineNameId(null);
+    };
+
+    const saveInlineStyle = (habit: HabitItem, newColor?: string, newIcon?: string) => {
+        router.put(
+            route('habits.update', habit.id),
+            {
+                color: newColor ?? habit.color ?? '#d97706',
+                icon: newIcon ?? habit.icon ?? 'check',
+            },
+            { preserveScroll: true, preserveState: true }
+        );
+        setActiveStylePopoverId(null);
+    };
+
+    const saveInlineTarget = (
+        habit: HabitItem,
+        type: 'boolean' | 'quantitative' | 'duration',
+        targetVal: number,
+        unitVal: string
+    ) => {
+        router.put(
+            route('habits.update', habit.id),
+            {
+                measurement_type: type,
+                target_value: targetVal,
+                unit: type === 'boolean' ? '' : unitVal,
+            },
+            { preserveScroll: true, preserveState: true }
+        );
+        setActiveTypePopoverId(null);
+    };
+
     const handleShiftWeek = (days: number) => {
         const d = new Date(filter_date);
         d.setDate(d.getDate() + days);
@@ -240,7 +322,6 @@ export default function HabitsIndex({
                 );
             }
         } else {
-            // Quantitative / duration: buka quick editor
             setActiveCellEdit({
                 habit,
                 date: dateStr,
@@ -328,6 +409,11 @@ export default function HabitsIndex({
         return `${d1.toLocaleDateString('id-ID', opt)} - ${d2.toLocaleDateString('id-ID', { ...opt, year: 'numeric' })}`;
     }, [week_start, week_end]);
 
+    const renderHabitIcon = (iconName: string | null, className = 'w-3.5 h-3.5 text-white') => {
+        const IconComponent = (iconName && LUCIDE_ICONS[iconName]) || Check;
+        return <IconComponent className={className} />;
+    };
+
     return (
         <AuthenticatedLayout>
             <Head title="Habit Tracker - MindStep" />
@@ -349,7 +435,7 @@ export default function HabitsIndex({
                             Habit Tracker
                         </h1>
                         <p className="mt-1 text-xs sm:text-sm text-stone-500 dark:text-stone-400">
-                            Catat dan pantau konsistensi seluruh rutinitas harianmu dalam spreadsheet mingguan terpadu.
+                            Klik nama, icon warna, atau tipe target langsung pada tabel untuk mengedit secara cepat.
                         </p>
                     </div>
 
@@ -504,22 +590,119 @@ export default function HabitsIndex({
                                                 key={habit.id}
                                                 className="hover:bg-stone-50/50 dark:hover:bg-stone-850/30 transition-colors"
                                             >
-                                                {/* Kolom Info Habit */}
+                                                {/* Kolom Info Habit (Inline Edit Icon, Warna & Nama) */}
                                                 <td className="py-3.5 pl-5 pr-4">
-                                                    <div className="flex items-center gap-2.5">
-                                                        <span
-                                                            className="w-3 h-3 rounded-full flex-shrink-0"
-                                                            style={{ backgroundColor: habit.color || '#d97706' }}
-                                                        />
-                                                        <div>
-                                                            <div className="font-bold text-stone-900 dark:text-stone-100 flex items-center gap-1.5">
-                                                                <span>{habit.name}</span>
-                                                                {habit.is_archived && (
-                                                                    <span className="text-[10px] font-semibold text-stone-400 px-1.5 py-0.2 rounded bg-stone-100 dark:bg-stone-800">
-                                                                        Arsip
+                                                    <div className="flex items-center gap-2.5 relative">
+                                                        {/* Icon & Color Trigger Button */}
+                                                        <div className="relative">
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => {
+                                                                    setActiveStylePopoverId(
+                                                                        activeStylePopoverId === habit.id ? null : habit.id
+                                                                    );
+                                                                    setActiveTypePopoverId(null);
+                                                                }}
+                                                                title="Ubah icon & warna habit"
+                                                                className="w-7 h-7 rounded-xl flex items-center justify-center shadow-sm hover:scale-105 transition-transform"
+                                                                style={{ backgroundColor: habit.color || '#d97706' }}
+                                                            >
+                                                                {renderHabitIcon(habit.icon)}
+                                                            </button>
+
+                                                            {/* Popover Icon & Color Picker */}
+                                                            {activeStylePopoverId === habit.id && (
+                                                                <div className="absolute left-0 top-9 w-60 p-3 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl shadow-2xl z-30 space-y-3">
+                                                                    <div>
+                                                                        <label className="text-[10px] font-bold uppercase tracking-wider text-stone-400 block mb-1.5">
+                                                                            Pilih Warna
+                                                                        </label>
+                                                                        <div className="flex items-center gap-1.5">
+                                                                            {COLOR_OPTIONS.map((c) => (
+                                                                                <button
+                                                                                    key={c.value}
+                                                                                    type="button"
+                                                                                    onClick={() =>
+                                                                                        saveInlineStyle(habit, c.value, undefined)
+                                                                                    }
+                                                                                    className={`w-6 h-6 rounded-full ${c.bg} flex items-center justify-center transition-all ${
+                                                                                        habit.color === c.value ? 'ring-2 ring-offset-2 ' + c.ring : 'opacity-80'
+                                                                                    }`}
+                                                                                >
+                                                                                    {habit.color === c.value && (
+                                                                                        <Check className="w-3.5 h-3.5 text-white stroke-[3]" />
+                                                                                    )}
+                                                                                </button>
+                                                                            ))}
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div>
+                                                                        <label className="text-[10px] font-bold uppercase tracking-wider text-stone-400 block mb-1.5">
+                                                                            Pilih Icon Lucide
+                                                                        </label>
+                                                                        <div className="grid grid-cols-4 gap-1.5 max-h-36 overflow-y-auto pr-1">
+                                                                            {Object.keys(LUCIDE_ICONS).map((iconKey) => {
+                                                                                const IconComp = LUCIDE_ICONS[iconKey];
+                                                                                const isSelected = habit.icon === iconKey;
+                                                                                return (
+                                                                                    <button
+                                                                                        key={iconKey}
+                                                                                        type="button"
+                                                                                        onClick={() =>
+                                                                                            saveInlineStyle(habit, undefined, iconKey)
+                                                                                        }
+                                                                                        className={`p-2 rounded-xl flex items-center justify-center border transition-all ${
+                                                                                            isSelected
+                                                                                                ? 'bg-amber-600 text-white border-amber-600 shadow-sm'
+                                                                                                : 'bg-stone-50 dark:bg-stone-850 border-stone-200 dark:border-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-100'
+                                                                                        }`}
+                                                                                    >
+                                                                                        <IconComp className="w-4 h-4" />
+                                                                                    </button>
+                                                                                );
+                                                                            })}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                        </div>
+
+                                                        {/* Nama Habit: Klik untuk inline rename */}
+                                                        <div className="min-w-0 flex-1">
+                                                            {inlineNameId === habit.id ? (
+                                                                <input
+                                                                    type="text"
+                                                                    autoFocus
+                                                                    value={inlineNameValue}
+                                                                    onChange={(e) => setInlineNameValue(e.target.value)}
+                                                                    onBlur={() => saveInlineName(habit)}
+                                                                    onKeyDown={(e) => {
+                                                                        if (e.key === 'Enter') saveInlineName(habit);
+                                                                        if (e.key === 'Escape') setInlineNameId(null);
+                                                                    }}
+                                                                    className="w-full text-xs font-bold text-stone-900 dark:text-stone-100 bg-stone-50 dark:bg-stone-850 px-2 py-1 rounded-lg border border-amber-600 focus:outline-none"
+                                                                />
+                                                            ) : (
+                                                                <div
+                                                                    onClick={() => {
+                                                                        setInlineNameId(habit.id);
+                                                                        setInlineNameValue(habit.name);
+                                                                    }}
+                                                                    title="Klik untuk ubah nama"
+                                                                    className="font-bold text-stone-900 dark:text-stone-100 flex items-center gap-1.5 cursor-pointer group"
+                                                                >
+                                                                    <span className="group-hover:text-amber-600 transition-colors">
+                                                                        {habit.name}
                                                                     </span>
-                                                                )}
-                                                            </div>
+                                                                    <Edit3 className="w-3 h-3 text-stone-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                                                    {habit.is_archived && (
+                                                                        <span className="text-[10px] font-semibold text-stone-400 px-1.5 py-0.2 rounded bg-stone-100 dark:bg-stone-800">
+                                                                            Arsip
+                                                                        </span>
+                                                                    )}
+                                                                </div>
+                                                            )}
                                                             {habit.description && (
                                                                 <div className="text-[11px] text-stone-400 dark:text-stone-500 line-clamp-1">
                                                                     {habit.description}
@@ -529,9 +712,19 @@ export default function HabitsIndex({
                                                     </div>
                                                 </td>
 
-                                                {/* Kolom Tipe / Target */}
-                                                <td className="py-3.5 px-3 text-center">
-                                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300">
+                                                {/* Kolom Tipe / Target (Inline Popover Editor) */}
+                                                <td className="py-3.5 px-3 text-center relative">
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            setActiveTypePopoverId(
+                                                                activeTypePopoverId === habit.id ? null : habit.id
+                                                            );
+                                                            setActiveStylePopoverId(null);
+                                                        }}
+                                                        title="Klik untuk ubah tipe atau target"
+                                                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-bold bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-750 transition"
+                                                    >
                                                         {habit.measurement_type === 'boolean' && (
                                                             <>
                                                                 <Check className="w-3 h-3 text-emerald-500" />
@@ -554,7 +747,70 @@ export default function HabitsIndex({
                                                                 </span>
                                                             </>
                                                         )}
-                                                    </span>
+                                                    </button>
+
+                                                    {/* Popover Inline Target Editor */}
+                                                    {activeTypePopoverId === habit.id && (
+                                                        <div className="absolute left-1/2 -translate-x-1/2 top-11 w-56 p-3 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl shadow-2xl z-30 text-left space-y-2.5">
+                                                            <div className="text-[10px] font-bold text-stone-400 uppercase tracking-wider">
+                                                                Ganti Tipe Target
+                                                            </div>
+                                                            <div className="flex flex-col gap-1.5">
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() =>
+                                                                        saveInlineTarget(habit, 'boolean', 1, '')
+                                                                    }
+                                                                    className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold text-left flex items-center gap-2 ${
+                                                                        habit.measurement_type === 'boolean'
+                                                                            ? 'bg-amber-600 text-white'
+                                                                            : 'hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-700 dark:text-stone-300'
+                                                                    }`}
+                                                                >
+                                                                    <Check className="w-3.5 h-3.5" />
+                                                                    <span>Ya / Tidak</span>
+                                                                </button>
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() =>
+                                                                        saveInlineTarget(
+                                                                            habit,
+                                                                            'quantitative',
+                                                                            habit.target_value || 2000,
+                                                                            habit.unit || 'ml'
+                                                                        )
+                                                                    }
+                                                                    className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold text-left flex items-center gap-2 ${
+                                                                        habit.measurement_type === 'quantitative'
+                                                                            ? 'bg-amber-600 text-white'
+                                                                            : 'hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-700 dark:text-stone-300'
+                                                                    }`}
+                                                                >
+                                                                    <Hash className="w-3.5 h-3.5" />
+                                                                    <span>Kuantitas Terukur</span>
+                                                                </button>
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() =>
+                                                                        saveInlineTarget(
+                                                                            habit,
+                                                                            'duration',
+                                                                            habit.target_value || 30,
+                                                                            habit.unit || 'menit'
+                                                                        )
+                                                                    }
+                                                                    className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold text-left flex items-center gap-2 ${
+                                                                        habit.measurement_type === 'duration'
+                                                                            ? 'bg-amber-600 text-white'
+                                                                            : 'hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-700 dark:text-stone-300'
+                                                                    }`}
+                                                                >
+                                                                    <Clock className="w-3.5 h-3.5" />
+                                                                    <span>Durasi Waktu</span>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    )}
                                                 </td>
 
                                                 {/* 7 Days Cells */}
@@ -643,7 +899,7 @@ export default function HabitsIndex({
                                                                 className="flex items-center gap-2 w-full px-3 py-2 text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800"
                                                             >
                                                                 <Edit3 className="w-3.5 h-3.5 text-stone-400" />
-                                                                <span>Edit Habit</span>
+                                                                <span>Edit Detail</span>
                                                             </button>
                                                             {!habit.is_archived && (
                                                                 <button
@@ -1010,6 +1266,33 @@ export default function HabitsIndex({
                                             {data.color === c.value && <Check className="w-4 h-4 text-white stroke-[3]" />}
                                         </button>
                                     ))}
+                                </div>
+                            </div>
+
+                            {/* Pilihan Icon Lucide di Modal Create */}
+                            <div>
+                                <label className="block text-xs font-bold text-stone-700 dark:text-stone-300 uppercase tracking-wider mb-1.5">
+                                    Icon Kebiasaan (Lucide)
+                                </label>
+                                <div className="grid grid-cols-8 gap-2 p-2 bg-stone-50 dark:bg-stone-850 rounded-xl border border-stone-200 dark:border-stone-800">
+                                    {Object.keys(LUCIDE_ICONS).map((iconKey) => {
+                                        const IconComp = LUCIDE_ICONS[iconKey];
+                                        const isSelected = data.icon === iconKey;
+                                        return (
+                                            <button
+                                                key={iconKey}
+                                                type="button"
+                                                onClick={() => setData('icon', iconKey)}
+                                                className={`p-2 rounded-lg flex items-center justify-center border transition-all ${
+                                                    isSelected
+                                                        ? 'bg-amber-600 text-white border-amber-600 shadow-sm'
+                                                        : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-100'
+                                                }`}
+                                            >
+                                                <IconComp className="w-4 h-4" />
+                                            </button>
+                                        );
+                                    })}
                                 </div>
                             </div>
 
