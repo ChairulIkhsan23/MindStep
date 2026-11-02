@@ -123,7 +123,7 @@ class StreakCalculationService
         $todayEval = $evaluateDate($today);
         $todayPerfect = $todayEval['completed'];
         $currentStreak = 0;
-        $isAtRisk = false;
+        $yesterdayMissed = false;
 
         $cursor = $today->copy();
         if ($todayPerfect) {
@@ -132,9 +132,6 @@ class StreakCalculationService
         } elseif ($todayEval['freeze']) {
             $cursor->subDay();
         } else {
-            if ($todayEval['habits_total'] > 0) {
-                $isAtRisk = true;
-            }
             $cursor->subDay();
         }
 
@@ -143,6 +140,7 @@ class StreakCalculationService
         if ($cursor->equalTo($yesterday)) {
             $yesterdayEval = $evaluateDate($yesterday);
             if (! $yesterdayEval['completed'] && ! $yesterdayEval['freeze']) {
+                $yesterdayMissed = true;
                 // Check if user had an active streak before yesterday
                 $checkBefore = $yesterday->copy()->subDay();
                 $hadStreakBefore = false;
@@ -184,6 +182,9 @@ class StreakCalculationService
             }
             $cursor->subDay();
         }
+
+        // Alert banner only triggers if user missed yesterday and has not finished today yet
+        $isAtRisk = $yesterdayMissed && ! $todayPerfect;
 
         return [
             'current_streak' => $currentStreak,

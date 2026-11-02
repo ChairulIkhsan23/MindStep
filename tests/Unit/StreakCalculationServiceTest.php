@@ -285,6 +285,50 @@ class StreakCalculationServiceTest extends TestCase
         $this->assertEquals(1, $this->service->getRemainingFreezeCredits($user, Carbon::parse('2026-10-04')));
     }
 
+    public function test_alert_banner_is_at_risk_only_when_yesterday_missed_and_today_not_perfect(): void
+    {
+        $user = User::factory()->create(['timezone' => 'UTC']);
+        $habit = Habit::factory()->create([
+            'user_id' => $user->id,
+            'frequency_type' => 'daily',
+            'start_date' => Carbon::parse('2026-10-01'),
+        ]);
+
+        // Case 1: Yesterday was completed, today not yet -> Default: NO alert (is_at_risk = false)
+        HabitLog::factory()->create([
+            'habit_id' => $habit->id,
+            'user_id' => $user->id,
+            'log_date' => '2026-10-01',
+            'status' => 'completed',
+        ]);
+        Journal::factory()->create([
+            'user_id' => $user->id,
+            'entry_date' => '2026-10-01',
+        ]);
+
+        $metricsDay2 = $this->service->calculateForUser($user, Carbon::parse('2026-10-02'));
+        $this->assertFalse($metricsDay2['is_at_risk']);
+
+        // Case 2: Yesterday (2026-10-02) missed, today (2026-10-03) not logged -> Alert ON (is_at_risk = true)
+        $metricsDay3 = $this->service->calculateForUser($user, Carbon::parse('2026-10-03'));
+        $this->assertTrue($metricsDay3['is_at_risk']);
+
+        // Case 3: User logs today's habit and journal on 2026-10-03 -> Alert turns OFF (is_at_risk = false)
+        HabitLog::factory()->create([
+            'habit_id' => $habit->id,
+            'user_id' => $user->id,
+            'log_date' => '2026-10-03',
+            'status' => 'completed',
+        ]);
+        Journal::factory()->create([
+            'user_id' => $user->id,
+            'entry_date' => '2026-10-03',
+        ]);
+
+        $metricsDay3AfterFill = $this->service->calculateForUser($user, Carbon::parse('2026-10-03'));
+        $this->assertFalse($metricsDay3AfterFill['is_at_risk']);
+    }
+
     public function test_streak_maturity_levels_mapping(): void
     {
         $this->assertEquals('Belum Dimulai', $this->service->resolveStreakLevel(0)['label']);
