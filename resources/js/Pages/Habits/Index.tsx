@@ -391,9 +391,6 @@ export default function HabitsIndex({
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-stone-200/90 dark:border-stone-800">
                     <div>
                         <div className="flex items-center gap-2">
-                            <span className="px-2 py-0.5 rounded-md text-[10px] font-extrabold tracking-wider uppercase bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800/60">
-                                Weekly Matrix Tracker
-                            </span>
                             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300">
                                 <Snowflake className="w-3 h-3 text-sky-500" />
                                 Sisa Freeze: {freeze_credits_remaining}/2 bln ini
@@ -403,7 +400,7 @@ export default function HabitsIndex({
                             Habit Tracker
                         </h1>
                         <p className="mt-1 text-xs sm:text-sm text-stone-500 dark:text-stone-400">
-                            Klik nama, icon warna, atau tipe target langsung pada tabel untuk mengedit secara cepat.
+                            Pantau konsistensi dan progres kebiasaan Anda pekan ini.
                         </p>
                     </div>
 
@@ -633,7 +630,7 @@ export default function HabitsIndex({
 
                                                                     <div>
                                                                         <label className="text-[10px] font-bold uppercase tracking-wider text-stone-400 block mb-1.5">
-                                                                            Icon Lucide
+                                                                            Pilih Icon
                                                                         </label>
                                                                         {/* Quick Popular Icons */}
                                                                         <div className="grid grid-cols-4 gap-1.5 max-h-32 overflow-y-auto pr-1">
@@ -681,7 +678,7 @@ export default function HabitsIndex({
                                                                             className="mt-2.5 w-full py-1.5 px-2.5 rounded-xl text-[11px] font-bold text-amber-700 dark:text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-300 dark:border-amber-800 transition flex items-center justify-center gap-1.5"
                                                                         >
                                                                             <Search className="w-3.5 h-3.5" />
-                                                                            <span>Cari dari 2.200+ Icon...</span>
+                                                                            <span>Cari Icon Lainnya...</span>
                                                                         </button>
                                                                     </div>
                                                                 </div>
@@ -1319,7 +1316,7 @@ export default function HabitsIndex({
                                                     {data.icon || 'check'}
                                                 </div>
                                                 <div className="text-[10px] text-stone-400">
-                                                    Icon terpilih saat ini
+                                                    Icon aktif
                                                 </div>
                                             </div>
                                         </div>
@@ -1330,7 +1327,7 @@ export default function HabitsIndex({
                                             className="px-3 py-1.5 rounded-xl text-xs font-bold text-amber-700 dark:text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-300 dark:border-amber-800 transition flex items-center gap-1.5"
                                         >
                                             <Search className="w-3.5 h-3.5" />
-                                            <span>Pilih dari 2.200+ Icon</span>
+                                            <span>Ganti Icon</span>
                                         </button>
                                     </div>
 

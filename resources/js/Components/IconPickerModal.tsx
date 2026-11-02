@@ -238,7 +238,7 @@ export default function IconPickerModal({
                 <div className="mt-4">
                     <div className="flex items-center justify-between text-[11px] font-semibold text-stone-500 dark:text-stone-400">
                         <span>
-                            Ditemukan {filteredIcons.length.toLocaleString()} icon (Cached)
+                            Ditemukan {filteredIcons.length.toLocaleString()} icon
                         </span>
                         <span>
                             Halaman {currentPage} dari {totalPages}
