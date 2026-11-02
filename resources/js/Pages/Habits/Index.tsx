@@ -817,7 +817,8 @@ export default function HabitsIndex({
                                                                 </button>
 
                                                                 {/* Nested Flyout Card on Hover */}
-                                                                <div className="hidden group-hover/qty:block absolute left-full top-0 ml-1.5 w-64 p-3 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl shadow-xl z-50 text-left space-y-2.5 animate-in fade-in">
+                                                                <div className="hidden group-hover/qty:block absolute left-full top-0 pl-3 z-50">
+                                                                    <div className="w-64 p-3.5 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl shadow-xl text-left space-y-2.5 animate-in fade-in">
                                                                     <div className="text-[10px] font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider">
                                                                         Konfigurasi Kuantitas
                                                                     </div>
@@ -904,6 +905,7 @@ export default function HabitsIndex({
                                                                     >
                                                                         Terapkan Kuantitas
                                                                     </button>
+                                                                    </div>
                                                                 </div>
                                                             </div>
 
@@ -933,7 +935,8 @@ export default function HabitsIndex({
                                                                 </button>
 
                                                                 {/* Nested Flyout Card on Hover */}
-                                                                <div className="hidden group-hover/dur:block absolute left-full top-0 ml-1.5 w-60 p-3 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl shadow-xl z-50 text-left space-y-2.5 animate-in fade-in">
+                                                                <div className="hidden group-hover/dur:block absolute left-full top-0 pl-3 z-50">
+                                                                    <div className="w-60 p-3.5 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl shadow-xl text-left space-y-2.5 animate-in fade-in">
                                                                     <div className="text-[10px] font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider">
                                                                         Konfigurasi Durasi
                                                                     </div>
@@ -1022,6 +1025,7 @@ export default function HabitsIndex({
                                                                     >
                                                                         Terapkan Durasi
                                                                     </button>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1339,77 +1343,79 @@ export default function HabitsIndex({
                                                                     </button>
 
                                                                     {/* Nested Flyout Card on Hover */}
-                                                                    <div className="hidden group-hover/editqty:block absolute left-full top-0 ml-1.5 w-64 p-3 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl shadow-xl z-50 text-left space-y-2.5 animate-in fade-in">
-                                                                        <div className="text-[10px] font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider">
-                                                                            Konfigurasi Kuantitas
-                                                                        </div>
-                                                                        <div className="grid grid-cols-2 gap-2">
-                                                                            <div>
-                                                                                <label className="block text-[10px] font-medium text-stone-600 dark:text-stone-400 mb-1">
-                                                                                    Target Angka
-                                                                                </label>
-                                                                                <input
-                                                                                    type="number"
-                                                                                    step="any"
-                                                                                    min={1}
-                                                                                    defaultValue={habit.measurement_type === 'quantitative' ? habit.target_value : 10}
-                                                                                    id={`qty-val-${habit.id}`}
-                                                                                    className="w-full text-xs bg-stone-50 dark:bg-stone-850 px-2 py-1 rounded border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-stone-100 focus:outline-none focus:border-amber-600"
-                                                                                />
+                                                                    <div className="hidden group-hover/editqty:block absolute left-full top-0 pl-3 z-50">
+                                                                        <div className="w-64 p-3.5 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl shadow-xl text-left space-y-2.5 animate-in fade-in">
+                                                                            <div className="text-[10px] font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider">
+                                                                                Konfigurasi Kuantitas
                                                                             </div>
-                                                                            <div>
-                                                                                <label className="block text-[10px] font-medium text-stone-600 dark:text-stone-400 mb-1">
-                                                                                    Satuan
-                                                                                </label>
-                                                                                <input
-                                                                                    type="text"
-                                                                                    defaultValue={habit.measurement_type === 'quantitative' && habit.unit ? habit.unit : 'kali'}
-                                                                                    id={`qty-unit-${habit.id}`}
-                                                                                    placeholder="kali, ml, hal"
-                                                                                    className="w-full text-xs bg-stone-50 dark:bg-stone-850 px-2 py-1 rounded border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-stone-100 focus:outline-none focus:border-amber-600"
-                                                                                />
+                                                                            <div className="grid grid-cols-2 gap-2">
+                                                                                <div>
+                                                                                    <label className="block text-[10px] font-medium text-stone-600 dark:text-stone-400 mb-1">
+                                                                                        Target Angka
+                                                                                    </label>
+                                                                                    <input
+                                                                                        type="number"
+                                                                                        step="any"
+                                                                                        min={1}
+                                                                                        defaultValue={habit.measurement_type === 'quantitative' ? habit.target_value : 10}
+                                                                                        id={`qty-val-${habit.id}`}
+                                                                                        className="w-full text-xs bg-stone-50 dark:bg-stone-850 px-2 py-1 rounded border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-stone-100 focus:outline-none focus:border-amber-600"
+                                                                                    />
+                                                                                </div>
+                                                                                <div>
+                                                                                    <label className="block text-[10px] font-medium text-stone-600 dark:text-stone-400 mb-1">
+                                                                                        Satuan
+                                                                                    </label>
+                                                                                    <input
+                                                                                        type="text"
+                                                                                        defaultValue={habit.measurement_type === 'quantitative' && habit.unit ? habit.unit : 'kali'}
+                                                                                        id={`qty-unit-${habit.id}`}
+                                                                                        placeholder="kali, ml, hal"
+                                                                                        className="w-full text-xs bg-stone-50 dark:bg-stone-850 px-2 py-1 rounded border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-stone-100 focus:outline-none focus:border-amber-600"
+                                                                                    />
+                                                                                </div>
                                                                             </div>
-                                                                        </div>
 
-                                                                        {/* Presets Satuan Cepat */}
-                                                                        <div>
-                                                                            <div className="text-[9px] font-medium text-stone-400 mb-1">Pilihan Cepat:</div>
-                                                                            <div className="flex flex-wrap gap-1">
-                                                                                {[
-                                                                                    { label: '8 Gelas', val: 8, unit: 'gelas' },
-                                                                                    { label: '2000 ml', val: 2000, unit: 'ml' },
-                                                                                    { label: '10 Hal', val: 10, unit: 'halaman' },
-                                                                                    { label: '5000 Langkah', val: 5000, unit: 'langkah' },
-                                                                                ].map((preset, idx) => (
-                                                                                    <button
-                                                                                        key={idx}
-                                                                                        type="button"
-                                                                                        onClick={() => {
-                                                                                            const inputVal = document.getElementById(`qty-val-${habit.id}`) as HTMLInputElement;
-                                                                                            const inputUnit = document.getElementById(`qty-unit-${habit.id}`) as HTMLInputElement;
-                                                                                            if (inputVal) inputVal.value = String(preset.val);
-                                                                                            if (inputUnit) inputUnit.value = preset.unit;
-                                                                                        }}
-                                                                                        className="px-1.5 py-0.5 text-[10px] rounded bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700"
-                                                                                    >
-                                                                                        {preset.label}
-                                                                                    </button>
-                                                                                ))}
+                                                                            {/* Presets Satuan Cepat */}
+                                                                            <div>
+                                                                                <div className="text-[9px] font-medium text-stone-400 mb-1">Pilihan Cepat:</div>
+                                                                                <div className="flex flex-wrap gap-1">
+                                                                                    {[
+                                                                                        { label: '8 Gelas', val: 8, unit: 'gelas' },
+                                                                                        { label: '2000 ml', val: 2000, unit: 'ml' },
+                                                                                        { label: '10 Hal', val: 10, unit: 'halaman' },
+                                                                                        { label: '5000 Langkah', val: 5000, unit: 'langkah' },
+                                                                                    ].map((preset, idx) => (
+                                                                                        <button
+                                                                                            key={idx}
+                                                                                            type="button"
+                                                                                            onClick={() => {
+                                                                                                const inputVal = document.getElementById(`qty-val-${habit.id}`) as HTMLInputElement;
+                                                                                                const inputUnit = document.getElementById(`qty-unit-${habit.id}`) as HTMLInputElement;
+                                                                                                if (inputVal) inputVal.value = String(preset.val);
+                                                                                                if (inputUnit) inputUnit.value = preset.unit;
+                                                                                            }}
+                                                                                            className="px-1.5 py-0.5 text-[10px] rounded bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700"
+                                                                                        >
+                                                                                            {preset.label}
+                                                                                        </button>
+                                                                                    ))}
+                                                                                </div>
                                                                             </div>
+                                                                            <button
+                                                                                type="button"
+                                                                                onClick={() => {
+                                                                                    const inputVal = document.getElementById(`qty-val-${habit.id}`) as HTMLInputElement;
+                                                                                    const inputUnit = document.getElementById(`qty-unit-${habit.id}`) as HTMLInputElement;
+                                                                                    const tVal = Number(inputVal?.value) || 1;
+                                                                                    const uVal = inputUnit?.value?.trim() || 'kali';
+                                                                                    saveInlineTarget(habit, 'quantitative', tVal, uVal);
+                                                                                }}
+                                                                                className="w-full py-1 text-center text-xs font-semibold rounded bg-amber-600 text-white hover:bg-amber-700 transition"
+                                                                            >
+                                                                                Terapkan Kuantitas
+                                                                            </button>
                                                                         </div>
-                                                                        <button
-                                                                            type="button"
-                                                                            onClick={() => {
-                                                                                const inputVal = document.getElementById(`qty-val-${habit.id}`) as HTMLInputElement;
-                                                                                const inputUnit = document.getElementById(`qty-unit-${habit.id}`) as HTMLInputElement;
-                                                                                const tVal = Number(inputVal?.value) || 1;
-                                                                                const uVal = inputUnit?.value?.trim() || 'kali';
-                                                                                saveInlineTarget(habit, 'quantitative', tVal, uVal);
-                                                                            }}
-                                                                            className="w-full py-1 text-center text-xs font-semibold rounded bg-amber-600 text-white hover:bg-amber-700 transition"
-                                                                        >
-                                                                            Terapkan Kuantitas
-                                                                        </button>
                                                                     </div>
                                                                 </div>
 
@@ -1439,79 +1445,81 @@ export default function HabitsIndex({
                                                                     </button>
 
                                                                     {/* Nested Flyout Card on Hover */}
-                                                                    <div className="hidden group-hover/editdur:block absolute left-full top-0 ml-1.5 w-60 p-3 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl shadow-xl z-50 text-left space-y-2.5 animate-in fade-in">
-                                                                        <div className="text-[10px] font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider">
-                                                                            Konfigurasi Durasi
-                                                                        </div>
-                                                                        <div className="grid grid-cols-2 gap-2">
-                                                                            <div>
-                                                                                <label className="block text-[10px] font-medium text-stone-600 dark:text-stone-400 mb-1">
-                                                                                    Target Durasi
-                                                                                </label>
-                                                                                <input
-                                                                                    type="number"
-                                                                                    step="any"
-                                                                                    min={1}
-                                                                                    defaultValue={habit.measurement_type === 'duration' ? habit.target_value : 30}
-                                                                                    id={`dur-val-${habit.id}`}
-                                                                                    className="w-full text-xs bg-stone-50 dark:bg-stone-850 px-2 py-1 rounded border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-stone-100 focus:outline-none focus:border-amber-600"
-                                                                                />
+                                                                    <div className="hidden group-hover/editdur:block absolute left-full top-0 pl-3 z-50">
+                                                                        <div className="w-60 p-3.5 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl shadow-xl text-left space-y-2.5 animate-in fade-in">
+                                                                            <div className="text-[10px] font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider">
+                                                                                Konfigurasi Durasi
                                                                             </div>
-                                                                            <div>
-                                                                                <label className="block text-[10px] font-medium text-stone-600 dark:text-stone-400 mb-1">
-                                                                                    Satuan
-                                                                                </label>
-                                                                                <select
-                                                                                    defaultValue={habit.measurement_type === 'duration' && habit.unit ? habit.unit : 'menit'}
-                                                                                    id={`dur-unit-${habit.id}`}
-                                                                                    className="w-full text-xs bg-stone-50 dark:bg-stone-850 px-2 py-1 rounded border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-stone-100 focus:outline-none focus:border-amber-600"
-                                                                                >
-                                                                                    <option value="menit">menit</option>
-                                                                                    <option value="jam">jam</option>
-                                                                                    <option value="detik">detik</option>
-                                                                                </select>
-                                                                            </div>
-                                                                        </div>
-
-                                                                        {/* Presets Durasi Cepat */}
-                                                                        <div>
-                                                                            <div className="text-[9px] font-medium text-stone-400 mb-1">Pilihan Cepat:</div>
-                                                                            <div className="flex flex-wrap gap-1">
-                                                                                {[
-                                                                                    { label: '15 Menit', val: 15, unit: 'menit' },
-                                                                                    { label: '30 Menit', val: 30, unit: 'menit' },
-                                                                                    { label: '45 Menit', val: 45, unit: 'menit' },
-                                                                                    { label: '1 Jam', val: 1, unit: 'jam' },
-                                                                                ].map((preset, idx) => (
-                                                                                    <button
-                                                                                        key={idx}
-                                                                                        type="button"
-                                                                                        onClick={() => {
-                                                                                            const inputVal = document.getElementById(`dur-val-${habit.id}`) as HTMLInputElement;
-                                                                                            const inputUnit = document.getElementById(`dur-unit-${habit.id}`) as HTMLSelectElement;
-                                                                                            if (inputVal) inputVal.value = String(preset.val);
-                                                                                            if (inputUnit) inputUnit.value = preset.unit;
-                                                                                        }}
-                                                                                        className="px-1.5 py-0.5 text-[10px] rounded bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700"
+                                                                            <div className="grid grid-cols-2 gap-2">
+                                                                                <div>
+                                                                                    <label className="block text-[10px] font-medium text-stone-600 dark:text-stone-400 mb-1">
+                                                                                        Target Durasi
+                                                                                    </label>
+                                                                                    <input
+                                                                                        type="number"
+                                                                                        step="any"
+                                                                                        min={1}
+                                                                                        defaultValue={habit.measurement_type === 'duration' ? habit.target_value : 30}
+                                                                                        id={`dur-val-${habit.id}`}
+                                                                                        className="w-full text-xs bg-stone-50 dark:bg-stone-850 px-2 py-1 rounded border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-stone-100 focus:outline-none focus:border-amber-600"
+                                                                                    />
+                                                                                </div>
+                                                                                <div>
+                                                                                    <label className="block text-[10px] font-medium text-stone-600 dark:text-stone-400 mb-1">
+                                                                                        Satuan
+                                                                                    </label>
+                                                                                    <select
+                                                                                        defaultValue={habit.measurement_type === 'duration' && habit.unit ? habit.unit : 'menit'}
+                                                                                        id={`dur-unit-${habit.id}`}
+                                                                                        className="w-full text-xs bg-stone-50 dark:bg-stone-850 px-2 py-1 rounded border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-stone-100 focus:outline-none focus:border-amber-600"
                                                                                     >
-                                                                                        {preset.label}
-                                                                                    </button>
-                                                                                ))}
+                                                                                        <option value="menit">menit</option>
+                                                                                        <option value="jam">jam</option>
+                                                                                        <option value="detik">detik</option>
+                                                                                    </select>
+                                                                                </div>
                                                                             </div>
+
+                                                                            {/* Presets Durasi Cepat */}
+                                                                            <div>
+                                                                                <div className="text-[9px] font-medium text-stone-400 mb-1">Pilihan Cepat:</div>
+                                                                                <div className="flex flex-wrap gap-1">
+                                                                                    {[
+                                                                                        { label: '15 Menit', val: 15, unit: 'menit' },
+                                                                                        { label: '30 Menit', val: 30, unit: 'menit' },
+                                                                                        { label: '45 Menit', val: 45, unit: 'menit' },
+                                                                                        { label: '1 Jam', val: 1, unit: 'jam' },
+                                                                                    ].map((preset, idx) => (
+                                                                                        <button
+                                                                                            key={idx}
+                                                                                            type="button"
+                                                                                            onClick={() => {
+                                                                                                const inputVal = document.getElementById(`dur-val-${habit.id}`) as HTMLInputElement;
+                                                                                                const inputUnit = document.getElementById(`dur-unit-${habit.id}`) as HTMLSelectElement;
+                                                                                                if (inputVal) inputVal.value = String(preset.val);
+                                                                                                if (inputUnit) inputUnit.value = preset.unit;
+                                                                                            }}
+                                                                                            className="px-1.5 py-0.5 text-[10px] rounded bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700"
+                                                                                        >
+                                                                                            {preset.label}
+                                                                                        </button>
+                                                                                    ))}
+                                                                                </div>
+                                                                            </div>
+                                                                            <button
+                                                                                type="button"
+                                                                                onClick={() => {
+                                                                                    const inputVal = document.getElementById(`dur-val-${habit.id}`) as HTMLInputElement;
+                                                                                    const inputUnit = document.getElementById(`dur-unit-${habit.id}`) as HTMLSelectElement;
+                                                                                    const tVal = Number(inputVal?.value) || 1;
+                                                                                    const uVal = inputUnit?.value || 'menit';
+                                                                                    saveInlineTarget(habit, 'duration', tVal, uVal);
+                                                                                }}
+                                                                                className="w-full py-1 text-center text-xs font-semibold rounded bg-amber-600 text-white hover:bg-amber-700 transition"
+                                                                            >
+                                                                                Terapkan Durasi
+                                                                            </button>
                                                                         </div>
-                                                                        <button
-                                                                            type="button"
-                                                                            onClick={() => {
-                                                                                const inputVal = document.getElementById(`dur-val-${habit.id}`) as HTMLInputElement;
-                                                                                const inputUnit = document.getElementById(`dur-unit-${habit.id}`) as HTMLSelectElement;
-                                                                                const tVal = Number(inputVal?.value) || 1;
-                                                                                const uVal = inputUnit?.value || 'menit';
-                                                                                saveInlineTarget(habit, 'duration', tVal, uVal);
-                                                                            }}
-                                                                            className="w-full py-1 text-center text-xs font-semibold rounded bg-amber-600 text-white hover:bg-amber-700 transition"
-                                                                        >
-                                                                            Terapkan Durasi
-                                                                        </button>
                                                                     </div>
                                                                 </div>
                                                             </div>
