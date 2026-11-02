@@ -6,6 +6,7 @@ use App\Models\Habit;
 use App\Models\HabitLog;
 use App\Models\Journal;
 use App\Models\User;
+use App\Models\UserFreeze;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
@@ -68,8 +69,14 @@ class StreakCalculationService
             ->get()
             ->groupBy(fn (Journal $j) => $j->entry_date instanceof Carbon ? $j->entry_date->toDateString() : (string) $j->entry_date);
 
+        $userFreezesByDate = UserFreeze::query()
+            ->where('user_id', $user->id)
+            ->whereBetween('freeze_date', [$earliestDate->toDateString(), $today->toDateString()])
+            ->get()
+            ->keyBy(fn (UserFreeze $f) => $f->freeze_date instanceof Carbon ? $f->freeze_date->toDateString() : (string) $f->freeze_date);
+
         // Helper to evaluate a specific date
-        $evaluateDate = function (Carbon $date) use ($habits, $habitLogs, $journalsByDate) {
+        $evaluateDate = function (Carbon $date) use ($habits, $habitLogs, $journalsByDate, $userFreezesByDate) {
             $dateStr = $date->toDateString();
             $scheduledHabits = $habits->filter(function (Habit $h) use ($date) {
                 if ($date->lt($h->start_date->copy()->startOfDay())) {
@@ -88,7 +95,7 @@ class StreakCalculationService
             }
 
             $dateLogs = $habitLogs->get($dateStr, collect())->keyBy('habit_id');
-            $hasFreeze = $dateLogs->contains(fn ($l) => $l->status === 'freeze');
+            $hasFreeze = $dateLogs->contains(fn ($l) => $l->status === 'freeze') || $userFreezesByDate->has($dateStr);
 
             $completedHabits = 0;
             foreach ($scheduledHabits as $habit) {
@@ -129,6 +136,40 @@ class StreakCalculationService
                 $isAtRisk = true;
             }
             $cursor->subDay();
+        }
+
+        // Auto-protect yesterday if missing, user has previous streak, and has available freeze credits
+        $yesterday = $today->copy()->subDay();
+        if ($cursor->equalTo($yesterday)) {
+            $yesterdayEval = $evaluateDate($yesterday);
+            if (! $yesterdayEval['completed'] && ! $yesterdayEval['freeze']) {
+                // Check if user had an active streak before yesterday
+                $checkBefore = $yesterday->copy()->subDay();
+                $hadStreakBefore = false;
+                while ($checkBefore->gte($earliestDate)) {
+                    $checkEval = $evaluateDate($checkBefore);
+                    if ($checkEval['completed']) {
+                        $hadStreakBefore = true;
+                        break;
+                    } elseif ($checkEval['freeze']) {
+                        $checkBefore->subDay();
+
+                        continue;
+                    }
+                    break;
+                }
+
+                if ($hadStreakBefore && $this->getRemainingFreezeCredits($user, $yesterday) > 0) {
+                    UserFreeze::firstOrCreate([
+                        'user_id' => $user->id,
+                        'freeze_date' => $yesterday->toDateString(),
+                    ]);
+                    $userFreezesByDate->put($yesterday->toDateString(), new UserFreeze([
+                        'user_id' => $user->id,
+                        'freeze_date' => $yesterday->toDateString(),
+                    ]));
+                }
+            }
         }
 
         // Iterate backwards
@@ -321,14 +362,23 @@ class StreakCalculationService
         $userTimezone = $user->timezone ?? 'UTC';
         $date = $referenceDate ? $referenceDate->copy()->setTimezone($userTimezone) : Carbon::now($userTimezone);
 
-        $usedCredits = HabitLog::query()
+        $usedHabitLogs = HabitLog::query()
             ->where('user_id', $user->id)
             ->where('status', 'freeze')
             ->whereYear('log_date', $date->year)
             ->whereMonth('log_date', $date->month)
+            ->distinct()
+            ->count('log_date');
+
+        $usedUserFreezes = UserFreeze::query()
+            ->where('user_id', $user->id)
+            ->whereYear('freeze_date', $date->year)
+            ->whereMonth('freeze_date', $date->month)
             ->count();
 
-        return max(0, self::MONTHLY_FREEZE_LIMIT - $usedCredits);
+        $totalUsed = max($usedHabitLogs, $usedUserFreezes);
+
+        return max(0, self::MONTHLY_FREEZE_LIMIT - $totalUsed);
     }
 
     /**

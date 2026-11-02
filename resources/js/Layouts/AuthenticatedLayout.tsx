@@ -275,6 +275,26 @@ export default function AuthenticatedLayout({
                     </div>
                 </header>
 
+                {/* Global Streak Alert Banner */}
+                {streak?.is_at_risk && (
+                    <div className="bg-amber-500/10 dark:bg-amber-500/15 border-b border-amber-200 dark:border-amber-800/60 px-4 py-2.5 sm:px-6">
+                        <div className="max-w-[1400px] mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+                            <div className="flex items-center gap-2 text-amber-900 dark:text-amber-200">
+                                <Flame className="w-4 h-4 text-amber-600 dark:text-amber-400 fill-amber-600 shrink-0 animate-bounce" />
+                                <span>
+                                    <strong>Lanjutkan Runtunan Anda!</strong> Segera catat habit dan jurnal Anda hari ini untuk memastikan runtutan tidak terputus.
+                                </span>
+                            </div>
+                            <Link
+                                href={route('habits.index')}
+                                className="inline-flex items-center justify-center self-start sm:self-auto px-3 py-1 rounded-lg text-xs font-bold text-white bg-amber-600 hover:bg-amber-700 shadow-sm transition shrink-0"
+                            >
+                                Catat Sekarang
+                            </Link>
+                        </div>
+                    </div>
+                )}
+
                 {/* Page Content */}
                 <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-[1400px] w-full mx-auto">
                     {children}

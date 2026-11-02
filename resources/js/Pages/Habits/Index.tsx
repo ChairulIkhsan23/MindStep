@@ -322,24 +322,6 @@ export default function HabitsIndex({
         setActiveCellEdit(null);
     };
 
-    const handleApplyFreeze = (habit: HabitItem, targetDate: string) => {
-        if (freeze_credits_remaining <= 0) {
-            alert('Kuota freeze Anda untuk bulan ini sudah habis (Maks 2x/bulan).');
-            return;
-        }
-        if (confirm(`Gunakan 1 kuota freeze untuk menjaga streak "${habit.name}" pada tanggal ${targetDate}?`)) {
-            router.post(
-                route('habits.logs.store', habit.id),
-                {
-                    log_date: targetDate,
-                    status: 'freeze',
-                    actual_value: 0,
-                },
-                { preserveScroll: true }
-            );
-        }
-    };
-
     const handleToggleArchive = (habit: HabitItem) => {
         setActiveMenuId(null);
         if (habit.is_archived) {
@@ -390,13 +372,7 @@ export default function HabitsIndex({
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-stone-200/90 dark:border-stone-800">
                     <div>
-                        <div className="flex items-center gap-2">
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300">
-                                <Snowflake className="w-3 h-3 text-sky-500" />
-                                Sisa Freeze: {freeze_credits_remaining}/2 bln ini
-                            </span>
-                        </div>
-                        <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-stone-900 dark:text-stone-100">
+                        <h1 className="text-2xl font-extrabold tracking-tight text-stone-900 dark:text-stone-100">
                             Habit Tracker
                         </h1>
                         <p className="mt-1 text-xs sm:text-sm text-stone-500 dark:text-stone-400">
@@ -929,18 +905,6 @@ export default function HabitsIndex({
                                                                 <Edit3 className="w-3.5 h-3.5 text-stone-400" />
                                                                 <span>Edit Detail</span>
                                                             </button>
-                                                            {!habit.is_archived && (
-                                                                <button
-                                                                    onClick={() => {
-                                                                        setActiveMenuId(null);
-                                                                        handleApplyFreeze(habit, filter_date);
-                                                                    }}
-                                                                    className="flex items-center gap-2 w-full px-3 py-2 text-sky-600 dark:text-sky-400 hover:bg-sky-50 dark:hover:bg-sky-950/30"
-                                                                >
-                                                                    <Snowflake className="w-3.5 h-3.5" />
-                                                                    <span>Freeze Hari Ini</span>
-                                                                </button>
-                                                            )}
                                                             <button
                                                                 onClick={() => handleToggleArchive(habit)}
                                                                 className="flex items-center gap-2 w-full px-3 py-2 text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800"

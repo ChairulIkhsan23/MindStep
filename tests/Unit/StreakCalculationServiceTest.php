@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Models\Habit;
 use App\Models\HabitLog;
+use App\Models\Journal;
 use App\Models\User;
 use App\Services\StreakCalculationService;
 use Carbon\Carbon;
@@ -231,6 +232,57 @@ class StreakCalculationServiceTest extends TestCase
 
         // Oct 3 check: cannot freeze for 3rd consecutive day
         $this->assertFalse($this->service->canApplyFreeze($habit, '2026-10-03'));
+    }
+
+    public function test_automatic_global_freeze_protects_streak_when_yesterday_was_missed(): void
+    {
+        $user = User::factory()->create();
+        $habit = Habit::factory()->create([
+            'user_id' => $user->id,
+            'frequency_type' => 'daily',
+            'start_date' => '2026-10-01',
+        ]);
+
+        // Complete 2026-10-01 (Habit + Journal)
+        HabitLog::factory()->create([
+            'habit_id' => $habit->id,
+            'user_id' => $user->id,
+            'log_date' => '2026-10-01',
+            'status' => 'completed',
+        ]);
+        Journal::factory()->create([
+            'user_id' => $user->id,
+            'entry_date' => '2026-10-01',
+        ]);
+
+        // Complete 2026-10-02 (Habit + Journal)
+        HabitLog::factory()->create([
+            'habit_id' => $habit->id,
+            'user_id' => $user->id,
+            'log_date' => '2026-10-02',
+            'status' => 'completed',
+        ]);
+        Journal::factory()->create([
+            'user_id' => $user->id,
+            'entry_date' => '2026-10-02',
+        ]);
+
+        // On 2026-10-03 user completely missed (no log, no journal).
+        // On 2026-10-04 user checks streak:
+        $metrics = $this->service->calculateForUser($user, Carbon::parse('2026-10-04'));
+
+        // Streak held at 2 from Oct 1 & Oct 2, not reset to 0!
+        $this->assertEquals(2, $metrics['current_streak']);
+        $this->assertTrue($metrics['is_at_risk']);
+
+        // Check that UserFreeze record was automatically created for 2026-10-03
+        $this->assertDatabaseHas('user_freezes', [
+            'user_id' => $user->id,
+            'freeze_date' => '2026-10-03 00:00:00',
+        ]);
+
+        // 1 freeze credit consumed
+        $this->assertEquals(1, $this->service->getRemainingFreezeCredits($user, Carbon::parse('2026-10-04')));
     }
 
     public function test_streak_maturity_levels_mapping(): void
