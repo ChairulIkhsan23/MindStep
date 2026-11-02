@@ -468,8 +468,7 @@ export default function HabitsIndex({
                                 <thead>
                                     <tr className="border-b border-stone-200/90 dark:border-stone-800 bg-stone-50/80 dark:bg-stone-850/60 text-[11px] font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider">
                                         <th className="py-3.5 pl-5 pr-4 min-w-[240px]">Nama Kebiasaan</th>
-                                        <th className="py-3.5 px-3 w-28 text-center">Tipe / Target</th>
-                                        <th className="py-3.5 px-3 w-24 text-center">Streak</th>
+                                        <th className="py-3.5 px-3 w-32 text-center">Tipe / Target</th>
                                         {/* 7 Days Column */}
                                         {week_days.map((wd) => (
                                             <th
@@ -555,14 +554,6 @@ export default function HabitsIndex({
                                                                 </span>
                                                             </>
                                                         )}
-                                                    </span>
-                                                </td>
-
-                                                {/* Kolom Streak */}
-                                                <td className="py-3.5 px-3 text-center">
-                                                    <span className="inline-flex items-center gap-1 text-xs font-bold text-amber-600 dark:text-amber-400">
-                                                        <Flame className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
-                                                        <span>{habit.streak?.current_streak ?? habit.stats?.current_streak ?? 0}d</span>
                                                     </span>
                                                 </td>
 

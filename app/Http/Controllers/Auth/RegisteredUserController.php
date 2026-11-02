@@ -48,6 +48,19 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
+        // Create initial default habit
+        $user->habits()->create([
+            'name' => 'Minum Air Putih Cukup',
+            'description' => 'Target hidrasi sehat harian untuk konsistensi tubuh segar.',
+            'measurement_type' => 'quantitative',
+            'target_value' => 2000,
+            'unit' => 'ml',
+            'frequency_type' => 'daily',
+            'start_date' => now($user->timezone ?? 'UTC')->toDateString(),
+            'color' => '#0284c7',
+            'icon' => 'check',
+        ]);
+
         return redirect()->route('login')
             ->with('status', 'Registrasi berhasil. Silakan masuk dengan akun Anda.');
     }
