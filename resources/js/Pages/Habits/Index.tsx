@@ -136,7 +136,7 @@ export default function HabitsIndex({
         color: string;
         icon: string;
         measurement_type: 'boolean' | 'quantitative' | 'duration';
-        target_value: number;
+        target_value: number | '';
         unit: string;
     }>({
         name: '',
@@ -154,7 +154,7 @@ export default function HabitsIndex({
     const [activeCellEdit, setActiveCellEdit] = useState<{
         habit: HabitItem;
         date: string;
-        currentVal: number;
+        currentVal: number | '';
     } | null>(null);
 
     const { data, setData, post, put, processing, errors, reset, clearErrors } = useForm({
@@ -199,7 +199,7 @@ export default function HabitsIndex({
             {
                 name: trimmed,
                 measurement_type: newRowData.measurement_type,
-                target_value: newRowData.target_value,
+                target_value: Number(newRowData.target_value) || 1,
                 unit: newRowData.measurement_type === 'boolean' ? '' : newRowData.unit || (newRowData.measurement_type === 'duration' ? 'menit' : 'kali'),
                 frequency_type: 'daily',
                 scheduled_days: [1, 2, 3, 4, 5, 6, 7],
@@ -831,12 +831,13 @@ export default function HabitsIndex({
                                                                                 type="number"
                                                                                 step="any"
                                                                                 min={1}
-                                                                                value={newRowData.measurement_type === 'quantitative' ? newRowData.target_value : 10}
+                                                                                value={newRowData.target_value}
+                                                                                onFocus={(e) => e.target.select()}
                                                                                 onChange={(e) =>
                                                                                     setNewRowData({
                                                                                         ...newRowData,
                                                                                         measurement_type: 'quantitative',
-                                                                                        target_value: Number(e.target.value) || 1,
+                                                                                        target_value: e.target.value === '' ? '' : Number(e.target.value),
                                                                                     })
                                                                                 }
                                                                                 className="w-full text-xs bg-stone-50 dark:bg-stone-850 px-2 py-1 rounded border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-stone-100 focus:outline-none focus:border-amber-600"
@@ -949,12 +950,13 @@ export default function HabitsIndex({
                                                                                 type="number"
                                                                                 step="any"
                                                                                 min={1}
-                                                                                value={newRowData.measurement_type === 'duration' ? newRowData.target_value : 30}
+                                                                                value={newRowData.target_value}
+                                                                                onFocus={(e) => e.target.select()}
                                                                                 onChange={(e) =>
                                                                                     setNewRowData({
                                                                                         ...newRowData,
                                                                                         measurement_type: 'duration',
-                                                                                        target_value: Number(e.target.value) || 1,
+                                                                                        target_value: e.target.value === '' ? '' : Number(e.target.value),
                                                                                     })
                                                                                 }
                                                                                 className="w-full text-xs bg-stone-50 dark:bg-stone-850 px-2 py-1 rounded border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-stone-100 focus:outline-none focus:border-amber-600"
@@ -1358,6 +1360,7 @@ export default function HabitsIndex({
                                                                                         step="any"
                                                                                         min={1}
                                                                                         defaultValue={habit.measurement_type === 'quantitative' ? habit.target_value : 10}
+                                                                                        onFocus={(e) => e.target.select()}
                                                                                         id={`qty-val-${habit.id}`}
                                                                                         className="w-full text-xs bg-stone-50 dark:bg-stone-850 px-2 py-1 rounded border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-stone-100 focus:outline-none focus:border-amber-600"
                                                                                     />
@@ -1460,6 +1463,7 @@ export default function HabitsIndex({
                                                                                         step="any"
                                                                                         min={1}
                                                                                         defaultValue={habit.measurement_type === 'duration' ? habit.target_value : 30}
+                                                                                        onFocus={(e) => e.target.select()}
                                                                                         id={`dur-val-${habit.id}`}
                                                                                         className="w-full text-xs bg-stone-50 dark:bg-stone-850 px-2 py-1 rounded border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-stone-100 focus:outline-none focus:border-amber-600"
                                                                                     />
@@ -1679,12 +1683,13 @@ export default function HabitsIndex({
                             <div className="flex items-center gap-2">
                                 <button
                                     type="button"
-                                    onClick={() =>
+                                    onClick={() => {
+                                        const current = typeof activeCellEdit.currentVal === 'number' ? activeCellEdit.currentVal : 0;
                                         setActiveCellEdit({
                                             ...activeCellEdit,
-                                            currentVal: Math.max(0, activeCellEdit.currentVal - 1),
-                                        })
-                                    }
+                                            currentVal: Math.max(0, current - 1),
+                                        });
+                                    }}
                                     className="p-2 rounded-lg bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-semibold hover:bg-stone-200 dark:hover:bg-stone-750 transition"
                                 >
                                     <Minus className="w-4 h-4" />
@@ -1693,22 +1698,24 @@ export default function HabitsIndex({
                                     type="number"
                                     step="any"
                                     value={activeCellEdit.currentVal}
+                                    onFocus={(e) => e.target.select()}
                                     onChange={(e) =>
                                         setActiveCellEdit({
                                             ...activeCellEdit,
-                                            currentVal: Number(e.target.value),
+                                            currentVal: e.target.value === '' ? '' : Number(e.target.value),
                                         })
                                     }
                                     className="flex-1 text-center font-semibold text-base py-1.5 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-850 text-stone-900 dark:text-stone-100 focus:outline-none focus:border-amber-600"
                                 />
                                 <button
                                     type="button"
-                                    onClick={() =>
+                                    onClick={() => {
+                                        const current = typeof activeCellEdit.currentVal === 'number' ? activeCellEdit.currentVal : 0;
                                         setActiveCellEdit({
                                             ...activeCellEdit,
-                                            currentVal: activeCellEdit.currentVal + 1,
-                                        })
-                                    }
+                                            currentVal: current + 1,
+                                        });
+                                    }}
                                     className="p-2 rounded-lg bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-semibold hover:bg-stone-200 dark:hover:bg-stone-750 transition"
                                 >
                                     <Plus className="w-4 h-4" />
@@ -1727,7 +1734,8 @@ export default function HabitsIndex({
                                         key={idx}
                                         type="button"
                                         onClick={() => {
-                                            const next = preset.val === 0 ? 0 : activeCellEdit.currentVal + preset.val;
+                                            const current = typeof activeCellEdit.currentVal === 'number' ? activeCellEdit.currentVal : 0;
+                                            const next = preset.val === 0 ? 0 : current + preset.val;
                                             setActiveCellEdit({
                                                 ...activeCellEdit,
                                                 currentVal: preset.label === 'Tuntas' ? preset.val : next,
@@ -1751,7 +1759,7 @@ export default function HabitsIndex({
                             </button>
                             <button
                                 type="button"
-                                onClick={() => saveCellLog(activeCellEdit.currentVal)}
+                                onClick={() => saveCellLog(Number(activeCellEdit.currentVal) || 0)}
                                 className="px-3 py-1.5 text-xs font-semibold text-white bg-amber-600 hover:bg-amber-700 rounded-md transition"
                             >
                                 Simpan Capaian
@@ -1859,7 +1867,8 @@ export default function HabitsIndex({
                                             step="any"
                                             required
                                             value={data.target_value}
-                                            onChange={(e) => setData('target_value', Number(e.target.value))}
+                                            onFocus={(e) => e.target.select()}
+                                            onChange={(e) => setData('target_value', e.target.value === '' ? ('' as any) : Number(e.target.value))}
                                             placeholder="Contoh: 2000, 30"
                                             className="w-full text-xs bg-white dark:bg-stone-900 rounded-lg border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 px-3 py-2 focus:outline-none focus:border-amber-600"
                                         />
@@ -1957,7 +1966,8 @@ export default function HabitsIndex({
                                         min={1}
                                         max={7}
                                         value={data.weekly_target_days}
-                                        onChange={(e) => setData('weekly_target_days', Number(e.target.value))}
+                                        onFocus={(e) => e.target.select()}
+                                        onChange={(e) => setData('weekly_target_days', e.target.value === '' ? ('' as any) : Number(e.target.value))}
                                         className="w-full text-xs bg-white dark:bg-stone-850 rounded-lg border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 px-3 py-2 focus:outline-none focus:border-amber-600"
                                     />
                                 </div>
