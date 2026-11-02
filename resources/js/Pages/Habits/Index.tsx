@@ -6,7 +6,8 @@ import {
     AlertCircle,
     Archive,
     ArchiveRestore,
-    ArrowDownUp,
+    ArrowDown,
+    ArrowUp,
     Check,
     ChevronLeft,
     ChevronRight,
@@ -18,7 +19,6 @@ import {
     Plus,
     Search,
     Snowflake,
-    Sparkles,
     Trash2,
     X,
 } from 'lucide-react';
@@ -398,32 +398,32 @@ export default function HabitsIndex({
 
             <div className="space-y-6 max-w-7xl mx-auto pb-12">
                 {/* Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-stone-200/90 dark:border-stone-800">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-stone-200 dark:border-stone-800">
                     <div>
-                        <h1 className="text-2xl font-extrabold tracking-tight text-stone-900 dark:text-stone-100">
+                        <h1 className="text-xl font-bold tracking-tight text-stone-900 dark:text-stone-100">
                             Habit Tracker
                         </h1>
-                        <p className="mt-1 text-xs sm:text-sm text-stone-500 dark:text-stone-400">
-                            Pantau konsistensi dan progres kebiasaan Anda pekan ini.
+                        <p className="mt-0.5 text-xs text-stone-500 dark:text-stone-400">
+                            Pantau konsistensi dan progres kebiasaan pekan ini.
                         </p>
                     </div>
 
-                    <div className="flex items-center gap-2.5">
+                    <div className="flex items-center gap-2">
                         {/* Week Navigator */}
-                        <div className="flex items-center bg-white dark:bg-stone-900 border border-stone-200/90 dark:border-stone-800 rounded-xl p-1 shadow-sm text-xs font-semibold">
+                        <div className="flex items-center bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-lg p-0.5 text-xs font-medium">
                             <button
                                 onClick={() => handleShiftWeek(-7)}
-                                className="p-1.5 text-stone-500 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg transition"
+                                className="p-1.5 text-stone-500 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-md transition"
                                 title="Pekan Sebelumnya"
                             >
                                 <ChevronLeft className="w-4 h-4" />
                             </button>
-                            <span className="px-2.5 text-stone-700 dark:text-stone-300 font-bold whitespace-nowrap">
+                            <span className="px-2 text-stone-700 dark:text-stone-300 font-semibold whitespace-nowrap">
                                 {formattedRange}
                             </span>
                             <button
                                 onClick={() => handleShiftWeek(7)}
-                                className="p-1.5 text-stone-500 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg transition"
+                                className="p-1.5 text-stone-500 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-md transition"
                                 title="Pekan Berikutnya"
                             >
                                 <ChevronRight className="w-4 h-4" />
@@ -432,9 +432,9 @@ export default function HabitsIndex({
 
                         <button
                             onClick={openCreateModal}
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-white bg-amber-600 hover:bg-amber-700 shadow-sm shadow-amber-600/20 transition whitespace-nowrap"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-amber-600 hover:bg-amber-700 transition whitespace-nowrap"
                         >
-                            <Plus className="w-4 h-4" />
+                            <Plus className="w-3.5 h-3.5" />
                             <span>Tambah Habit</span>
                         </button>
                     </div>
@@ -443,44 +443,46 @@ export default function HabitsIndex({
                 {/* Toolbar: Sorting Waktu & Search */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     {/* Waktu Sorting Buttons */}
-                    <div className="flex items-center gap-1.5 text-xs font-semibold">
-                        <span className="text-stone-400 dark:text-stone-500 mr-1 flex items-center gap-1">
+                    <div className="flex items-center gap-1 text-xs font-medium">
+                        <span className="text-stone-500 dark:text-stone-400 mr-1 flex items-center gap-1">
                             <Clock className="w-3.5 h-3.5" />
-                            <span>Urutkan Waktu:</span>
+                            <span>Urutkan:</span>
                         </span>
                         <button
                             type="button"
                             onClick={() => setTimeSortOrder(timeSortOrder === 'asc' ? 'none' : 'asc')}
-                            className={`px-3 py-1.5 rounded-xl border transition-all ${
+                            className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md border text-xs font-medium transition ${
                                 timeSortOrder === 'asc'
-                                    ? 'bg-amber-600 text-white border-amber-600 shadow-sm'
-                                    : 'bg-white dark:bg-stone-900 border-stone-200/90 dark:border-stone-800 text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-850'
+                                    ? 'bg-amber-600 text-white border-amber-600'
+                                    : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-850'
                             }`}
                         >
-                            🌅 Pagi &rarr; Malam
+                            <ArrowUp className="w-3 h-3" />
+                            <span>Pagi ke Malam</span>
                         </button>
                         <button
                             type="button"
                             onClick={() => setTimeSortOrder(timeSortOrder === 'desc' ? 'none' : 'desc')}
-                            className={`px-3 py-1.5 rounded-xl border transition-all ${
+                            className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md border text-xs font-medium transition ${
                                 timeSortOrder === 'desc'
-                                    ? 'bg-amber-600 text-white border-amber-600 shadow-sm'
-                                    : 'bg-white dark:bg-stone-900 border-stone-200/90 dark:border-stone-800 text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-850'
+                                    ? 'bg-amber-600 text-white border-amber-600'
+                                    : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-850'
                             }`}
                         >
-                            🌙 Malam &rarr; Pagi
+                            <ArrowDown className="w-3 h-3" />
+                            <span>Malam ke Pagi</span>
                         </button>
                     </div>
 
                     {/* Search */}
-                    <div className="relative w-full sm:w-64">
-                        <Search className="w-3.5 h-3.5 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                    <div className="relative w-full sm:w-60">
+                        <Search className="w-3.5 h-3.5 text-stone-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
                         <input
                             type="text"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             placeholder="Cari habit..."
-                            className="w-full pl-8 pr-3 py-1.5 text-xs bg-white dark:bg-stone-900 rounded-xl border border-stone-200/90 dark:border-stone-800 text-stone-900 dark:text-stone-100 placeholder:text-stone-400 focus:outline-none focus:border-amber-600"
+                            className="w-full pl-8 pr-3 py-1.5 text-xs bg-white dark:bg-stone-900 rounded-lg border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 placeholder:text-stone-400 focus:outline-none focus:border-amber-600"
                         />
                     </div>
                 </div>
@@ -499,9 +501,9 @@ export default function HabitsIndex({
                 )}
 
                 {filteredHabits.length === 0 ? (
-                    <div className="text-center py-16 bg-white dark:bg-stone-900/60 rounded-2xl border border-stone-200/80 dark:border-stone-800">
-                        <AlertCircle className="w-10 h-10 mx-auto text-stone-400 dark:text-stone-500" />
-                        <h3 className="mt-3 text-sm font-bold text-stone-800 dark:text-stone-200">
+                    <div className="text-center py-12 bg-white dark:bg-stone-900 rounded-xl border border-stone-200 dark:border-stone-800">
+                        <AlertCircle className="w-8 h-8 mx-auto text-stone-400 dark:text-stone-500" />
+                        <h3 className="mt-2 text-sm font-semibold text-stone-800 dark:text-stone-200">
                             {searchQuery ? 'Tidak ada habit yang cocok' : 'Belum ada habit'}
                         </h3>
                         <p className="mt-1 text-xs text-stone-500 dark:text-stone-400 max-w-sm mx-auto">
@@ -510,7 +512,7 @@ export default function HabitsIndex({
                         {!searchQuery && (
                             <button
                                 onClick={openCreateModal}
-                                className="mt-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-amber-600 hover:bg-amber-700"
+                                className="mt-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-amber-600 hover:bg-amber-700 transition"
                             >
                                 <Plus className="w-3.5 h-3.5" />
                                 <span>Buat Habit Pertama</span>
@@ -518,31 +520,31 @@ export default function HabitsIndex({
                         )}
                     </div>
                 ) : (
-                    <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200/90 dark:border-stone-800 shadow-sm">
+                    <div className="bg-white dark:bg-stone-900 rounded-xl border border-stone-200 dark:border-stone-800 overflow-hidden">
                         <div className="overflow-x-auto min-h-[380px] pb-28">
                             <table className="w-full text-left border-collapse">
                                 <thead>
-                                    <tr className="border-b border-stone-200/90 dark:border-stone-800 bg-stone-50/80 dark:bg-stone-850/60 text-[11px] font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider">
-                                        <th className="py-3.5 pl-5 pr-4 min-w-[240px]">Nama Kebiasaan</th>
-                                        <th className="py-3.5 px-3 w-32 text-center">Tipe / Target</th>
+                                    <tr className="border-b border-stone-200 dark:border-stone-800 bg-stone-50/80 dark:bg-stone-850/60 text-[11px] font-semibold text-stone-500 dark:text-stone-400 uppercase tracking-wider">
+                                        <th className="py-3 pl-5 pr-4 min-w-[240px]">Nama Kebiasaan</th>
+                                        <th className="py-3 px-3 w-32 text-center">Tipe / Target</th>
                                         {/* 7 Days Column */}
                                         {week_days.map((wd) => (
                                             <th
                                                 key={wd.date}
-                                                className={`py-3.5 px-2 text-center min-w-[58px] ${
+                                                className={`py-3 px-2 text-center min-w-[58px] ${
                                                     wd.is_today
-                                                        ? 'bg-amber-500/10 text-amber-700 dark:text-amber-400 font-extrabold'
+                                                        ? 'bg-amber-500/10 text-amber-800 dark:text-amber-300 font-bold'
                                                         : ''
                                                 }`}
                                             >
                                                 <div>{wd.day_name}</div>
-                                                <div className="text-stone-800 dark:text-stone-200 text-xs font-bold mt-0.5">
+                                                <div className="text-stone-800 dark:text-stone-200 text-xs font-semibold mt-0.5">
                                                     {wd.day_number}
                                                 </div>
                                             </th>
                                         ))}
-                                        <th className="py-3.5 px-3 w-28 text-center">Progress Pekan</th>
-                                        <th className="py-3.5 pr-4 pl-2 w-12 text-center">Aksi</th>
+                                        <th className="py-3 px-3 w-28 text-center">Progress Pekan</th>
+                                        <th className="py-3 pr-4 pl-2 w-12 text-center">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-stone-100 dark:divide-stone-800/70 text-xs">
@@ -565,12 +567,12 @@ export default function HabitsIndex({
                                                 key={habit.id}
                                                 className={`transition-colors ${
                                                     isRowActive
-                                                        ? 'relative z-40 bg-stone-50/90 dark:bg-stone-850/80 shadow-sm'
-                                                        : 'hover:bg-stone-50/50 dark:hover:bg-stone-850/30'
+                                                        ? 'relative z-40 bg-stone-50 dark:bg-stone-850'
+                                                        : 'hover:bg-stone-50/60 dark:hover:bg-stone-850/40'
                                                 }`}
                                             >
                                                 {/* Kolom Info Habit (Inline Edit Icon, Warna & Nama) */}
-                                                <td className={`py-3.5 pl-5 pr-4 ${activeStylePopoverId === habit.id ? 'relative z-50' : ''}`}>
+                                                <td className={`py-3 pl-5 pr-4 ${activeStylePopoverId === habit.id ? 'relative z-50' : ''}`}>
                                                     <div className="flex items-center gap-2.5 relative">
                                                         {/* Icon & Color Trigger Button */}
                                                         <div className="relative">
@@ -585,7 +587,7 @@ export default function HabitsIndex({
                                                                     setActiveMenuId(null);
                                                                 }}
                                                                 title="Ubah icon & warna habit"
-                                                                className="w-7 h-7 rounded-xl flex items-center justify-center shadow-sm hover:scale-105 transition-transform"
+                                                                className="w-7 h-7 rounded-lg flex items-center justify-center transition-opacity hover:opacity-90"
                                                                 style={{ backgroundColor: habit.color || '#d97706' }}
                                                             >
                                                                 {renderHabitIcon(habit.icon)}
@@ -595,10 +597,10 @@ export default function HabitsIndex({
                                                             {activeStylePopoverId === habit.id && (
                                                                 <div
                                                                     onClick={(e) => e.stopPropagation()}
-                                                                    className="absolute left-0 top-full mt-2 w-64 p-3 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl shadow-2xl z-50 space-y-3"
+                                                                    className="absolute left-0 top-full mt-1.5 w-64 p-3 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl shadow-lg z-50 space-y-3"
                                                                 >
                                                                     <div>
-                                                                        <label className="text-[10px] font-bold uppercase tracking-wider text-stone-400 block mb-1.5">
+                                                                        <label className="text-[10px] font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 block mb-1.5">
                                                                             Pilih Warna
                                                                         </label>
                                                                         <div className="flex items-center gap-1.5">
@@ -622,7 +624,7 @@ export default function HabitsIndex({
                                                                     </div>
 
                                                                     <div>
-                                                                        <label className="text-[10px] font-bold uppercase tracking-wider text-stone-400 block mb-1.5">
+                                                                        <label className="text-[10px] font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 block mb-1.5">
                                                                             Pilih Icon
                                                                         </label>
                                                                         {/* Quick Popular Icons */}
@@ -638,7 +640,6 @@ export default function HabitsIndex({
                                                                                 'heart',
                                                                                 'coffee',
                                                                                 'zap',
-                                                                                'sparkles',
                                                                                 'activity',
                                                                             ].map((iconKey) => {
                                                                                 const isSelected = habit.icon === iconKey;
@@ -649,9 +650,9 @@ export default function HabitsIndex({
                                                                                         onClick={() =>
                                                                                             saveInlineStyle(habit, undefined, iconKey)
                                                                                         }
-                                                                                        className={`p-2 rounded-xl flex items-center justify-center border transition-all ${
+                                                                                        className={`p-2 rounded-lg flex items-center justify-center border transition-all ${
                                                                                             isSelected
-                                                                                                ? 'bg-amber-600 text-white border-amber-600 shadow-sm'
+                                                                                                ? 'bg-amber-600 text-white border-amber-600'
                                                                                                 : 'bg-stone-50 dark:bg-stone-850 border-stone-200 dark:border-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-100'
                                                                                         }`}
                                                                                     >
@@ -668,7 +669,7 @@ export default function HabitsIndex({
                                                                                 setIconPickerTarget(habit);
                                                                                 setActiveStylePopoverId(null);
                                                                             }}
-                                                                            className="mt-2.5 w-full py-1.5 px-2.5 rounded-xl text-[11px] font-bold text-amber-700 dark:text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-300 dark:border-amber-800 transition flex items-center justify-center gap-1.5"
+                                                                            className="mt-2.5 w-full py-1.5 px-2.5 rounded-lg text-[11px] font-semibold text-stone-700 dark:text-stone-300 bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-750 border border-stone-200 dark:border-stone-700 transition flex items-center justify-center gap-1.5"
                                                                         >
                                                                             <Search className="w-3.5 h-3.5" />
                                                                             <span>Cari Icon Lainnya...</span>
@@ -691,7 +692,7 @@ export default function HabitsIndex({
                                                                         if (e.key === 'Enter') saveInlineName(habit);
                                                                         if (e.key === 'Escape') setInlineNameId(null);
                                                                     }}
-                                                                    className="w-full text-xs font-bold text-stone-900 dark:text-stone-100 bg-stone-50 dark:bg-stone-850 px-2 py-1 rounded-lg border border-amber-600 focus:outline-none"
+                                                                    className="w-full text-xs font-semibold text-stone-900 dark:text-stone-100 bg-stone-50 dark:bg-stone-850 px-2 py-1 rounded-md border border-amber-600 focus:outline-none"
                                                                 />
                                                             ) : (
                                                                 <div
@@ -700,20 +701,20 @@ export default function HabitsIndex({
                                                                         setInlineNameValue(habit.name);
                                                                     }}
                                                                     title="Klik untuk ubah nama"
-                                                                    className="font-bold text-stone-900 dark:text-stone-100 flex items-center gap-1.5 cursor-pointer group"
+                                                                    className="font-medium text-stone-900 dark:text-stone-100 flex items-center gap-1.5 cursor-pointer group"
                                                                 >
                                                                     <span className="group-hover:text-amber-600 transition-colors">
                                                                         {habit.name}
                                                                     </span>
                                                                     {habit.time_of_day && (
-                                                                        <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md text-[10px] font-bold bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-200/80 dark:border-amber-800/60">
+                                                                        <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-medium bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400 border border-stone-200 dark:border-stone-700">
                                                                             <Clock className="w-2.5 h-2.5" />
                                                                             {habit.time_of_day}
                                                                         </span>
                                                                     )}
                                                                     <Edit3 className="w-3 h-3 text-stone-400 opacity-0 group-hover:opacity-100 transition-opacity" />
                                                                     {habit.is_archived && (
-                                                                        <span className="text-[10px] font-semibold text-stone-400 px-1.5 py-0.2 rounded bg-stone-100 dark:bg-stone-800">
+                                                                        <span className="text-[10px] font-medium text-stone-400 px-1.5 py-0.2 rounded bg-stone-100 dark:bg-stone-800">
                                                                             Arsip
                                                                         </span>
                                                                     )}
@@ -729,11 +730,11 @@ export default function HabitsIndex({
                                                 </td>
 
                                                 {/* Kolom Tipe / Target (Inline Popover Editor) */}
-                                                <td className={`py-3.5 px-3 text-center ${activeTypePopoverId === habit.id ? 'relative z-50' : 'relative'}`}>
+                                                <td className={`py-3 px-3 text-center ${activeTypePopoverId === habit.id ? 'relative z-50' : 'relative'}`}>
                                                     <button
                                                         type="button"
                                                         onClick={(e) => {
-                                                            e.stopPropagation();
+                                                             e.stopPropagation();
                                                             setActiveTypePopoverId(
                                                                 activeTypePopoverId === habit.id ? null : habit.id
                                                             );
@@ -741,17 +742,17 @@ export default function HabitsIndex({
                                                             setActiveMenuId(null);
                                                         }}
                                                         title="Klik untuk ubah tipe atau target"
-                                                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-bold bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-750 transition"
+                                                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-medium bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-750 transition"
                                                     >
                                                         {habit.measurement_type === 'boolean' && (
                                                             <>
-                                                                <Check className="w-3 h-3 text-emerald-500" />
+                                                                <Check className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
                                                                 <span>Ya/Tidak</span>
                                                             </>
                                                         )}
                                                         {habit.measurement_type === 'quantitative' && (
                                                             <>
-                                                                <Hash className="w-3 h-3 text-amber-500" />
+                                                                <Hash className="w-3 h-3 text-amber-600 dark:text-amber-400" />
                                                                 <span>
                                                                     {habit.target_value} {habit.unit}
                                                                 </span>
@@ -759,7 +760,7 @@ export default function HabitsIndex({
                                                         )}
                                                         {habit.measurement_type === 'duration' && (
                                                             <>
-                                                                <Clock className="w-3 h-3 text-sky-500" />
+                                                                <Clock className="w-3 h-3 text-stone-600 dark:text-stone-400" />
                                                                 <span>
                                                                     {habit.target_value} {habit.unit}
                                                                 </span>
@@ -771,9 +772,9 @@ export default function HabitsIndex({
                                                     {activeTypePopoverId === habit.id && (
                                                         <div
                                                             onClick={(e) => e.stopPropagation()}
-                                                            className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-56 p-3 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl shadow-2xl z-50 text-left space-y-2.5"
+                                                            className="absolute left-1/2 -translate-x-1/2 top-full mt-1.5 w-56 p-3 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl shadow-lg z-50 text-left space-y-2.5"
                                                         >
-                                                            <div className="text-[10px] font-bold text-stone-400 uppercase tracking-wider">
+                                                            <div className="text-[10px] font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider">
                                                                 Ganti Tipe Target
                                                             </div>
                                                             <div className="flex flex-col gap-1.5">
@@ -782,7 +783,7 @@ export default function HabitsIndex({
                                                                     onClick={() =>
                                                                         saveInlineTarget(habit, 'boolean', 1, '')
                                                                     }
-                                                                    className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold text-left flex items-center gap-2 ${
+                                                                    className={`px-2.5 py-1.5 rounded-md text-xs font-medium text-left flex items-center gap-2 ${
                                                                         habit.measurement_type === 'boolean'
                                                                             ? 'bg-amber-600 text-white'
                                                                             : 'hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-700 dark:text-stone-300'
@@ -801,7 +802,7 @@ export default function HabitsIndex({
                                                                             habit.unit || 'ml'
                                                                         )
                                                                     }
-                                                                    className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold text-left flex items-center gap-2 ${
+                                                                    className={`px-2.5 py-1.5 rounded-md text-xs font-medium text-left flex items-center gap-2 ${
                                                                         habit.measurement_type === 'quantitative'
                                                                             ? 'bg-amber-600 text-white'
                                                                             : 'hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-700 dark:text-stone-300'
@@ -820,7 +821,7 @@ export default function HabitsIndex({
                                                                             habit.unit || 'menit'
                                                                         )
                                                                     }
-                                                                    className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold text-left flex items-center gap-2 ${
+                                                                    className={`px-2.5 py-1.5 rounded-md text-xs font-medium text-left flex items-center gap-2 ${
                                                                         habit.measurement_type === 'duration'
                                                                             ? 'bg-amber-600 text-white'
                                                                             : 'hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-700 dark:text-stone-300'
@@ -853,22 +854,22 @@ export default function HabitsIndex({
                                                                 onClick={() => handleCellClick(habit, wd.date)}
                                                                 disabled={habit.is_archived}
                                                                 title={`Tandai log ${wd.date}`}
-                                                                className={`w-8 h-8 mx-auto rounded-full flex items-center justify-center font-bold text-xs border transition-all ${
+                                                                className={`w-8 h-8 mx-auto rounded-full flex items-center justify-center font-semibold text-xs border transition-colors ${
                                                                     isCompleted
                                                                         ? 'bg-emerald-600 border-emerald-600 text-white'
                                                                         : isFreeze
-                                                                        ? 'bg-sky-500 border-sky-500 text-white'
+                                                                        ? 'bg-sky-600 border-sky-600 text-white'
                                                                         : isPartial
-                                                                        ? 'bg-amber-50 dark:bg-amber-950/40 border-amber-400 text-amber-700 dark:text-amber-400'
-                                                                        : 'bg-white dark:bg-stone-900 border-stone-300/80 dark:border-stone-700 text-stone-300 dark:text-stone-600 hover:border-amber-500 hover:text-amber-500'
+                                                                        ? 'bg-amber-50 dark:bg-amber-950/40 border-amber-500 text-amber-800 dark:text-amber-300'
+                                                                        : 'bg-white dark:bg-stone-900 border-stone-300 dark:border-stone-700 text-stone-300 dark:text-stone-600 hover:border-amber-600 hover:text-amber-600'
                                                                 }`}
                                                             >
                                                                 {isFreeze ? (
-                                                                    <Snowflake className="w-3.5 h-3.5 stroke-[2.5]" />
+                                                                    <Snowflake className="w-3.5 h-3.5 stroke-[2]" />
                                                                 ) : isCompleted ? (
-                                                                    <Check className="w-4 h-4 stroke-[3]" />
+                                                                    <Check className="w-4 h-4 stroke-[2.5]" />
                                                                 ) : isPartial ? (
-                                                                    <span className="text-[10px] font-black leading-none">½</span>
+                                                                    <span className="text-[10px] font-bold leading-none">½</span>
                                                                 ) : (
                                                                     <Check className="w-3.5 h-3.5 stroke-[2] opacity-0 hover:opacity-40 transition-opacity" />
                                                                 )}
@@ -878,15 +879,15 @@ export default function HabitsIndex({
                                                 })}
 
                                                 {/* Progress Pekan */}
-                                                <td className="py-3.5 px-3 text-center">
+                                                <td className="py-3 px-3 text-center">
                                                     <div className="w-20 mx-auto">
-                                                        <div className="flex items-center justify-between text-[10px] font-bold text-stone-500 mb-1">
+                                                        <div className="flex items-center justify-between text-[10px] font-medium text-stone-500 mb-1">
                                                             <span>{weekCompleted}/7</span>
                                                             <span>{weekPercent}%</span>
                                                         </div>
                                                         <div className="w-full bg-stone-100 dark:bg-stone-800 rounded-full h-1.5 overflow-hidden">
                                                             <div
-                                                                className="h-full bg-emerald-500 rounded-full transition-all"
+                                                                className="h-full bg-emerald-600 rounded-full transition-all"
                                                                 style={{ width: `${weekPercent}%` }}
                                                             />
                                                         </div>
@@ -894,7 +895,7 @@ export default function HabitsIndex({
                                                 </td>
 
                                                 {/* Aksi Menu */}
-                                                <td className={`py-3.5 pr-4 pl-2 text-center ${activeMenuId === habit.id ? 'relative z-50' : 'relative'}`}>
+                                                <td className={`py-3 pr-4 pl-2 text-center ${activeMenuId === habit.id ? 'relative z-50' : 'relative'}`}>
                                                     <button
                                                         onClick={(e) => {
                                                             e.stopPropagation();
@@ -902,7 +903,7 @@ export default function HabitsIndex({
                                                             setActiveStylePopoverId(null);
                                                             setActiveTypePopoverId(null);
                                                         }}
-                                                        className="p-1 rounded-lg text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800 transition"
+                                                        className="p-1 rounded-md text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800 transition"
                                                     >
                                                         <MoreVertical className="w-4 h-4" />
                                                     </button>
@@ -910,7 +911,7 @@ export default function HabitsIndex({
                                                     {activeMenuId === habit.id && (
                                                         <div
                                                             onClick={(e) => e.stopPropagation()}
-                                                            className="absolute right-4 top-full mt-1 w-44 bg-white dark:bg-stone-850 border border-stone-200 dark:border-stone-800 rounded-xl shadow-2xl z-50 py-1 text-xs text-left"
+                                                            className="absolute right-4 top-full mt-1 w-44 bg-white dark:bg-stone-850 border border-stone-200 dark:border-stone-800 rounded-lg shadow-lg z-50 py-1 text-xs text-left"
                                                         >
                                                             <button
                                                                 onClick={() => openEditModal(habit)}
@@ -957,27 +958,27 @@ export default function HabitsIndex({
 
             {/* Quick Cell Value Editor Modal for Quantitative & Duration */}
             {activeCellEdit && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
-                    <div className="bg-white dark:bg-stone-900 rounded-2xl max-w-sm w-full p-5 shadow-2xl border border-stone-200 dark:border-stone-800">
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40">
+                    <div className="bg-white dark:bg-stone-900 rounded-xl max-w-sm w-full p-4 border border-stone-200 dark:border-stone-800 shadow-lg">
                         <div className="flex items-center justify-between pb-3 border-b border-stone-200 dark:border-stone-800">
                             <div>
-                                <h3 className="font-bold text-stone-900 dark:text-stone-100 text-sm">
+                                <h3 className="font-semibold text-stone-900 dark:text-stone-100 text-sm">
                                     Catat Capaian
                                 </h3>
-                                <p className="text-[11px] text-stone-400">
+                                <p className="text-[11px] text-stone-500">
                                     {activeCellEdit.habit.name} ({activeCellEdit.date})
                                 </p>
                             </div>
                             <button
                                 onClick={() => setActiveCellEdit(null)}
-                                className="p-1 text-stone-400 hover:text-stone-600 rounded-lg"
+                                className="p-1 text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 rounded-md"
                             >
                                 <X className="w-4 h-4" />
                             </button>
                         </div>
 
-                        <div className="py-4 space-y-3">
-                            <div className="flex items-center justify-between text-xs font-semibold text-stone-600 dark:text-stone-400">
+                        <div className="py-3 space-y-3">
+                            <div className="flex items-center justify-between text-xs font-medium text-stone-600 dark:text-stone-400">
                                 <span>Target: {activeCellEdit.habit.target_value} {activeCellEdit.habit.unit}</span>
                                 <span>Nilai Sekarang: {activeCellEdit.currentVal}</span>
                             </div>
@@ -992,7 +993,7 @@ export default function HabitsIndex({
                                             currentVal: Math.max(0, activeCellEdit.currentVal - 1),
                                         })
                                     }
-                                    className="p-2 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-bold"
+                                    className="p-2 rounded-lg bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-semibold hover:bg-stone-200 dark:hover:bg-stone-750 transition"
                                 >
                                     <Minus className="w-4 h-4" />
                                 </button>
@@ -1006,7 +1007,7 @@ export default function HabitsIndex({
                                             currentVal: Number(e.target.value),
                                         })
                                     }
-                                    className="flex-1 text-center font-bold text-base py-2 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-850 text-stone-900 dark:text-stone-100 focus:outline-none focus:border-amber-600"
+                                    className="flex-1 text-center font-semibold text-base py-1.5 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-850 text-stone-900 dark:text-stone-100 focus:outline-none focus:border-amber-600"
                                 />
                                 <button
                                     type="button"
@@ -1016,7 +1017,7 @@ export default function HabitsIndex({
                                             currentVal: activeCellEdit.currentVal + 1,
                                         })
                                     }
-                                    className="p-2 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-bold"
+                                    className="p-2 rounded-lg bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-semibold hover:bg-stone-200 dark:hover:bg-stone-750 transition"
                                 >
                                     <Plus className="w-4 h-4" />
                                 </button>
@@ -1025,10 +1026,10 @@ export default function HabitsIndex({
                             {/* Quick Add Presets */}
                             <div className="flex items-center gap-1.5 pt-1">
                                 {[
-                                    { label: 'Set 0 (Reset)', val: 0 },
+                                    { label: 'Reset', val: 0 },
                                     { label: '+25%', val: Math.round(Number(activeCellEdit.habit.target_value) * 0.25) },
                                     { label: '+50%', val: Math.round(Number(activeCellEdit.habit.target_value) * 0.5) },
-                                    { label: 'Tuntas 100%', val: Number(activeCellEdit.habit.target_value) },
+                                    { label: 'Tuntas', val: Number(activeCellEdit.habit.target_value) },
                                 ].map((preset, idx) => (
                                     <button
                                         key={idx}
@@ -1037,10 +1038,10 @@ export default function HabitsIndex({
                                             const next = preset.val === 0 ? 0 : activeCellEdit.currentVal + preset.val;
                                             setActiveCellEdit({
                                                 ...activeCellEdit,
-                                                currentVal: preset.label.includes('100%') ? preset.val : next,
+                                                currentVal: preset.label === 'Tuntas' ? preset.val : next,
                                             });
                                         }}
-                                        className="flex-1 py-1 text-[10px] font-bold rounded-lg bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 text-stone-700 dark:text-stone-300"
+                                        className="flex-1 py-1 text-[10px] font-medium rounded-md bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-750 text-stone-700 dark:text-stone-300 transition"
                                     >
                                         {preset.label}
                                     </button>
@@ -1052,14 +1053,14 @@ export default function HabitsIndex({
                             <button
                                 type="button"
                                 onClick={() => setActiveCellEdit(null)}
-                                className="px-3 py-1.5 text-xs font-semibold text-stone-600 rounded-lg hover:bg-stone-100"
+                                className="px-3 py-1.5 text-xs font-medium text-stone-600 dark:text-stone-400 rounded-md hover:bg-stone-100 dark:hover:bg-stone-800 transition"
                             >
                                 Batal
                             </button>
                             <button
                                 type="button"
                                 onClick={() => saveCellLog(activeCellEdit.currentVal)}
-                                className="px-4 py-1.5 text-xs font-bold text-white bg-amber-600 hover:bg-amber-700 rounded-xl shadow-sm shadow-amber-600/30"
+                                className="px-3 py-1.5 text-xs font-semibold text-white bg-amber-600 hover:bg-amber-700 rounded-md transition"
                             >
                                 Simpan Capaian
                             </button>
@@ -1070,17 +1071,17 @@ export default function HabitsIndex({
 
             {/* Modal Create & Edit Habit */}
             {isModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
-                    <div className="bg-white dark:bg-stone-900 rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-stone-200 dark:border-stone-800 max-h-[90vh] overflow-y-auto">
-                        <div className="flex items-center justify-between pb-4 border-b border-stone-200 dark:border-stone-800">
-                            <h2 className="text-lg font-bold text-stone-900 dark:text-stone-100">
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40">
+                    <div className="bg-white dark:bg-stone-900 rounded-xl max-w-lg w-full p-5 border border-stone-200 dark:border-stone-800 shadow-xl max-h-[90vh] overflow-y-auto">
+                        <div className="flex items-center justify-between pb-3 border-b border-stone-200 dark:border-stone-800">
+                            <h2 className="text-base font-bold text-stone-900 dark:text-stone-100">
                                 {editingHabit ? 'Edit Kebiasaan' : 'Tambah Kebiasaan Baru'}
                             </h2>
                             <button
                                 onClick={() => setIsModalOpen(false)}
-                                className="p-1 text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 transition"
+                                className="p-1 text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 rounded-md hover:bg-stone-100 dark:hover:bg-stone-800 transition"
                             >
-                                <X className="w-5 h-5" />
+                                <X className="w-4 h-4" />
                             </button>
                         </div>
 
@@ -1096,7 +1097,7 @@ export default function HabitsIndex({
                                     value={data.name}
                                     onChange={(e) => setData('name', e.target.value)}
                                     placeholder="Contoh: Meditasi Pagi, Minum Air, Olahraga..."
-                                    className="w-full text-xs bg-stone-50 dark:bg-stone-850 rounded-xl border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 px-3 py-2 focus:outline-none focus:border-amber-600"
+                                    className="w-full text-xs bg-white dark:bg-stone-850 rounded-lg border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 px-3 py-2 focus:outline-none focus:border-amber-600"
                                 />
                                 {errors.name && <p className="mt-1 text-[11px] text-rose-500">{errors.name}</p>}
                             </div>
@@ -1111,7 +1112,7 @@ export default function HabitsIndex({
                                     value={data.description}
                                     onChange={(e) => setData('description', e.target.value)}
                                     placeholder="Alasan atau motivasi kebiasaan ini..."
-                                    className="w-full text-xs bg-stone-50 dark:bg-stone-850 rounded-xl border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 px-3 py-2 focus:outline-none focus:border-amber-600"
+                                    className="w-full text-xs bg-white dark:bg-stone-850 rounded-lg border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 px-3 py-2 focus:outline-none focus:border-amber-600"
                                 />
                             </div>
 
@@ -1140,10 +1141,10 @@ export default function HabitsIndex({
                                                         setData('unit', 'menit');
                                                     }
                                                 }}
-                                                className={`flex items-center justify-center gap-1.5 py-2.5 text-xs font-bold rounded-xl border transition-all ${
+                                                className={`flex items-center justify-center gap-1.5 py-2 text-xs font-medium rounded-lg border transition-all ${
                                                     data.measurement_type === t.id
-                                                        ? 'bg-amber-600 text-white border-amber-600 shadow-sm'
-                                                        : 'bg-stone-50 dark:bg-stone-850 text-stone-600 dark:text-stone-300 border-stone-200 dark:border-stone-800 hover:bg-stone-100'
+                                                        ? 'bg-amber-600 text-white border-amber-600'
+                                                        : 'bg-stone-50 dark:bg-stone-850 text-stone-700 dark:text-stone-300 border-stone-200 dark:border-stone-800 hover:bg-stone-100'
                                                 }`}
                                             >
                                                 <IconComp className="w-3.5 h-3.5" />
@@ -1156,7 +1157,7 @@ export default function HabitsIndex({
 
                             {/* Target Nilai & Satuan */}
                             {data.measurement_type !== 'boolean' && (
-                                <div className="grid grid-cols-2 gap-3 p-3 bg-stone-50 dark:bg-stone-850/60 rounded-xl border border-stone-200/80 dark:border-stone-800">
+                                <div className="grid grid-cols-2 gap-3 p-3 bg-stone-50 dark:bg-stone-850 rounded-lg border border-stone-200 dark:border-stone-800">
                                     <div>
                                         <label className="block text-xs font-bold text-stone-700 dark:text-stone-300 uppercase tracking-wider mb-1">
                                             Target Angka *
@@ -1168,7 +1169,7 @@ export default function HabitsIndex({
                                             value={data.target_value}
                                             onChange={(e) => setData('target_value', Number(e.target.value))}
                                             placeholder="Contoh: 2000, 30"
-                                            className="w-full text-xs bg-white dark:bg-stone-900 rounded-xl border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 px-3 py-2 focus:outline-none focus:border-amber-600"
+                                            className="w-full text-xs bg-white dark:bg-stone-900 rounded-lg border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 px-3 py-2 focus:outline-none focus:border-amber-600"
                                         />
                                     </div>
                                     <div>
@@ -1181,7 +1182,7 @@ export default function HabitsIndex({
                                             value={data.unit}
                                             onChange={(e) => setData('unit', e.target.value)}
                                             placeholder={data.measurement_type === 'duration' ? 'menit, jam' : 'ml, halaman, langkah'}
-                                            className="w-full text-xs bg-white dark:bg-stone-900 rounded-xl border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 px-3 py-2 focus:outline-none focus:border-amber-600"
+                                            className="w-full text-xs bg-white dark:bg-stone-900 rounded-lg border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 px-3 py-2 focus:outline-none focus:border-amber-600"
                                         />
                                     </div>
                                 </div>
@@ -1196,11 +1197,11 @@ export default function HabitsIndex({
                                     <select
                                         value={data.frequency_type}
                                         onChange={(e) => setData('frequency_type', e.target.value as any)}
-                                        className="w-full text-xs bg-stone-50 dark:bg-stone-850 rounded-xl border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 px-3 py-2 focus:outline-none focus:border-amber-600"
+                                        className="w-full text-xs bg-white dark:bg-stone-850 rounded-lg border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 px-3 py-2 focus:outline-none focus:border-amber-600"
                                     >
                                         <option value="daily">Setiap Hari (Harian)</option>
-                                        <option value="specific_days">Hari-Hari Tertentu dalam Sepekan</option>
-                                        <option value="weekly_target">Target Akumulasi Hari per Pekan</option>
+                                        <option value="specific_days">Hari Tertentu dalam Pekan</option>
+                                        <option value="weekly_target">Target Hari per Pekan</option>
                                     </select>
                                 </div>
                                 <div>
@@ -1211,7 +1212,7 @@ export default function HabitsIndex({
                                         type="time"
                                         value={data.time_of_day}
                                         onChange={(e) => setData('time_of_day', e.target.value)}
-                                        className="w-full text-xs bg-stone-50 dark:bg-stone-850 rounded-xl border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 px-3 py-2 focus:outline-none focus:border-amber-600"
+                                        className="w-full text-xs bg-white dark:bg-stone-850 rounded-lg border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 px-3 py-2 focus:outline-none focus:border-amber-600"
                                     />
                                     {errors.time_of_day && (
                                         <p className="mt-1 text-[11px] text-rose-500">{errors.time_of_day}</p>
@@ -1239,10 +1240,10 @@ export default function HabitsIndex({
                                                             : [...current, d.value];
                                                         setData('scheduled_days', next);
                                                     }}
-                                                    className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                                                    className={`flex-1 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                                                         isSelected
                                                             ? 'bg-amber-600 text-white'
-                                                            : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300'
+                                                            : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-200'
                                                     }`}
                                                 >
                                                     {d.label}
@@ -1265,7 +1266,7 @@ export default function HabitsIndex({
                                         max={7}
                                         value={data.weekly_target_days}
                                         onChange={(e) => setData('weekly_target_days', Number(e.target.value))}
-                                        className="w-full text-xs bg-stone-50 dark:bg-stone-850 rounded-xl border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 px-3 py-2 focus:outline-none focus:border-amber-600"
+                                        className="w-full text-xs bg-white dark:bg-stone-850 rounded-lg border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 px-3 py-2 focus:outline-none focus:border-amber-600"
                                     />
                                 </div>
                             )}
@@ -1275,17 +1276,17 @@ export default function HabitsIndex({
                                 <label className="block text-xs font-bold text-stone-700 dark:text-stone-300 uppercase tracking-wider mb-1.5">
                                     Warna Label Kebiasaan
                                 </label>
-                                <div className="flex items-center gap-3">
+                                <div className="flex items-center gap-2.5">
                                     {COLOR_OPTIONS.map((c) => (
                                         <button
                                             key={c.value}
                                             type="button"
                                             onClick={() => setData('color', c.value)}
-                                            className={`w-7 h-7 rounded-full ${c.bg} flex items-center justify-center transition-all ${
+                                            className={`w-6 h-6 rounded-full ${c.bg} flex items-center justify-center transition-all ${
                                                 data.color === c.value ? 'ring-2 ring-offset-2 ' + c.ring : 'opacity-70'
                                             }`}
                                         >
-                                            {data.color === c.value && <Check className="w-4 h-4 text-white stroke-[3]" />}
+                                            {data.color === c.value && <Check className="w-3.5 h-3.5 text-white stroke-[3]" />}
                                         </button>
                                     ))}
                                 </div>
@@ -1296,17 +1297,17 @@ export default function HabitsIndex({
                                 <label className="block text-xs font-bold text-stone-700 dark:text-stone-300 uppercase tracking-wider mb-1.5">
                                     Icon Kebiasaan
                                 </label>
-                                <div className="p-3 bg-stone-50 dark:bg-stone-850 rounded-xl border border-stone-200 dark:border-stone-800 space-y-3">
+                                <div className="p-3 bg-stone-50 dark:bg-stone-850 rounded-lg border border-stone-200 dark:border-stone-800 space-y-3">
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-2.5">
                                             <div
-                                                className="w-9 h-9 rounded-xl flex items-center justify-center shadow-sm"
+                                                className="w-8 h-8 rounded-lg flex items-center justify-center"
                                                 style={{ backgroundColor: data.color || '#d97706' }}
                                             >
                                                 <Icons name={data.icon} className="w-4 h-4 text-white" />
                                             </div>
                                             <div>
-                                                <div className="text-xs font-bold text-stone-900 dark:text-stone-100">
+                                                <div className="text-xs font-semibold text-stone-900 dark:text-stone-100">
                                                     {data.icon || 'check'}
                                                 </div>
                                                 <div className="text-[10px] text-stone-400">
@@ -1318,7 +1319,7 @@ export default function HabitsIndex({
                                         <button
                                             type="button"
                                             onClick={() => setIconPickerTarget('form')}
-                                            className="px-3 py-1.5 rounded-xl text-xs font-bold text-amber-700 dark:text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-300 dark:border-amber-800 transition flex items-center gap-1.5"
+                                            className="px-2.5 py-1 rounded-lg text-xs font-medium text-stone-700 dark:text-stone-300 bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-750 border border-stone-200 dark:border-stone-700 transition flex items-center gap-1.5"
                                         >
                                             <Search className="w-3.5 h-3.5" />
                                             <span>Ganti Icon</span>
@@ -1327,7 +1328,7 @@ export default function HabitsIndex({
 
                                     {/* Quick Picks */}
                                     <div>
-                                        <label className="text-[10px] font-bold uppercase tracking-wider text-stone-400 block mb-1">
+                                        <label className="text-[10px] font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 block mb-1">
                                             Pilihan Cepat
                                         </label>
                                         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-thin">
@@ -1342,16 +1343,15 @@ export default function HabitsIndex({
                                                 'heart',
                                                 'coffee',
                                                 'zap',
-                                                'sparkles',
                                                 'activity',
                                             ].map((iconKey) => (
                                                 <button
                                                     key={iconKey}
                                                     type="button"
                                                     onClick={() => setData('icon', iconKey)}
-                                                    className={`p-2 rounded-xl flex items-center justify-center border transition-all flex-shrink-0 ${
+                                                    className={`p-1.5 rounded-lg flex items-center justify-center border transition-all flex-shrink-0 ${
                                                         data.icon === iconKey
-                                                            ? 'bg-amber-600 text-white border-amber-600 shadow-sm'
+                                                            ? 'bg-amber-600 text-white border-amber-600'
                                                             : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-100'
                                                     }`}
                                                 >
@@ -1364,18 +1364,18 @@ export default function HabitsIndex({
                             </div>
 
                             {/* Actions */}
-                            <div className="pt-4 border-t border-stone-200 dark:border-stone-800 flex items-center justify-end gap-2">
+                            <div className="pt-3 border-t border-stone-200 dark:border-stone-800 flex items-center justify-end gap-2">
                                 <button
                                     type="button"
                                     onClick={() => setIsModalOpen(false)}
-                                    className="px-4 py-2 text-xs font-semibold text-stone-700 dark:text-stone-300 bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 rounded-xl transition"
+                                    className="px-3 py-1.5 text-xs font-medium text-stone-700 dark:text-stone-300 bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 rounded-lg transition"
                                 >
                                     Batal
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={processing}
-                                    className="px-5 py-2 text-xs font-bold text-white bg-amber-600 hover:bg-amber-700 rounded-xl shadow-sm shadow-amber-600/30 transition disabled:opacity-50"
+                                    className="px-4 py-1.5 text-xs font-semibold text-white bg-amber-600 hover:bg-amber-700 rounded-lg transition disabled:opacity-50"
                                 >
                                     {processing ? 'Menyimpan...' : editingHabit ? 'Simpan Perubahan' : 'Buat Habit'}
                                 </button>
@@ -1387,22 +1387,22 @@ export default function HabitsIndex({
 
             {/* Guard Modal: Percobaan menandai di luar hari ini */}
             {guardModalInfo.show && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
-                    <div className="bg-white dark:bg-stone-900 rounded-2xl max-w-sm w-full p-5 shadow-2xl border border-stone-200 dark:border-stone-800 text-center">
-                        <div className="w-11 h-11 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center mx-auto mb-3">
-                            <AlertCircle className="w-6 h-6" />
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40">
+                    <div className="bg-white dark:bg-stone-900 rounded-xl max-w-sm w-full p-5 border border-stone-200 dark:border-stone-800 shadow-xl text-center">
+                        <div className="w-10 h-10 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-400 flex items-center justify-center mx-auto mb-3">
+                            <AlertCircle className="w-5 h-5" />
                         </div>
-                        <h3 className="text-base font-bold text-stone-900 dark:text-stone-100">
+                        <h3 className="text-sm font-semibold text-stone-900 dark:text-stone-100">
                             Tidak Dapat Menandai
                         </h3>
-                        <p className="mt-1.5 text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
-                            Anda hanya dapat menandai atau mencatat kebiasaan untuk hari ini (<strong>{filter_date}</strong>). Tanggal <strong>{guardModalInfo.targetDate}</strong> tidak dapat diubah.
+                        <p className="mt-1 text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
+                            Penandaan habit hanya dapat dilakukan untuk hari ini (<strong>{filter_date}</strong>). Tanggal <strong>{guardModalInfo.targetDate}</strong> tidak dapat diubah.
                         </p>
-                        <div className="mt-5">
+                        <div className="mt-4">
                             <button
                                 type="button"
                                 onClick={() => setGuardModalInfo({ show: false, targetDate: '' })}
-                                className="w-full py-2 px-4 rounded-xl text-xs font-bold text-white bg-amber-600 hover:bg-amber-700 transition shadow-sm shadow-amber-600/30"
+                                className="w-full py-1.5 px-4 rounded-lg text-xs font-semibold text-white bg-amber-600 hover:bg-amber-700 transition"
                             >
                                 Mengerti
                             </button>
