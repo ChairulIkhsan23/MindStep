@@ -88,6 +88,7 @@ class HabitController extends Controller
                 'end_date' => $habit->end_date?->toDateString(),
                 'color' => $habit->color,
                 'icon' => $habit->icon,
+                'time_of_day' => $habit->time_of_day,
                 'is_archived' => $habit->is_archived,
                 'today_log' => $todayLog ? [
                     'id' => $todayLog->id,

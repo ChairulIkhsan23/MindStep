@@ -6,6 +6,7 @@ import {
     AlertCircle,
     Archive,
     ArchiveRestore,
+    ArrowDownUp,
     Check,
     ChevronLeft,
     ChevronRight,
@@ -63,6 +64,7 @@ interface HabitItem {
     end_date: string | null;
     color: string | null;
     icon: string | null;
+    time_of_day: string | null;
     is_archived: boolean;
     today_log: HabitLogInfo | null;
     week_logs?: Record<string, HabitLogInfo>;
@@ -111,6 +113,11 @@ export default function HabitsIndex({
     showing_archived,
 }: Props) {
     const [searchQuery, setSearchQuery] = useState('');
+    const [timeSortOrder, setTimeSortOrder] = useState<'none' | 'asc' | 'desc'>('none');
+    const [guardModalInfo, setGuardModalInfo] = useState<{
+        show: boolean;
+        targetDate: string;
+    }>({ show: false, targetDate: '' });
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingHabit, setEditingHabit] = useState<HabitItem | null>(null);
     const [activeMenuId, setActiveMenuId] = useState<number | null>(null);
@@ -141,6 +148,7 @@ export default function HabitsIndex({
         start_date: filter_date,
         color: '#d97706',
         icon: 'check',
+        time_of_day: '' as string,
     });
 
     const openCreateModal = () => {
@@ -159,6 +167,7 @@ export default function HabitsIndex({
             start_date: filter_date,
             color: '#d97706',
             icon: 'check',
+            time_of_day: '',
         });
         setIsModalOpen(true);
     };
@@ -178,6 +187,7 @@ export default function HabitsIndex({
             start_date: habit.start_date,
             color: habit.color ?? '#d97706',
             icon: habit.icon ?? 'check',
+            time_of_day: habit.time_of_day ?? '',
         });
         setActiveMenuId(null);
         setIsModalOpen(true);
@@ -266,8 +276,17 @@ export default function HabitsIndex({
         );
     };
 
-    // Cell logging actions
+    // Cell logging actions with Today guard
     const handleCellClick = (habit: HabitItem, dateStr: string) => {
+        const todayDate = filter_date;
+        if (dateStr !== todayDate) {
+            setGuardModalInfo({
+                show: true,
+                targetDate: dateStr,
+            });
+            return;
+        }
+
         const log = habit.week_logs?.[dateStr];
         const isCompleted = log?.status === 'completed';
 
@@ -336,14 +355,30 @@ export default function HabitsIndex({
     };
 
     const filteredHabits = useMemo(() => {
-        return habits.filter((h) => {
+        let result = habits.filter((h) => {
             if (searchQuery.trim() === '') return true;
             return (
                 h.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 (h.description && h.description.toLowerCase().includes(searchQuery.toLowerCase()))
             );
         });
-    }, [habits, searchQuery]);
+
+        if (timeSortOrder === 'asc') {
+            result = [...result].sort((a, b) => {
+                const tA = a.time_of_day || '99:99';
+                const tB = b.time_of_day || '99:99';
+                return tA.localeCompare(tB);
+            });
+        } else if (timeSortOrder === 'desc') {
+            result = [...result].sort((a, b) => {
+                const tA = a.time_of_day || '00:00';
+                const tB = b.time_of_day || '00:00';
+                return tB.localeCompare(tA);
+            });
+        }
+
+        return result;
+    }, [habits, searchQuery, timeSortOrder]);
 
     const formattedRange = useMemo(() => {
         if (!week_start || !week_end) return '';
@@ -405,8 +440,39 @@ export default function HabitsIndex({
                     </div>
                 </div>
 
-                {/* Search */}
-                <div className="flex justify-end">
+                {/* Toolbar: Sorting Waktu & Search */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    {/* Waktu Sorting Buttons */}
+                    <div className="flex items-center gap-1.5 text-xs font-semibold">
+                        <span className="text-stone-400 dark:text-stone-500 mr-1 flex items-center gap-1">
+                            <Clock className="w-3.5 h-3.5" />
+                            <span>Urutkan Waktu:</span>
+                        </span>
+                        <button
+                            type="button"
+                            onClick={() => setTimeSortOrder(timeSortOrder === 'asc' ? 'none' : 'asc')}
+                            className={`px-3 py-1.5 rounded-xl border transition-all ${
+                                timeSortOrder === 'asc'
+                                    ? 'bg-amber-600 text-white border-amber-600 shadow-sm'
+                                    : 'bg-white dark:bg-stone-900 border-stone-200/90 dark:border-stone-800 text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-850'
+                            }`}
+                        >
+                            🌅 Pagi &rarr; Malam
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setTimeSortOrder(timeSortOrder === 'desc' ? 'none' : 'desc')}
+                            className={`px-3 py-1.5 rounded-xl border transition-all ${
+                                timeSortOrder === 'desc'
+                                    ? 'bg-amber-600 text-white border-amber-600 shadow-sm'
+                                    : 'bg-white dark:bg-stone-900 border-stone-200/90 dark:border-stone-800 text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-850'
+                            }`}
+                        >
+                            🌙 Malam &rarr; Pagi
+                        </button>
+                    </div>
+
+                    {/* Search */}
                     <div className="relative w-full sm:w-64">
                         <Search className="w-3.5 h-3.5 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
                         <input
@@ -639,6 +705,12 @@ export default function HabitsIndex({
                                                                     <span className="group-hover:text-amber-600 transition-colors">
                                                                         {habit.name}
                                                                     </span>
+                                                                    {habit.time_of_day && (
+                                                                        <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md text-[10px] font-bold bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-200/80 dark:border-amber-800/60">
+                                                                            <Clock className="w-2.5 h-2.5" />
+                                                                            {habit.time_of_day}
+                                                                        </span>
+                                                                    )}
                                                                     <Edit3 className="w-3 h-3 text-stone-400 opacity-0 group-hover:opacity-100 transition-opacity" />
                                                                     {habit.is_archived && (
                                                                         <span className="text-[10px] font-semibold text-stone-400 px-1.5 py-0.2 rounded bg-stone-100 dark:bg-stone-800">
@@ -762,13 +834,12 @@ export default function HabitsIndex({
                                                     )}
                                                 </td>
 
-                                                {/* 7 Days Cells */}
+                                                {/* 7 Days Cells: Circle Polos Tanpa Shadow */}
                                                 {week_days.map((wd) => {
                                                     const log = habit.week_logs?.[wd.date];
                                                     const isCompleted = log?.status === 'completed';
                                                     const isPartial = log?.status === 'partial';
                                                     const isFreeze = log?.status === 'freeze';
-                                                    const actualVal = log ? Number(log.actual_value) : 0;
 
                                                     return (
                                                         <td
@@ -781,33 +852,25 @@ export default function HabitsIndex({
                                                                 type="button"
                                                                 onClick={() => handleCellClick(habit, wd.date)}
                                                                 disabled={habit.is_archived}
-                                                                title={`Klik untuk edit log ${wd.date}`}
-                                                                className={`w-9 h-9 mx-auto rounded-xl flex items-center justify-center font-bold text-xs transition-all ${
+                                                                title={`Tandai log ${wd.date}`}
+                                                                className={`w-8 h-8 mx-auto rounded-full flex items-center justify-center font-bold text-xs border transition-all ${
                                                                     isCompleted
-                                                                        ? 'bg-emerald-600 text-white shadow-sm shadow-emerald-600/30'
+                                                                        ? 'bg-emerald-600 border-emerald-600 text-white'
                                                                         : isFreeze
-                                                                        ? 'bg-sky-500 text-white shadow-sm shadow-sky-500/30'
+                                                                        ? 'bg-sky-500 border-sky-500 text-white'
                                                                         : isPartial
-                                                                        ? 'bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 border border-amber-300 dark:border-amber-700'
-                                                                        : 'bg-stone-100/80 dark:bg-stone-800 text-stone-400 hover:bg-stone-200 dark:hover:bg-stone-700'
+                                                                        ? 'bg-amber-50 dark:bg-amber-950/40 border-amber-400 text-amber-700 dark:text-amber-400'
+                                                                        : 'bg-white dark:bg-stone-900 border-stone-300/80 dark:border-stone-700 text-stone-300 dark:text-stone-600 hover:border-amber-500 hover:text-amber-500'
                                                                 }`}
                                                             >
                                                                 {isFreeze ? (
-                                                                    <Snowflake className="w-4 h-4 stroke-[2.5]" />
-                                                                ) : habit.measurement_type === 'boolean' ? (
-                                                                    isCompleted ? (
-                                                                        <Check className="w-4 h-4 stroke-[3]" />
-                                                                    ) : (
-                                                                        <span className="opacity-0 hover:opacity-40">✓</span>
-                                                                    )
-                                                                ) : actualVal > 0 ? (
-                                                                    <span className="text-[10px] leading-tight">
-                                                                        {actualVal >= 1000 ? `${(actualVal / 1000).toFixed(1)}k` : actualVal}
-                                                                    </span>
+                                                                    <Snowflake className="w-3.5 h-3.5 stroke-[2.5]" />
+                                                                ) : isCompleted ? (
+                                                                    <Check className="w-4 h-4 stroke-[3]" />
+                                                                ) : isPartial ? (
+                                                                    <span className="text-[10px] font-black leading-none">½</span>
                                                                 ) : (
-                                                                    <span className="text-stone-300 dark:text-stone-600 text-[10px]">
-                                                                        -
-                                                                    </span>
+                                                                    <Check className="w-3.5 h-3.5 stroke-[2] opacity-0 hover:opacity-40 transition-opacity" />
                                                                 )}
                                                             </button>
                                                         </td>
@@ -1124,20 +1187,36 @@ export default function HabitsIndex({
                                 </div>
                             )}
 
-                            {/* Frekuensi */}
-                            <div>
-                                <label className="block text-xs font-bold text-stone-700 dark:text-stone-300 uppercase tracking-wider mb-1">
-                                    Jadwal Frekuensi
-                                </label>
-                                <select
-                                    value={data.frequency_type}
-                                    onChange={(e) => setData('frequency_type', e.target.value as any)}
-                                    className="w-full text-xs bg-stone-50 dark:bg-stone-850 rounded-xl border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 px-3 py-2 focus:outline-none focus:border-amber-600"
-                                >
-                                    <option value="daily">Setiap Hari (Harian)</option>
-                                    <option value="specific_days">Hari-Hari Tertentu dalam Sepekan</option>
-                                    <option value="weekly_target">Target Akumulasi Hari per Pekan</option>
-                                </select>
+                            {/* Frekuensi & Waktu */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                    <label className="block text-xs font-bold text-stone-700 dark:text-stone-300 uppercase tracking-wider mb-1">
+                                        Jadwal Frekuensi
+                                    </label>
+                                    <select
+                                        value={data.frequency_type}
+                                        onChange={(e) => setData('frequency_type', e.target.value as any)}
+                                        className="w-full text-xs bg-stone-50 dark:bg-stone-850 rounded-xl border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 px-3 py-2 focus:outline-none focus:border-amber-600"
+                                    >
+                                        <option value="daily">Setiap Hari (Harian)</option>
+                                        <option value="specific_days">Hari-Hari Tertentu dalam Sepekan</option>
+                                        <option value="weekly_target">Target Akumulasi Hari per Pekan</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-stone-700 dark:text-stone-300 uppercase tracking-wider mb-1">
+                                        Waktu Pelaksanaan (Opsional)
+                                    </label>
+                                    <input
+                                        type="time"
+                                        value={data.time_of_day}
+                                        onChange={(e) => setData('time_of_day', e.target.value)}
+                                        className="w-full text-xs bg-stone-50 dark:bg-stone-850 rounded-xl border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 px-3 py-2 focus:outline-none focus:border-amber-600"
+                                    />
+                                    {errors.time_of_day && (
+                                        <p className="mt-1 text-[11px] text-rose-500">{errors.time_of_day}</p>
+                                    )}
+                                </div>
                             </div>
 
                             {/* Specific Days Checkbox */}
@@ -1302,6 +1381,32 @@ export default function HabitsIndex({
                                 </button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Guard Modal: Percobaan menandai di luar hari ini */}
+            {guardModalInfo.show && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
+                    <div className="bg-white dark:bg-stone-900 rounded-2xl max-w-sm w-full p-5 shadow-2xl border border-stone-200 dark:border-stone-800 text-center">
+                        <div className="w-11 h-11 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center mx-auto mb-3">
+                            <AlertCircle className="w-6 h-6" />
+                        </div>
+                        <h3 className="text-base font-bold text-stone-900 dark:text-stone-100">
+                            Tidak Dapat Menandai
+                        </h3>
+                        <p className="mt-1.5 text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
+                            Anda hanya dapat menandai atau mencatat kebiasaan untuk hari ini (<strong>{filter_date}</strong>). Tanggal <strong>{guardModalInfo.targetDate}</strong> tidak dapat diubah.
+                        </p>
+                        <div className="mt-5">
+                            <button
+                                type="button"
+                                onClick={() => setGuardModalInfo({ show: false, targetDate: '' })}
+                                className="w-full py-2 px-4 rounded-xl text-xs font-bold text-white bg-amber-600 hover:bg-amber-700 transition shadow-sm shadow-amber-600/30"
+                            >
+                                Mengerti
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}

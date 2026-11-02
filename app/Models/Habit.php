@@ -25,6 +25,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'end_date',
     'color',
     'icon',
+    'time_of_day',
     'is_archived',
 ])]
 class Habit extends Model
