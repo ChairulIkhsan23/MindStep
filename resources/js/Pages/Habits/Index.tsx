@@ -817,7 +817,7 @@ export default function HabitsIndex({
                                                                 </button>
 
                                                                 {/* Nested Flyout Card on Hover */}
-                                                                <div className="hidden group-hover/qty:block absolute left-full top-0 pl-3 z-50">
+                                                                <div className="hidden group-hover/qty:block absolute left-full -top-1.5 pl-4 z-50">
                                                                     <div className="w-64 p-3.5 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl shadow-xl text-left space-y-2.5 animate-in fade-in">
                                                                     <div className="text-[10px] font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider">
                                                                         Konfigurasi Kuantitas
@@ -935,7 +935,7 @@ export default function HabitsIndex({
                                                                 </button>
 
                                                                 {/* Nested Flyout Card on Hover */}
-                                                                <div className="hidden group-hover/dur:block absolute left-full top-0 pl-3 z-50">
+                                                                <div className="hidden group-hover/dur:block absolute left-full -top-1.5 pl-4 z-50">
                                                                     <div className="w-60 p-3.5 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl shadow-xl text-left space-y-2.5 animate-in fade-in">
                                                                     <div className="text-[10px] font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider">
                                                                         Konfigurasi Durasi
@@ -1343,7 +1343,7 @@ export default function HabitsIndex({
                                                                     </button>
 
                                                                     {/* Nested Flyout Card on Hover */}
-                                                                    <div className="hidden group-hover/editqty:block absolute left-full top-0 pl-3 z-50">
+                                                                    <div className="hidden group-hover/editqty:block absolute left-full -top-1.5 pl-4 z-50">
                                                                         <div className="w-64 p-3.5 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl shadow-xl text-left space-y-2.5 animate-in fade-in">
                                                                             <div className="text-[10px] font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider">
                                                                                 Konfigurasi Kuantitas
@@ -1445,7 +1445,7 @@ export default function HabitsIndex({
                                                                     </button>
 
                                                                     {/* Nested Flyout Card on Hover */}
-                                                                    <div className="hidden group-hover/editdur:block absolute left-full top-0 pl-3 z-50">
+                                                                    <div className="hidden group-hover/editdur:block absolute left-full -top-1.5 pl-4 z-50">
                                                                         <div className="w-60 p-3.5 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl shadow-xl text-left space-y-2.5 animate-in fade-in">
                                                                             <div className="text-[10px] font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider">
                                                                                 Konfigurasi Durasi
