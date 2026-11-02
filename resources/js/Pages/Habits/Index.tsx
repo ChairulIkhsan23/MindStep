@@ -55,7 +55,8 @@ interface HabitItem {
     icon: string | null;
     is_archived: boolean;
     today_log: HabitLogInfo | null;
-    streak: StreakInfo;
+    stats?: StreakInfo;
+    streak?: StreakInfo;
 }
 
 interface Props {
@@ -556,10 +557,10 @@ export default function HabitsIndex({
                                         <div className="mt-3 flex items-center justify-between">
                                             <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-200/60 dark:border-amber-800/40 text-xs font-bold">
                                                 <Flame className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
-                                                <span>{habit.streak.current_streak} Hari</span>
+                                                <span>{habit.streak?.current_streak ?? habit.stats?.current_streak ?? 0} Hari</span>
                                             </div>
                                             <span className="text-[11px] font-medium text-stone-500 dark:text-stone-400">
-                                                {habit.streak.streak_level.label}
+                                                {habit.streak?.streak_level?.label ?? habit.stats?.streak_level?.label ?? 'Memulai'}
                                             </span>
                                         </div>
                                     </div>

@@ -67,6 +67,7 @@ class HabitController extends Controller
                     'status' => $todayLog->status,
                     'notes' => $todayLog->notes,
                 ] : null,
+                'streak' => $stats,
                 'stats' => $stats,
             ];
         });
