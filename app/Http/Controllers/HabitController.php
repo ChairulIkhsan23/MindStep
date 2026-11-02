@@ -29,21 +29,49 @@ class HabitController extends Controller
         $user = $request->user();
         $userTimezone = $user->timezone ?? 'UTC';
 
-        $filterDate = $request->query('date')
-            ? Carbon::parse($request->query('date'), $userTimezone)->toDateString()
-            : Carbon::now($userTimezone)->toDateString();
+        $refDate = $request->query('date')
+            ? Carbon::parse($request->query('date'), $userTimezone)
+            : Carbon::now($userTimezone);
+        $filterDate = $refDate->toDateString();
+
+        // Calculate Monday to Sunday of the active week
+        $startOfWeek = $refDate->copy()->startOfWeek(Carbon::MONDAY);
+        $endOfWeek = $refDate->copy()->endOfWeek(Carbon::SUNDAY);
+
+        $weekDays = [];
+        $cursor = $startOfWeek->copy();
+        while ($cursor->lte($endOfWeek)) {
+            $weekDays[] = [
+                'date' => $cursor->toDateString(),
+                'day_name' => $cursor->locale('id')->isoFormat('ddd'),
+                'day_number' => $cursor->day,
+                'is_today' => $cursor->isToday(),
+            ];
+            $cursor->addDay();
+        }
 
         $showArchived = $request->boolean('archived');
 
         $habitsQuery = $user->habits()
             ->where('is_archived', $showArchived)
-            ->with(['logs' => function ($query) use ($filterDate) {
-                $query->whereDate('log_date', $filterDate);
+            ->with(['logs' => function ($query) use ($startOfWeek, $endOfWeek) {
+                $query->whereBetween('log_date', [$startOfWeek->toDateString(), $endOfWeek->toDateString()]);
             }])
             ->orderBy('created_at', 'desc');
 
         $habits = $habitsQuery->get()->map(function (Habit $habit) use ($filterDate) {
-            $todayLog = $habit->logs->first();
+            $todayLog = $habit->logs->firstWhere('log_date', Carbon::parse($filterDate));
+            $weekLogs = $habit->logs->mapWithKeys(function ($log) {
+                $dateKey = $log->log_date instanceof Carbon ? $log->log_date->toDateString() : (string) $log->log_date;
+
+                return [$dateKey => [
+                    'id' => $log->id,
+                    'actual_value' => (float) $log->actual_value,
+                    'status' => $log->status,
+                    'notes' => $log->notes,
+                ]];
+            })->all();
+
             $stats = $this->streakService->calculateForHabit($habit, Carbon::parse($filterDate));
 
             return [
@@ -67,6 +95,7 @@ class HabitController extends Controller
                     'status' => $todayLog->status,
                     'notes' => $todayLog->notes,
                 ] : null,
+                'week_logs' => $weekLogs,
                 'streak' => $stats,
                 'stats' => $stats,
             ];
@@ -80,6 +109,9 @@ class HabitController extends Controller
             'archived_count' => $archivedCount,
             'freeze_credits_remaining' => $remainingFreezes,
             'filter_date' => $filterDate,
+            'week_days' => $weekDays,
+            'week_start' => $startOfWeek->toDateString(),
+            'week_end' => $endOfWeek->toDateString(),
             'showing_archived' => $showArchived,
         ]);
     }

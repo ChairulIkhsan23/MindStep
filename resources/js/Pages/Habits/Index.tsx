@@ -4,17 +4,19 @@ import {
     AlertCircle,
     Archive,
     ArchiveRestore,
-    Calendar as CalendarIcon,
     Check,
     ChevronLeft,
     ChevronRight,
+    Clock,
     Edit3,
     Flame,
+    Hash,
     Minus,
     MoreVertical,
     Plus,
     Search,
     Snowflake,
+    Sparkles,
     Trash2,
     X,
 } from 'lucide-react';
@@ -39,6 +41,13 @@ interface HabitLogInfo {
     notes?: string | null;
 }
 
+interface WeekDayInfo {
+    date: string;
+    day_name: string;
+    day_number: number;
+    is_today: boolean;
+}
+
 interface HabitItem {
     id: number;
     name: string;
@@ -55,8 +64,9 @@ interface HabitItem {
     icon: string | null;
     is_archived: boolean;
     today_log: HabitLogInfo | null;
-    stats?: StreakInfo;
+    week_logs?: Record<string, HabitLogInfo>;
     streak?: StreakInfo;
+    stats?: StreakInfo;
 }
 
 interface Props {
@@ -64,6 +74,9 @@ interface Props {
     archived_count: number;
     freeze_credits_remaining: number;
     filter_date: string;
+    week_days?: WeekDayInfo[];
+    week_start?: string;
+    week_end?: string;
     showing_archived: boolean;
 }
 
@@ -91,6 +104,9 @@ export default function HabitsIndex({
     archived_count,
     freeze_credits_remaining,
     filter_date,
+    week_days = [],
+    week_start,
+    week_end,
     showing_archived,
 }: Props) {
     const [searchQuery, setSearchQuery] = useState('');
@@ -100,6 +116,13 @@ export default function HabitsIndex({
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingHabit, setEditingHabit] = useState<HabitItem | null>(null);
     const [activeMenuId, setActiveMenuId] = useState<number | null>(null);
+
+    // Quick popover cell editor for quantitative / duration
+    const [activeCellEdit, setActiveCellEdit] = useState<{
+        habit: HabitItem;
+        date: string;
+        currentVal: number;
+    } | null>(null);
 
     const { data, setData, post, put, processing, errors, reset, clearErrors } = useForm({
         name: '',
@@ -174,21 +197,17 @@ export default function HabitsIndex({
         }
     };
 
-    const handleDateChange = (newDate: string) => {
-        router.get(
-            route('habits.index'),
-            { date: newDate, archived: showing_archived ? 1 : 0 },
-            { preserveState: true }
-        );
-    };
-
-    const shiftDate = (days: number) => {
+    const handleShiftWeek = (days: number) => {
         const d = new Date(filter_date);
         d.setDate(d.getDate() + days);
         const yyyy = d.getFullYear();
         const mm = String(d.getMonth() + 1).padStart(2, '0');
         const dd = String(d.getDate()).padStart(2, '0');
-        handleDateChange(`${yyyy}-${mm}-${dd}`);
+        router.get(
+            route('habits.index'),
+            { date: `${yyyy}-${mm}-${dd}`, archived: showing_archived ? 1 : 0 },
+            { preserveState: true }
+        );
     };
 
     const toggleArchivedView = (showArchived: boolean) => {
@@ -199,61 +218,70 @@ export default function HabitsIndex({
         );
     };
 
-    // Logging actions
-    const handleLogToggleBoolean = (habit: HabitItem) => {
-        const isCompleted = habit.today_log?.status === 'completed';
-        if (isCompleted) {
-            router.delete(route('habits.logs.destroy', { habit: habit.id, date: filter_date }), {
+    // Cell logging actions
+    const handleCellClick = (habit: HabitItem, dateStr: string) => {
+        const log = habit.week_logs?.[dateStr];
+        const isCompleted = log?.status === 'completed';
+
+        if (habit.measurement_type === 'boolean') {
+            if (isCompleted) {
+                router.delete(route('habits.logs.destroy', { habit: habit.id, date: dateStr }), {
+                    preserveScroll: true,
+                });
+            } else {
+                router.post(
+                    route('habits.logs.store', habit.id),
+                    {
+                        log_date: dateStr,
+                        actual_value: 1,
+                        status: 'completed',
+                    },
+                    { preserveScroll: true }
+                );
+            }
+        } else {
+            // Quantitative / duration: buka quick editor
+            setActiveCellEdit({
+                habit,
+                date: dateStr,
+                currentVal: log ? Number(log.actual_value) : 0,
+            });
+        }
+    };
+
+    const saveCellLog = (val: number) => {
+        if (!activeCellEdit) return;
+        const { habit, date } = activeCellEdit;
+        const targetVal = Number(habit.target_value);
+
+        if (val <= 0) {
+            router.delete(route('habits.logs.destroy', { habit: habit.id, date }), {
                 preserveScroll: true,
             });
         } else {
             router.post(
                 route('habits.logs.store', habit.id),
                 {
-                    log_date: filter_date,
-                    actual_value: 1,
-                    status: 'completed',
+                    log_date: date,
+                    actual_value: val,
+                    status: val >= targetVal ? 'completed' : 'partial',
                 },
                 { preserveScroll: true }
             );
         }
+        setActiveCellEdit(null);
     };
 
-    const handleStepValue = (habit: HabitItem, delta: number) => {
-        const currentVal = habit.today_log ? Number(habit.today_log.actual_value) : 0;
-        const targetVal = Number(habit.target_value);
-        const nextVal = Math.max(0, Math.round((currentVal + delta) * 100) / 100);
-
-        if (nextVal === 0) {
-            router.delete(route('habits.logs.destroy', { habit: habit.id, date: filter_date }), {
-                preserveScroll: true,
-            });
-            return;
-        }
-
-        const nextStatus = nextVal >= targetVal ? 'completed' : 'partial';
-
-        router.post(
-            route('habits.logs.store', habit.id),
-            {
-                log_date: filter_date,
-                actual_value: nextVal,
-                status: nextStatus,
-            },
-            { preserveScroll: true }
-        );
-    };
-
-    const handleApplyFreeze = (habit: HabitItem) => {
+    const handleApplyFreeze = (habit: HabitItem, targetDate: string) => {
         if (freeze_credits_remaining <= 0) {
             alert('Kuota freeze Anda untuk bulan ini sudah habis (Maks 2x/bulan).');
             return;
         }
-        if (confirm(`Gunakan 1 kuota freeze untuk menjaga streak "${habit.name}" pada tanggal ini?`)) {
+        if (confirm(`Gunakan 1 kuota freeze untuk menjaga streak "${habit.name}" pada tanggal ${targetDate}?`)) {
             router.post(
                 route('habits.logs.store', habit.id),
                 {
-                    log_date: filter_date,
+                    log_date: targetDate,
                     status: 'freeze',
                     actual_value: 0,
                 },
@@ -291,19 +319,14 @@ export default function HabitsIndex({
     }, [habits, selectedTab, searchQuery]);
 
     const activeCount = habits.filter((h) => !h.is_archived).length;
-    const completedCount = habits.filter((h) => !h.is_archived && h.today_log?.status === 'completed').length;
 
-    const formattedDateLabel = useMemo(() => {
-        const today = new Date().toISOString().split('T')[0];
-        if (filter_date === today) return 'Hari Ini';
-        const d = new Date(filter_date);
-        return d.toLocaleDateString('id-ID', {
-            weekday: 'short',
-            day: 'numeric',
-            month: 'short',
-            year: 'numeric',
-        });
-    }, [filter_date]);
+    const formattedRange = useMemo(() => {
+        if (!week_start || !week_end) return '';
+        const d1 = new Date(week_start);
+        const d2 = new Date(week_end);
+        const opt: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short' };
+        return `${d1.toLocaleDateString('id-ID', opt)} - ${d2.toLocaleDateString('id-ID', { ...opt, year: 'numeric' })}`;
+    }, [week_start, week_end]);
 
     return (
         <AuthenticatedLayout>
@@ -315,7 +338,7 @@ export default function HabitsIndex({
                     <div>
                         <div className="flex items-center gap-2">
                             <span className="px-2 py-0.5 rounded-md text-[10px] font-extrabold tracking-wider uppercase bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800/60">
-                                Manajemen Kebiasaan
+                                Weekly Matrix Tracker
                             </span>
                             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300">
                                 <Snowflake className="w-3 h-3 text-sky-500" />
@@ -326,28 +349,27 @@ export default function HabitsIndex({
                             Habit Tracker
                         </h1>
                         <p className="mt-1 text-xs sm:text-sm text-stone-500 dark:text-stone-400">
-                            Bangun dan pantau konsistensi rutinitas harianmu selangkah demi selangkah.
+                            Catat dan pantau konsistensi seluruh rutinitas harianmu dalam spreadsheet mingguan terpadu.
                         </p>
                     </div>
 
                     <div className="flex items-center gap-2.5">
-                        {/* Date Navigator */}
+                        {/* Week Navigator */}
                         <div className="flex items-center bg-white dark:bg-stone-900 border border-stone-200/90 dark:border-stone-800 rounded-xl p-1 shadow-sm text-xs font-semibold">
                             <button
-                                onClick={() => shiftDate(-1)}
+                                onClick={() => handleShiftWeek(-7)}
                                 className="p-1.5 text-stone-500 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg transition"
-                                title="Hari Sebelumnya"
+                                title="Pekan Sebelumnya"
                             >
                                 <ChevronLeft className="w-4 h-4" />
                             </button>
-                            <div className="flex items-center gap-1.5 px-2 text-stone-700 dark:text-stone-300">
-                                <CalendarIcon className="w-3.5 h-3.5 text-amber-600" />
-                                <span>{formattedDateLabel}</span>
-                            </div>
+                            <span className="px-2.5 text-stone-700 dark:text-stone-300 font-bold whitespace-nowrap">
+                                {formattedRange}
+                            </span>
                             <button
-                                onClick={() => shiftDate(1)}
+                                onClick={() => handleShiftWeek(7)}
                                 className="p-1.5 text-stone-500 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg transition"
-                                title="Hari Berikutnya"
+                                title="Pekan Berikutnya"
                             >
                                 <ChevronRight className="w-4 h-4" />
                             </button>
@@ -355,7 +377,7 @@ export default function HabitsIndex({
 
                         <button
                             onClick={openCreateModal}
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-white bg-amber-600 hover:bg-amber-700 shadow-sm shadow-amber-600/20 transition"
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-white bg-amber-600 hover:bg-amber-700 shadow-sm shadow-amber-600/20 transition whitespace-nowrap"
                         >
                             <Plus className="w-4 h-4" />
                             <span>Tambah Habit</span>
@@ -363,9 +385,9 @@ export default function HabitsIndex({
                     </div>
                 </div>
 
-                {/* Quick Summary Pill & Filter Tabs */}
-                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
-                    <div className="flex flex-wrap items-center gap-2 text-xs font-semibold">
+                {/* Filter Tabs & Search */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="flex items-center gap-2 text-xs font-semibold">
                         <button
                             onClick={() => {
                                 setSelectedTab('all');
@@ -390,7 +412,7 @@ export default function HabitsIndex({
                                     : 'bg-white dark:bg-stone-900 border border-stone-200/90 dark:border-stone-800 text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-850'
                             }`}
                         >
-                            Sedang Aktif ({activeCount})
+                            Aktif ({activeCount})
                         </button>
                         <button
                             onClick={() => {
@@ -403,17 +425,11 @@ export default function HabitsIndex({
                                     : 'bg-white dark:bg-stone-900 border border-stone-200/90 dark:border-stone-800 text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-850'
                             }`}
                         >
-                            Diarsipkan ({archived_count})
+                            Arsip ({archived_count})
                         </button>
-
-                        <span className="hidden sm:inline-block text-stone-300 dark:text-stone-700">|</span>
-
-                        <span className="text-stone-500 dark:text-stone-400 text-xs">
-                            Capaian: <strong className="text-amber-600">{completedCount}</strong>/{activeCount} tuntas
-                        </span>
                     </div>
 
-                    <div className="relative w-full sm:w-72">
+                    <div className="relative w-full sm:w-64">
                         <Search className="w-3.5 h-3.5 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
                         <input
                             type="text"
@@ -425,7 +441,7 @@ export default function HabitsIndex({
                     </div>
                 </div>
 
-                {/* Habit Cards Grid */}
+                {/* WEEKLY MATRIX SPREADSHEET TABLE */}
                 {filteredHabits.length === 0 ? (
                     <div className="text-center py-16 bg-white dark:bg-stone-900/60 rounded-2xl border border-stone-200/80 dark:border-stone-800">
                         <AlertCircle className="w-10 h-10 mx-auto text-stone-400 dark:text-stone-500" />
@@ -433,9 +449,7 @@ export default function HabitsIndex({
                             {searchQuery ? 'Tidak ada habit yang cocok' : 'Belum ada habit'}
                         </h3>
                         <p className="mt-1 text-xs text-stone-500 dark:text-stone-400 max-w-sm mx-auto">
-                            {searchQuery
-                                ? 'Coba ubah kata kunci pencarian Anda.'
-                                : 'Mulai rutinitas baru sekarang untuk membangun kebiasaan baik setiap hari.'}
+                            Mulai rutinitas baru untuk mencatat konsistensi pekan ini.
                         </p>
                         {!searchQuery && (
                             <button
@@ -448,221 +462,358 @@ export default function HabitsIndex({
                         )}
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {filteredHabits.map((habit) => {
-                            const isCompleted = habit.today_log?.status === 'completed';
-                            const isFreeze = habit.today_log?.status === 'freeze';
-                            const actualVal = habit.today_log ? Number(habit.today_log.actual_value) : 0;
-                            const targetVal = Number(habit.target_value);
-                            const percent = Math.min(100, Math.round((actualVal / targetVal) * 100));
+                    <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200/90 dark:border-stone-800 shadow-sm overflow-hidden">
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left border-collapse">
+                                <thead>
+                                    <tr className="border-b border-stone-200/90 dark:border-stone-800 bg-stone-50/80 dark:bg-stone-850/60 text-[11px] font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider">
+                                        <th className="py-3.5 pl-5 pr-4 min-w-[240px]">Nama Kebiasaan</th>
+                                        <th className="py-3.5 px-3 w-28 text-center">Tipe / Target</th>
+                                        <th className="py-3.5 px-3 w-24 text-center">Streak</th>
+                                        {/* 7 Days Column */}
+                                        {week_days.map((wd) => (
+                                            <th
+                                                key={wd.date}
+                                                className={`py-3.5 px-2 text-center min-w-[58px] ${
+                                                    wd.is_today
+                                                        ? 'bg-amber-500/10 text-amber-700 dark:text-amber-400 font-extrabold'
+                                                        : ''
+                                                }`}
+                                            >
+                                                <div>{wd.day_name}</div>
+                                                <div className="text-stone-800 dark:text-stone-200 text-xs font-bold mt-0.5">
+                                                    {wd.day_number}
+                                                </div>
+                                            </th>
+                                        ))}
+                                        <th className="py-3.5 px-3 w-28 text-center">Progress Pekan</th>
+                                        <th className="py-3.5 pr-4 pl-2 w-12 text-center">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-stone-100 dark:divide-stone-800/70 text-xs">
+                                    {filteredHabits.map((habit) => {
+                                        // Count week completions
+                                        let weekCompleted = 0;
+                                        week_days.forEach((wd) => {
+                                            const log = habit.week_logs?.[wd.date];
+                                            if (log?.status === 'completed') weekCompleted++;
+                                        });
+                                        const weekPercent = Math.min(100, Math.round((weekCompleted / 7) * 100));
 
-                            return (
-                                <div
-                                    key={habit.id}
-                                    className={`relative flex flex-col justify-between p-5 rounded-2xl bg-white dark:bg-stone-900 border transition-all ${
-                                        isCompleted
-                                            ? 'border-emerald-200 dark:border-emerald-800/40 bg-emerald-500/[0.02]'
-                                            : isFreeze
-                                            ? 'border-sky-200 dark:border-sky-800/40 bg-sky-500/[0.02]'
-                                            : 'border-stone-200/90 dark:border-stone-800 hover:border-stone-300 dark:hover:border-stone-700 shadow-sm'
-                                    }`}
-                                >
-                                    {/* Top Card Info */}
-                                    <div>
-                                        <div className="flex items-start justify-between gap-2">
-                                            <div className="flex items-center gap-2">
-                                                <span
-                                                    className="w-2.5 h-2.5 rounded-full"
-                                                    style={{ backgroundColor: habit.color || '#d97706' }}
-                                                />
-                                                <span className="text-[11px] font-semibold text-stone-500 dark:text-stone-400 capitalize">
-                                                    {habit.frequency_type === 'daily'
-                                                        ? 'Harian'
-                                                        : habit.frequency_type === 'specific_days'
-                                                        ? 'Hari Tertentu'
-                                                        : `${habit.weekly_target_days} Hari/Pekan`}
-                                                </span>
-                                            </div>
-
-                                            {/* Action Menu Dropdown */}
-                                            <div className="relative">
-                                                <button
-                                                    onClick={() =>
-                                                        setActiveMenuId(activeMenuId === habit.id ? null : habit.id)
-                                                    }
-                                                    className="p-1 rounded-lg text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800 transition"
-                                                >
-                                                    <MoreVertical className="w-4 h-4" />
-                                                </button>
-
-                                                {activeMenuId === habit.id && (
-                                                    <div className="absolute right-0 mt-1 w-44 bg-white dark:bg-stone-850 border border-stone-200 dark:border-stone-800 rounded-xl shadow-lg z-20 py-1 text-xs">
-                                                        <button
-                                                            onClick={() => openEditModal(habit)}
-                                                            className="flex items-center gap-2 w-full px-3 py-2 text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800"
-                                                        >
-                                                            <Edit3 className="w-3.5 h-3.5 text-stone-400" />
-                                                            <span>Edit Habit</span>
-                                                        </button>
-                                                        {!isFreeze && !isCompleted && !habit.is_archived && (
-                                                            <button
-                                                                onClick={() => {
-                                                                    setActiveMenuId(null);
-                                                                    handleApplyFreeze(habit);
-                                                                }}
-                                                                className="flex items-center gap-2 w-full px-3 py-2 text-sky-600 dark:text-sky-400 hover:bg-sky-50 dark:hover:bg-sky-950/30"
-                                                            >
-                                                                <Snowflake className="w-3.5 h-3.5" />
-                                                                <span>Gunakan Freeze</span>
-                                                            </button>
-                                                        )}
-                                                        <button
-                                                            onClick={() => handleToggleArchive(habit)}
-                                                            className="flex items-center gap-2 w-full px-3 py-2 text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800"
-                                                        >
-                                                            {habit.is_archived ? (
-                                                                <>
-                                                                    <ArchiveRestore className="w-3.5 h-3.5 text-stone-400" />
-                                                                    <span>Pulihkan Habit</span>
-                                                                </>
-                                                            ) : (
-                                                                <>
-                                                                    <Archive className="w-3.5 h-3.5 text-stone-400" />
-                                                                    <span>Arsipkan</span>
-                                                                </>
+                                        return (
+                                            <tr
+                                                key={habit.id}
+                                                className="hover:bg-stone-50/50 dark:hover:bg-stone-850/30 transition-colors"
+                                            >
+                                                {/* Kolom Info Habit */}
+                                                <td className="py-3.5 pl-5 pr-4">
+                                                    <div className="flex items-center gap-2.5">
+                                                        <span
+                                                            className="w-3 h-3 rounded-full flex-shrink-0"
+                                                            style={{ backgroundColor: habit.color || '#d97706' }}
+                                                        />
+                                                        <div>
+                                                            <div className="font-bold text-stone-900 dark:text-stone-100 flex items-center gap-1.5">
+                                                                <span>{habit.name}</span>
+                                                                {habit.is_archived && (
+                                                                    <span className="text-[10px] font-semibold text-stone-400 px-1.5 py-0.2 rounded bg-stone-100 dark:bg-stone-800">
+                                                                        Arsip
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                            {habit.description && (
+                                                                <div className="text-[11px] text-stone-400 dark:text-stone-500 line-clamp-1">
+                                                                    {habit.description}
+                                                                </div>
                                                             )}
-                                                        </button>
-                                                        <button
-                                                            onClick={() => handleDeleteHabit(habit)}
-                                                            className="flex items-center gap-2 w-full px-3 py-2 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30"
-                                                        >
-                                                            <Trash2 className="w-3.5 h-3.5" />
-                                                            <span>Hapus Habit</span>
-                                                        </button>
+                                                        </div>
                                                     </div>
-                                                )}
-                                            </div>
-                                        </div>
+                                                </td>
 
-                                        <h3 className="mt-2 text-base font-bold text-stone-900 dark:text-stone-100 line-clamp-1">
-                                            {habit.name}
-                                        </h3>
-                                        {habit.description && (
-                                            <p className="mt-1 text-xs text-stone-500 dark:text-stone-400 line-clamp-2">
-                                                {habit.description}
-                                            </p>
-                                        )}
-
-                                        {/* Streak Badge & Milestone */}
-                                        <div className="mt-3 flex items-center justify-between">
-                                            <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-200/60 dark:border-amber-800/40 text-xs font-bold">
-                                                <Flame className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
-                                                <span>{habit.streak?.current_streak ?? habit.stats?.current_streak ?? 0} Hari</span>
-                                            </div>
-                                            <span className="text-[11px] font-medium text-stone-500 dark:text-stone-400">
-                                                {habit.streak?.streak_level?.label ?? habit.stats?.streak_level?.label ?? 'Memulai'}
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    {/* Action Bar per Measurement Type */}
-                                    <div className="mt-5 pt-4 border-t border-stone-100 dark:border-stone-800/80">
-                                        {habit.measurement_type === 'boolean' ? (
-                                            <div className="flex items-center justify-between">
-                                                <span className="text-xs font-semibold text-stone-600 dark:text-stone-400">
-                                                    {isCompleted ? (
-                                                        <span className="text-emerald-600 dark:text-emerald-400 font-bold">
-                                                            ✓ Selesai
-                                                        </span>
-                                                    ) : isFreeze ? (
-                                                        <span className="text-sky-600 dark:text-sky-400 font-bold">
-                                                            ❄ Freeze Aktif
-                                                        </span>
-                                                    ) : (
-                                                        'Belum Selesai'
-                                                    )}
-                                                </span>
-
-                                                <button
-                                                    onClick={() => handleLogToggleBoolean(habit)}
-                                                    disabled={habit.is_archived}
-                                                    className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all ${
-                                                        isCompleted
-                                                            ? 'bg-emerald-600 text-white shadow-sm shadow-emerald-600/30'
-                                                            : 'bg-stone-100 dark:bg-stone-800 text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 hover:bg-stone-200 dark:hover:bg-stone-700'
-                                                    }`}
-                                                >
-                                                    <Check className="w-5 h-5 stroke-[2.5]" />
-                                                </button>
-                                            </div>
-                                        ) : (
-                                            <div>
-                                                <div className="flex items-center justify-between text-xs font-semibold mb-2">
-                                                    <span className="text-stone-600 dark:text-stone-400">
-                                                        {actualVal} / {targetVal} {habit.unit}
+                                                {/* Kolom Tipe / Target */}
+                                                <td className="py-3.5 px-3 text-center">
+                                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300">
+                                                        {habit.measurement_type === 'boolean' && (
+                                                            <>
+                                                                <Check className="w-3 h-3 text-emerald-500" />
+                                                                <span>Ya/Tidak</span>
+                                                            </>
+                                                        )}
+                                                        {habit.measurement_type === 'quantitative' && (
+                                                            <>
+                                                                <Hash className="w-3 h-3 text-amber-500" />
+                                                                <span>
+                                                                    {habit.target_value} {habit.unit}
+                                                                </span>
+                                                            </>
+                                                        )}
+                                                        {habit.measurement_type === 'duration' && (
+                                                            <>
+                                                                <Clock className="w-3 h-3 text-sky-500" />
+                                                                <span>
+                                                                    {habit.target_value} {habit.unit}
+                                                                </span>
+                                                            </>
+                                                        )}
                                                     </span>
-                                                    <span
-                                                        className={
-                                                            isCompleted
-                                                                ? 'text-emerald-600 dark:text-emerald-400 font-bold'
-                                                                : 'text-stone-500'
-                                                        }
-                                                    >
-                                                        {percent}%
+                                                </td>
+
+                                                {/* Kolom Streak */}
+                                                <td className="py-3.5 px-3 text-center">
+                                                    <span className="inline-flex items-center gap-1 text-xs font-bold text-amber-600 dark:text-amber-400">
+                                                        <Flame className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
+                                                        <span>{habit.streak?.current_streak ?? habit.stats?.current_streak ?? 0}d</span>
                                                     </span>
-                                                </div>
+                                                </td>
 
-                                                {/* Progress Bar */}
-                                                <div className="w-full bg-stone-100 dark:bg-stone-800 rounded-full h-2 overflow-hidden mb-3">
-                                                    <div
-                                                        className={`h-full rounded-full transition-all ${
-                                                            isCompleted ? 'bg-emerald-500' : 'bg-amber-500'
-                                                        }`}
-                                                        style={{ width: `${percent}%` }}
-                                                    />
-                                                </div>
+                                                {/* 7 Days Cells */}
+                                                {week_days.map((wd) => {
+                                                    const log = habit.week_logs?.[wd.date];
+                                                    const isCompleted = log?.status === 'completed';
+                                                    const isPartial = log?.status === 'partial';
+                                                    const isFreeze = log?.status === 'freeze';
+                                                    const actualVal = log ? Number(log.actual_value) : 0;
 
-                                                {/* Stepper Buttons */}
-                                                <div className="flex items-center justify-between gap-2">
-                                                    <div className="flex items-center gap-1.5">
-                                                        <button
-                                                            onClick={() => handleStepValue(habit, -1)}
-                                                            disabled={actualVal <= 0 || habit.is_archived}
-                                                            className="p-1.5 rounded-lg border border-stone-200 dark:border-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 disabled:opacity-40 transition"
+                                                    return (
+                                                        <td
+                                                            key={wd.date}
+                                                            className={`py-3 px-1 text-center align-middle ${
+                                                                wd.is_today ? 'bg-amber-500/[0.04]' : ''
+                                                            }`}
                                                         >
-                                                            <Minus className="w-3.5 h-3.5" />
-                                                        </button>
-                                                        <button
-                                                            onClick={() => handleStepValue(habit, 1)}
-                                                            disabled={habit.is_archived}
-                                                            className="p-1.5 rounded-lg border border-stone-200 dark:border-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 transition"
-                                                        >
-                                                            <Plus className="w-3.5 h-3.5" />
-                                                        </button>
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => handleCellClick(habit, wd.date)}
+                                                                disabled={habit.is_archived}
+                                                                title={`Klik untuk edit log ${wd.date}`}
+                                                                className={`w-9 h-9 mx-auto rounded-xl flex items-center justify-center font-bold text-xs transition-all ${
+                                                                    isCompleted
+                                                                        ? 'bg-emerald-600 text-white shadow-sm shadow-emerald-600/30'
+                                                                        : isFreeze
+                                                                        ? 'bg-sky-500 text-white shadow-sm shadow-sky-500/30'
+                                                                        : isPartial
+                                                                        ? 'bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 border border-amber-300 dark:border-amber-700'
+                                                                        : 'bg-stone-100/80 dark:bg-stone-800 text-stone-400 hover:bg-stone-200 dark:hover:bg-stone-700'
+                                                                }`}
+                                                            >
+                                                                {isFreeze ? (
+                                                                    <Snowflake className="w-4 h-4 stroke-[2.5]" />
+                                                                ) : habit.measurement_type === 'boolean' ? (
+                                                                    isCompleted ? (
+                                                                        <Check className="w-4 h-4 stroke-[3]" />
+                                                                    ) : (
+                                                                        <span className="opacity-0 hover:opacity-40">✓</span>
+                                                                    )
+                                                                ) : actualVal > 0 ? (
+                                                                    <span className="text-[10px] leading-tight">
+                                                                        {actualVal >= 1000 ? `${(actualVal / 1000).toFixed(1)}k` : actualVal}
+                                                                    </span>
+                                                                ) : (
+                                                                    <span className="text-stone-300 dark:text-stone-600 text-[10px]">
+                                                                        -
+                                                                    </span>
+                                                                )}
+                                                            </button>
+                                                        </td>
+                                                    );
+                                                })}
+
+                                                {/* Progress Pekan */}
+                                                <td className="py-3.5 px-3 text-center">
+                                                    <div className="w-20 mx-auto">
+                                                        <div className="flex items-center justify-between text-[10px] font-bold text-stone-500 mb-1">
+                                                            <span>{weekCompleted}/7</span>
+                                                            <span>{weekPercent}%</span>
+                                                        </div>
+                                                        <div className="w-full bg-stone-100 dark:bg-stone-800 rounded-full h-1.5 overflow-hidden">
+                                                            <div
+                                                                className="h-full bg-emerald-500 rounded-full transition-all"
+                                                                style={{ width: `${weekPercent}%` }}
+                                                            />
+                                                        </div>
                                                     </div>
+                                                </td>
 
+                                                {/* Aksi Menu */}
+                                                <td className="py-3.5 pr-4 pl-2 text-center relative">
                                                     <button
                                                         onClick={() =>
-                                                            handleStepValue(
-                                                                habit,
-                                                                Math.max(1, Math.round(targetVal / 4))
-                                                            )
+                                                            setActiveMenuId(activeMenuId === habit.id ? null : habit.id)
                                                         }
-                                                        disabled={habit.is_archived}
-                                                        className="px-2.5 py-1 rounded-lg text-[11px] font-bold text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 hover:bg-amber-100 transition"
+                                                        className="p-1 rounded-lg text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800 transition"
                                                     >
-                                                        +{Math.max(1, Math.round(targetVal / 4))} {habit.unit}
+                                                        <MoreVertical className="w-4 h-4" />
                                                     </button>
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                            );
-                        })}
+
+                                                    {activeMenuId === habit.id && (
+                                                        <div className="absolute right-4 mt-1 w-44 bg-white dark:bg-stone-850 border border-stone-200 dark:border-stone-800 rounded-xl shadow-lg z-20 py-1 text-xs text-left">
+                                                            <button
+                                                                onClick={() => openEditModal(habit)}
+                                                                className="flex items-center gap-2 w-full px-3 py-2 text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800"
+                                                            >
+                                                                <Edit3 className="w-3.5 h-3.5 text-stone-400" />
+                                                                <span>Edit Habit</span>
+                                                            </button>
+                                                            {!habit.is_archived && (
+                                                                <button
+                                                                    onClick={() => {
+                                                                        setActiveMenuId(null);
+                                                                        handleApplyFreeze(habit, filter_date);
+                                                                    }}
+                                                                    className="flex items-center gap-2 w-full px-3 py-2 text-sky-600 dark:text-sky-400 hover:bg-sky-50 dark:hover:bg-sky-950/30"
+                                                                >
+                                                                    <Snowflake className="w-3.5 h-3.5" />
+                                                                    <span>Freeze Hari Ini</span>
+                                                                </button>
+                                                            )}
+                                                            <button
+                                                                onClick={() => handleToggleArchive(habit)}
+                                                                className="flex items-center gap-2 w-full px-3 py-2 text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800"
+                                                            >
+                                                                {habit.is_archived ? (
+                                                                    <>
+                                                                        <ArchiveRestore className="w-3.5 h-3.5 text-stone-400" />
+                                                                        <span>Pulihkan Habit</span>
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        <Archive className="w-3.5 h-3.5 text-stone-400" />
+                                                                        <span>Arsipkan</span>
+                                                                    </>
+                                                                )}
+                                                            </button>
+                                                            <button
+                                                                onClick={() => handleDeleteHabit(habit)}
+                                                                className="flex items-center gap-2 w-full px-3 py-2 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30"
+                                                            >
+                                                                <Trash2 className="w-3.5 h-3.5" />
+                                                                <span>Hapus Habit</span>
+                                                            </button>
+                                                        </div>
+                                                    )}
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 )}
             </div>
+
+            {/* Quick Cell Value Editor Modal for Quantitative & Duration */}
+            {activeCellEdit && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
+                    <div className="bg-white dark:bg-stone-900 rounded-2xl max-w-sm w-full p-5 shadow-2xl border border-stone-200 dark:border-stone-800">
+                        <div className="flex items-center justify-between pb-3 border-b border-stone-200 dark:border-stone-800">
+                            <div>
+                                <h3 className="font-bold text-stone-900 dark:text-stone-100 text-sm">
+                                    Catat Capaian
+                                </h3>
+                                <p className="text-[11px] text-stone-400">
+                                    {activeCellEdit.habit.name} ({activeCellEdit.date})
+                                </p>
+                            </div>
+                            <button
+                                onClick={() => setActiveCellEdit(null)}
+                                className="p-1 text-stone-400 hover:text-stone-600 rounded-lg"
+                            >
+                                <X className="w-4 h-4" />
+                            </button>
+                        </div>
+
+                        <div className="py-4 space-y-3">
+                            <div className="flex items-center justify-between text-xs font-semibold text-stone-600 dark:text-stone-400">
+                                <span>Target: {activeCellEdit.habit.target_value} {activeCellEdit.habit.unit}</span>
+                                <span>Nilai Sekarang: {activeCellEdit.currentVal}</span>
+                            </div>
+
+                            {/* Stepper Input */}
+                            <div className="flex items-center gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        setActiveCellEdit({
+                                            ...activeCellEdit,
+                                            currentVal: Math.max(0, activeCellEdit.currentVal - 1),
+                                        })
+                                    }
+                                    className="p-2 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-bold"
+                                >
+                                    <Minus className="w-4 h-4" />
+                                </button>
+                                <input
+                                    type="number"
+                                    step="any"
+                                    value={activeCellEdit.currentVal}
+                                    onChange={(e) =>
+                                        setActiveCellEdit({
+                                            ...activeCellEdit,
+                                            currentVal: Number(e.target.value),
+                                        })
+                                    }
+                                    className="flex-1 text-center font-bold text-base py-2 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-850 text-stone-900 dark:text-stone-100 focus:outline-none focus:border-amber-600"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        setActiveCellEdit({
+                                            ...activeCellEdit,
+                                            currentVal: activeCellEdit.currentVal + 1,
+                                        })
+                                    }
+                                    className="p-2 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-bold"
+                                >
+                                    <Plus className="w-4 h-4" />
+                                </button>
+                            </div>
+
+                            {/* Quick Add Presets */}
+                            <div className="flex items-center gap-1.5 pt-1">
+                                {[
+                                    { label: 'Set 0 (Reset)', val: 0 },
+                                    { label: '+25%', val: Math.round(Number(activeCellEdit.habit.target_value) * 0.25) },
+                                    { label: '+50%', val: Math.round(Number(activeCellEdit.habit.target_value) * 0.5) },
+                                    { label: 'Tuntas 100%', val: Number(activeCellEdit.habit.target_value) },
+                                ].map((preset, idx) => (
+                                    <button
+                                        key={idx}
+                                        type="button"
+                                        onClick={() => {
+                                            const next = preset.val === 0 ? 0 : activeCellEdit.currentVal + preset.val;
+                                            setActiveCellEdit({
+                                                ...activeCellEdit,
+                                                currentVal: preset.label.includes('100%') ? preset.val : next,
+                                            });
+                                        }}
+                                        className="flex-1 py-1 text-[10px] font-bold rounded-lg bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 text-stone-700 dark:text-stone-300"
+                                    >
+                                        {preset.label}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="flex items-center justify-end gap-2 pt-3 border-t border-stone-200 dark:border-stone-800">
+                            <button
+                                type="button"
+                                onClick={() => setActiveCellEdit(null)}
+                                className="px-3 py-1.5 text-xs font-semibold text-stone-600 rounded-lg hover:bg-stone-100"
+                            >
+                                Batal
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => saveCellLog(activeCellEdit.currentVal)}
+                                className="px-4 py-1.5 text-xs font-bold text-white bg-amber-600 hover:bg-amber-700 rounded-xl shadow-sm shadow-amber-600/30"
+                            >
+                                Simpan Capaian
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Modal Create & Edit Habit */}
             {isModalOpen && (
@@ -691,7 +842,7 @@ export default function HabitsIndex({
                                     required
                                     value={data.name}
                                     onChange={(e) => setData('name', e.target.value)}
-                                    placeholder="Contoh: Meditasi Pagi, Minum Air..."
+                                    placeholder="Contoh: Meditasi Pagi, Minum Air, Olahraga..."
                                     className="w-full text-xs bg-stone-50 dark:bg-stone-850 rounded-xl border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 px-3 py-2 focus:outline-none focus:border-amber-600"
                                 />
                                 {errors.name && <p className="mt-1 text-[11px] text-rose-500">{errors.name}</p>}
@@ -714,33 +865,45 @@ export default function HabitsIndex({
                             {/* Tipe Pengukuran */}
                             <div>
                                 <label className="block text-xs font-bold text-stone-700 dark:text-stone-300 uppercase tracking-wider mb-1">
-                                    Tipe Pengukuran
+                                    Tipe Pengukuran Kebiasaan
                                 </label>
                                 <div className="grid grid-cols-3 gap-2">
                                     {[
-                                        { id: 'boolean', label: 'Ya / Tidak' },
-                                        { id: 'quantitative', label: 'Kuantitas' },
-                                        { id: 'duration', label: 'Durasi' },
-                                    ].map((t) => (
-                                        <button
-                                            key={t.id}
-                                            type="button"
-                                            onClick={() => setData('measurement_type', t.id as any)}
-                                            className={`py-2 text-xs font-semibold rounded-xl border transition-all ${
-                                                data.measurement_type === t.id
-                                                    ? 'bg-amber-600 text-white border-amber-600 shadow-sm'
-                                                    : 'bg-stone-50 dark:bg-stone-850 text-stone-600 dark:text-stone-300 border-stone-200 dark:border-stone-800 hover:bg-stone-100'
-                                            }`}
-                                        >
-                                            {t.label}
-                                        </button>
-                                    ))}
+                                        { id: 'boolean', label: 'Ya / Tidak', icon: Check },
+                                        { id: 'quantitative', label: 'Kuantitas', icon: Hash },
+                                        { id: 'duration', label: 'Durasi Waktu', icon: Clock },
+                                    ].map((t) => {
+                                        const IconComp = t.icon;
+                                        return (
+                                            <button
+                                                key={t.id}
+                                                type="button"
+                                                onClick={() => {
+                                                    setData('measurement_type', t.id as any);
+                                                    if (t.id === 'boolean') {
+                                                        setData('unit', '');
+                                                        setData('target_value', 1);
+                                                    } else if (t.id === 'duration' && !data.unit) {
+                                                        setData('unit', 'menit');
+                                                    }
+                                                }}
+                                                className={`flex items-center justify-center gap-1.5 py-2.5 text-xs font-bold rounded-xl border transition-all ${
+                                                    data.measurement_type === t.id
+                                                        ? 'bg-amber-600 text-white border-amber-600 shadow-sm'
+                                                        : 'bg-stone-50 dark:bg-stone-850 text-stone-600 dark:text-stone-300 border-stone-200 dark:border-stone-800 hover:bg-stone-100'
+                                                }`}
+                                            >
+                                                <IconComp className="w-3.5 h-3.5" />
+                                                <span>{t.label}</span>
+                                            </button>
+                                        );
+                                    })}
                                 </div>
                             </div>
 
                             {/* Target Nilai & Satuan */}
                             {data.measurement_type !== 'boolean' && (
-                                <div className="grid grid-cols-2 gap-3">
+                                <div className="grid grid-cols-2 gap-3 p-3 bg-stone-50 dark:bg-stone-850/60 rounded-xl border border-stone-200/80 dark:border-stone-800">
                                     <div>
                                         <label className="block text-xs font-bold text-stone-700 dark:text-stone-300 uppercase tracking-wider mb-1">
                                             Target Angka *
@@ -751,7 +914,8 @@ export default function HabitsIndex({
                                             required
                                             value={data.target_value}
                                             onChange={(e) => setData('target_value', Number(e.target.value))}
-                                            className="w-full text-xs bg-stone-50 dark:bg-stone-850 rounded-xl border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 px-3 py-2 focus:outline-none focus:border-amber-600"
+                                            placeholder="Contoh: 2000, 30"
+                                            className="w-full text-xs bg-white dark:bg-stone-900 rounded-xl border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 px-3 py-2 focus:outline-none focus:border-amber-600"
                                         />
                                     </div>
                                     <div>
@@ -763,8 +927,8 @@ export default function HabitsIndex({
                                             required
                                             value={data.unit}
                                             onChange={(e) => setData('unit', e.target.value)}
-                                            placeholder="ml, halaman, menit..."
-                                            className="w-full text-xs bg-stone-50 dark:bg-stone-850 rounded-xl border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 px-3 py-2 focus:outline-none focus:border-amber-600"
+                                            placeholder={data.measurement_type === 'duration' ? 'menit, jam' : 'ml, halaman, langkah'}
+                                            className="w-full text-xs bg-white dark:bg-stone-900 rounded-xl border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 px-3 py-2 focus:outline-none focus:border-amber-600"
                                         />
                                     </div>
                                 </div>
@@ -780,9 +944,9 @@ export default function HabitsIndex({
                                     onChange={(e) => setData('frequency_type', e.target.value as any)}
                                     className="w-full text-xs bg-stone-50 dark:bg-stone-850 rounded-xl border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 px-3 py-2 focus:outline-none focus:border-amber-600"
                                 >
-                                    <option value="daily">Setiap Hari</option>
-                                    <option value="specific_days">Hari Tertentu dalam Sepekan</option>
-                                    <option value="weekly_target">Target Jumlah Hari per Pekan</option>
+                                    <option value="daily">Setiap Hari (Harian)</option>
+                                    <option value="specific_days">Hari-Hari Tertentu dalam Sepekan</option>
+                                    <option value="weekly_target">Target Akumulasi Hari per Pekan</option>
                                 </select>
                             </div>
 
@@ -840,7 +1004,7 @@ export default function HabitsIndex({
                             {/* Pilihan Warna */}
                             <div>
                                 <label className="block text-xs font-bold text-stone-700 dark:text-stone-300 uppercase tracking-wider mb-1.5">
-                                    Warna Label
+                                    Warna Label Kebiasaan
                                 </label>
                                 <div className="flex items-center gap-3">
                                     {COLOR_OPTIONS.map((c) => (
