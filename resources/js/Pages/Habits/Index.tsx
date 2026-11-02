@@ -585,10 +585,19 @@ export default function HabitsIndex({
                                         });
                                         const weekPercent = Math.min(100, Math.round((weekCompleted / 7) * 100));
 
+                                        const isRowActive =
+                                            activeStylePopoverId === habit.id ||
+                                            activeTypePopoverId === habit.id ||
+                                            activeMenuId === habit.id;
+
                                         return (
                                             <tr
                                                 key={habit.id}
-                                                className="hover:bg-stone-50/50 dark:hover:bg-stone-850/30 transition-colors"
+                                                className={`transition-colors ${
+                                                    isRowActive
+                                                        ? 'relative z-30 bg-stone-50/80 dark:bg-stone-850/60'
+                                                        : 'hover:bg-stone-50/50 dark:hover:bg-stone-850/30'
+                                                }`}
                                             >
                                                 {/* Kolom Info Habit (Inline Edit Icon, Warna & Nama) */}
                                                 <td className="py-3.5 pl-5 pr-4">
@@ -612,7 +621,7 @@ export default function HabitsIndex({
 
                                                             {/* Popover Icon & Color Picker */}
                                                             {activeStylePopoverId === habit.id && (
-                                                                <div className="absolute left-0 top-9 w-60 p-3 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl shadow-2xl z-30 space-y-3">
+                                                                <div className="absolute left-0 top-9 w-60 p-3 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl shadow-2xl z-50 space-y-3">
                                                                     <div>
                                                                         <label className="text-[10px] font-bold uppercase tracking-wider text-stone-400 block mb-1.5">
                                                                             Pilih Warna
@@ -751,7 +760,7 @@ export default function HabitsIndex({
 
                                                     {/* Popover Inline Target Editor */}
                                                     {activeTypePopoverId === habit.id && (
-                                                        <div className="absolute left-1/2 -translate-x-1/2 top-11 w-56 p-3 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl shadow-2xl z-30 text-left space-y-2.5">
+                                                        <div className="absolute left-1/2 -translate-x-1/2 top-11 w-56 p-3 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl shadow-2xl z-50 text-left space-y-2.5">
                                                             <div className="text-[10px] font-bold text-stone-400 uppercase tracking-wider">
                                                                 Ganti Tipe Target
                                                             </div>
@@ -893,7 +902,7 @@ export default function HabitsIndex({
                                                     </button>
 
                                                     {activeMenuId === habit.id && (
-                                                        <div className="absolute right-4 mt-1 w-44 bg-white dark:bg-stone-850 border border-stone-200 dark:border-stone-800 rounded-xl shadow-lg z-20 py-1 text-xs text-left">
+                                                        <div className="absolute right-4 mt-1 w-44 bg-white dark:bg-stone-850 border border-stone-200 dark:border-stone-800 rounded-xl shadow-lg z-50 py-1 text-xs text-left">
                                                             <button
                                                                 onClick={() => openEditModal(habit)}
                                                                 className="flex items-center gap-2 w-full px-3 py-2 text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800"
