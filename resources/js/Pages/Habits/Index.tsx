@@ -1,38 +1,25 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import IconPickerModal from '@/Components/IconPickerModal';
+import Icons from '@/Components/Icons';
 import { Head, router, useForm } from '@inertiajs/react';
 import {
-    Activity,
     AlertCircle,
-    Apple,
     Archive,
     ArchiveRestore,
-    BookOpen,
-    Brain,
     Check,
     ChevronLeft,
     ChevronRight,
     Clock,
-    Coffee,
-    Droplets,
-    Dumbbell,
     Edit3,
-    Flame,
-    Footprints,
     Hash,
-    Heart,
     Minus,
-    Moon,
     MoreVertical,
-    PenLine,
     Plus,
     Search,
-    Smile,
     Snowflake,
     Sparkles,
-    Sun,
     Trash2,
     X,
-    Zap,
 } from 'lucide-react';
 import { FormEvent, useMemo, useState } from 'react';
 
@@ -103,25 +90,6 @@ const COLOR_OPTIONS = [
     { label: 'Violet', value: '#8b5cf6', bg: 'bg-violet-500', ring: 'ring-violet-500' },
 ];
 
-const LUCIDE_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
-    check: Check,
-    droplets: Droplets,
-    book: BookOpen,
-    dumbbell: Dumbbell,
-    brain: Brain,
-    moon: Moon,
-    sun: Sun,
-    heart: Heart,
-    apple: Apple,
-    sparkles: Sparkles,
-    zap: Zap,
-    coffee: Coffee,
-    footprints: Footprints,
-    pen: PenLine,
-    smile: Smile,
-    activity: Activity,
-};
-
 const DAYS_OF_WEEK = [
     { value: 1, label: 'Sen' },
     { value: 2, label: 'Sel' },
@@ -155,6 +123,7 @@ export default function HabitsIndex({
     const [inlineNameValue, setInlineNameValue] = useState<string>('');
     const [activeStylePopoverId, setActiveStylePopoverId] = useState<number | null>(null);
     const [activeTypePopoverId, setActiveTypePopoverId] = useState<number | null>(null);
+    const [iconPickerTarget, setIconPickerTarget] = useState<'form' | HabitItem | null>(null);
 
     // Quick popover cell editor for quantitative / duration
     const [activeCellEdit, setActiveCellEdit] = useState<{
@@ -410,8 +379,7 @@ export default function HabitsIndex({
     }, [week_start, week_end]);
 
     const renderHabitIcon = (iconName: string | null, className = 'w-3.5 h-3.5 text-white') => {
-        const IconComponent = (iconName && LUCIDE_ICONS[iconName]) || Check;
-        return <IconComponent className={className} />;
+        return <Icons name={iconName} className={className} />;
     };
 
     return (
@@ -665,11 +633,24 @@ export default function HabitsIndex({
 
                                                                     <div>
                                                                         <label className="text-[10px] font-bold uppercase tracking-wider text-stone-400 block mb-1.5">
-                                                                            Pilih Icon Lucide
+                                                                            Icon Lucide
                                                                         </label>
-                                                                        <div className="grid grid-cols-4 gap-1.5 max-h-36 overflow-y-auto pr-1">
-                                                                            {Object.keys(LUCIDE_ICONS).map((iconKey) => {
-                                                                                const IconComp = LUCIDE_ICONS[iconKey];
+                                                                        {/* Quick Popular Icons */}
+                                                                        <div className="grid grid-cols-4 gap-1.5 max-h-32 overflow-y-auto pr-1">
+                                                                            {[
+                                                                                'check',
+                                                                                'droplets',
+                                                                                'book-open',
+                                                                                'dumbbell',
+                                                                                'brain',
+                                                                                'sun',
+                                                                                'moon',
+                                                                                'heart',
+                                                                                'coffee',
+                                                                                'zap',
+                                                                                'sparkles',
+                                                                                'activity',
+                                                                            ].map((iconKey) => {
                                                                                 const isSelected = habit.icon === iconKey;
                                                                                 return (
                                                                                     <button
@@ -684,11 +665,24 @@ export default function HabitsIndex({
                                                                                                 : 'bg-stone-50 dark:bg-stone-850 border-stone-200 dark:border-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-100'
                                                                                         }`}
                                                                                     >
-                                                                                        <IconComp className="w-4 h-4" />
+                                                                                        <Icons name={iconKey} className="w-4 h-4" />
                                                                                     </button>
                                                                                 );
                                                                             })}
                                                                         </div>
+
+                                                                        {/* Button to open full dynamic IconPickerModal */}
+                                                                        <button
+                                                                            type="button"
+                                                                            onClick={() => {
+                                                                                setIconPickerTarget(habit);
+                                                                                setActiveStylePopoverId(null);
+                                                                            }}
+                                                                            className="mt-2.5 w-full py-1.5 px-2.5 rounded-xl text-[11px] font-bold text-amber-700 dark:text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-300 dark:border-amber-800 transition flex items-center justify-center gap-1.5"
+                                                                        >
+                                                                            <Search className="w-3.5 h-3.5" />
+                                                                            <span>Cari dari 2.200+ Icon...</span>
+                                                                        </button>
                                                                     </div>
                                                                 </div>
                                                             )}
@@ -1311,25 +1305,70 @@ export default function HabitsIndex({
                                 <label className="block text-xs font-bold text-stone-700 dark:text-stone-300 uppercase tracking-wider mb-1.5">
                                     Icon Kebiasaan (Lucide)
                                 </label>
-                                <div className="grid grid-cols-8 gap-2 p-2 bg-stone-50 dark:bg-stone-850 rounded-xl border border-stone-200 dark:border-stone-800">
-                                    {Object.keys(LUCIDE_ICONS).map((iconKey) => {
-                                        const IconComp = LUCIDE_ICONS[iconKey];
-                                        const isSelected = data.icon === iconKey;
-                                        return (
-                                            <button
-                                                key={iconKey}
-                                                type="button"
-                                                onClick={() => setData('icon', iconKey)}
-                                                className={`p-2 rounded-lg flex items-center justify-center border transition-all ${
-                                                    isSelected
-                                                        ? 'bg-amber-600 text-white border-amber-600 shadow-sm'
-                                                        : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-100'
-                                                }`}
+                                <div className="p-3 bg-stone-50 dark:bg-stone-850 rounded-xl border border-stone-200 dark:border-stone-800 space-y-3">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-2.5">
+                                            <div
+                                                className="w-9 h-9 rounded-xl flex items-center justify-center shadow-sm"
+                                                style={{ backgroundColor: data.color || '#d97706' }}
                                             >
-                                                <IconComp className="w-4 h-4" />
-                                            </button>
-                                        );
-                                    })}
+                                                <Icons name={data.icon} className="w-4 h-4 text-white" />
+                                            </div>
+                                            <div>
+                                                <div className="text-xs font-bold text-stone-900 dark:text-stone-100">
+                                                    {data.icon || 'check'}
+                                                </div>
+                                                <div className="text-[10px] text-stone-400">
+                                                    Icon terpilih saat ini
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <button
+                                            type="button"
+                                            onClick={() => setIconPickerTarget('form')}
+                                            className="px-3 py-1.5 rounded-xl text-xs font-bold text-amber-700 dark:text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-300 dark:border-amber-800 transition flex items-center gap-1.5"
+                                        >
+                                            <Search className="w-3.5 h-3.5" />
+                                            <span>Pilih dari 2.200+ Icon</span>
+                                        </button>
+                                    </div>
+
+                                    {/* Quick Picks */}
+                                    <div>
+                                        <label className="text-[10px] font-bold uppercase tracking-wider text-stone-400 block mb-1">
+                                            Pilihan Cepat
+                                        </label>
+                                        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-thin">
+                                            {[
+                                                'check',
+                                                'droplets',
+                                                'book-open',
+                                                'dumbbell',
+                                                'brain',
+                                                'sun',
+                                                'moon',
+                                                'heart',
+                                                'coffee',
+                                                'zap',
+                                                'sparkles',
+                                                'activity',
+                                            ].map((iconKey) => (
+                                                <button
+                                                    key={iconKey}
+                                                    type="button"
+                                                    onClick={() => setData('icon', iconKey)}
+                                                    className={`p-2 rounded-xl flex items-center justify-center border transition-all flex-shrink-0 ${
+                                                        data.icon === iconKey
+                                                            ? 'bg-amber-600 text-white border-amber-600 shadow-sm'
+                                                            : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-100'
+                                                    }`}
+                                                >
+                                                    <Icons name={iconKey} className="w-4 h-4" />
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -1354,6 +1393,21 @@ export default function HabitsIndex({
                     </div>
                 </div>
             )}
+
+            {/* Dynamic Icon Picker Modal with Query & Recent Cache */}
+            <IconPickerModal
+                show={iconPickerTarget !== null}
+                onClose={() => setIconPickerTarget(null)}
+                currentIcon={iconPickerTarget === 'form' ? data.icon : iconPickerTarget?.icon}
+                onSelect={(chosenIcon) => {
+                    if (iconPickerTarget === 'form') {
+                        setData('icon', chosenIcon);
+                    } else if (iconPickerTarget) {
+                        saveInlineStyle(iconPickerTarget, undefined, chosenIcon);
+                    }
+                    setIconPickerTarget(null);
+                }}
+            />
         </AuthenticatedLayout>
     );
 }
