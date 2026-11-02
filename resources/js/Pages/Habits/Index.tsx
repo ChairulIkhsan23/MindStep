@@ -1300,10 +1300,10 @@ export default function HabitsIndex({
                                 </div>
                             </div>
 
-                            {/* Pilihan Icon Lucide di Modal Create */}
+                            {/* Pilihan Icon Kebiasaan di Modal Create */}
                             <div>
                                 <label className="block text-xs font-bold text-stone-700 dark:text-stone-300 uppercase tracking-wider mb-1.5">
-                                    Icon Kebiasaan (Lucide)
+                                    Icon Kebiasaan
                                 </label>
                                 <div className="p-3 bg-stone-50 dark:bg-stone-850 rounded-xl border border-stone-200 dark:border-stone-800 space-y-3">
                                     <div className="flex items-center justify-between">

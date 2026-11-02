@@ -177,16 +177,11 @@ export default function IconPickerModal({
             <div className="p-6">
                 <div className="flex items-center justify-between border-b border-stone-200 pb-3.5 dark:border-stone-800">
                     <div>
-                        <div className="flex items-center gap-2">
-                            <h2 className="text-base sm:text-lg font-bold text-stone-900 dark:text-stone-100">
-                                Pilih Icon Kebiasaan (Lucide)
-                            </h2>
-                            <span className="px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/60">
-                                ⚡ {allCachedIcons.length.toLocaleString()} Icon Cached
-                            </span>
-                        </div>
+                        <h2 className="text-base sm:text-lg font-bold text-stone-900 dark:text-stone-100">
+                            Pilih Icon
+                        </h2>
                         <p className="mt-0.5 text-xs text-stone-500 dark:text-stone-400">
-                            Semua {allCachedIcons.length.toLocaleString()} icon telah di-cache untuk pencarian dan pemuatan instan.
+                            Cari dan pilih icon untuk kebiasaan Anda.
                         </p>
                     </div>
                     <button
