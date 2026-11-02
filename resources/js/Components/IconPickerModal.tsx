@@ -14,6 +14,7 @@ interface Props {
 
 const ITEMS_PER_PAGE = 48;
 const RECENT_ICONS_STORAGE_KEY = 'mindstep_recent_icons';
+const ALL_ICONS_CACHE_KEY = 'mindstep_lucide_all_icons_cache';
 const DEFAULT_RECENT_ICONS = [
     'check',
     'droplets',
@@ -29,8 +30,36 @@ const DEFAULT_RECENT_ICONS = [
     'activity',
 ];
 
-// In-Memory search query cache
+// In-Memory cache for all 2,275 icon names & query filter cache
+let inMemoryAllIcons: string[] | null = null;
 const searchCache = new Map<string, string[]>();
+
+function getAllCachedIcons(): string[] {
+    if (inMemoryAllIcons && inMemoryAllIcons.length > 0) {
+        return inMemoryAllIcons;
+    }
+    try {
+        const stored = localStorage.getItem(ALL_ICONS_CACHE_KEY);
+        if (stored) {
+            const parsed = JSON.parse(stored);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+                inMemoryAllIcons = parsed;
+                return parsed;
+            }
+        }
+    } catch {
+        // ignore storage error
+    }
+
+    const all = iconNames as unknown as string[];
+    inMemoryAllIcons = all;
+    try {
+        localStorage.setItem(ALL_ICONS_CACHE_KEY, JSON.stringify(all));
+    } catch {
+        // ignore quota error
+    }
+    return all;
+}
 
 const IconItem = memo(function IconItem({
     name,
@@ -78,7 +107,10 @@ export default function IconPickerModal({
     const [recentIcons, setRecentIcons] = useState<string[]>(DEFAULT_RECENT_ICONS);
     const deferredSearch = useDeferredValue(search);
 
-    // Load cached recent icons from localStorage on mount
+    // Cache all 2,275 icon names on mount
+    const allCachedIcons = useMemo(() => getAllCachedIcons(), []);
+
+    // Load recent icons from localStorage on mount
     useEffect(() => {
         try {
             const raw = localStorage.getItem(RECENT_ICONS_STORAGE_KEY);
@@ -93,11 +125,11 @@ export default function IconPickerModal({
         }
     }, []);
 
-    // Filtered icons with query caching
+    // Filtered icons with query caching over the cached 2,275 icon collection
     const filteredIcons = useMemo(() => {
         const query = deferredSearch.trim().toLowerCase();
         if (!query) {
-            return iconNames as unknown as string[];
+            return allCachedIcons;
         }
 
         // Check in-memory query cache
@@ -106,12 +138,12 @@ export default function IconPickerModal({
         }
 
         // Compute and store in cache
-        const results = (iconNames as unknown as string[]).filter((name) =>
+        const results = allCachedIcons.filter((name) =>
             name.toLowerCase().includes(query)
         );
         searchCache.set(query, results);
         return results;
-    }, [deferredSearch]);
+    }, [deferredSearch, allCachedIcons]);
 
     const totalPages = Math.max(1, Math.ceil(filteredIcons.length / ITEMS_PER_PAGE));
     const currentPage = Math.min(page, totalPages);
@@ -127,7 +159,7 @@ export default function IconPickerModal({
     };
 
     const handleSelect = (name: string) => {
-        // Update recent icons cache in localStorage
+        // Update recent icons list in localStorage
         try {
             const updated = [name, ...recentIcons.filter((n) => n !== name)].slice(0, 16);
             setRecentIcons(updated);
@@ -149,12 +181,12 @@ export default function IconPickerModal({
                             <h2 className="text-base sm:text-lg font-bold text-stone-900 dark:text-stone-100">
                                 Pilih Icon Kebiasaan (Lucide)
                             </h2>
-                            <span className="px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800/60">
-                                Dynamic Loaded
+                            <span className="px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/60">
+                                ⚡ {allCachedIcons.length.toLocaleString()} Icon Cached
                             </span>
                         </div>
                         <p className="mt-0.5 text-xs text-stone-500 dark:text-stone-400">
-                            {iconNames.length.toLocaleString()} icon tersedia langsung dari library Lucide tanpa hardcode.
+                            Semua {allCachedIcons.length.toLocaleString()} icon telah di-cache untuk pencarian dan pemuatan instan.
                         </p>
                     </div>
                     <button
@@ -178,11 +210,11 @@ export default function IconPickerModal({
                     />
                 </div>
 
-                {/* Recent Icons Cache Section */}
+                {/* Recent Section */}
                 {!search.trim() && recentIcons.length > 0 && (
                     <div className="mt-3.5 pt-2 border-t border-stone-100 dark:border-stone-800/60">
                         <label className="text-[10px] font-bold uppercase tracking-wider text-stone-400 dark:text-stone-500 block mb-2">
-                            ⚡ Baru / Sering Digunakan (Cached)
+                            Recent
                         </label>
                         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-thin">
                             {recentIcons.map((rec) => {
@@ -211,7 +243,7 @@ export default function IconPickerModal({
                 <div className="mt-4">
                     <div className="flex items-center justify-between text-[11px] font-semibold text-stone-500 dark:text-stone-400">
                         <span>
-                            Ditemukan {filteredIcons.length.toLocaleString()} icon
+                            Ditemukan {filteredIcons.length.toLocaleString()} icon (Cached)
                         </span>
                         <span>
                             Halaman {currentPage} dari {totalPages}
