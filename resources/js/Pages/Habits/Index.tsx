@@ -21,6 +21,7 @@ import {
     Snowflake,
     Trash2,
     X,
+    ChevronRight as SubChevronRight,
 } from 'lucide-react';
 import { FormEvent, useMemo, useState } from 'react';
 
@@ -762,12 +763,13 @@ export default function HabitsIndex({
                                                 {newRowTypePopover && (
                                                     <div
                                                         onClick={(e) => e.stopPropagation()}
-                                                        className="absolute left-1/2 -translate-x-1/2 top-full mt-1.5 w-56 p-3 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl shadow-lg z-50 text-left space-y-2.5"
+                                                        className="absolute left-1/2 -translate-x-1/2 top-full mt-1.5 w-60 p-3 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl shadow-lg z-50 text-left space-y-2"
                                                     >
                                                         <div className="text-[10px] font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider">
                                                             Pilih Tipe Target
                                                         </div>
                                                         <div className="flex flex-col gap-1.5">
+                                                            {/* Option 1: Ya / Tidak */}
                                                             <button
                                                                 type="button"
                                                                 onClick={() => {
@@ -788,46 +790,240 @@ export default function HabitsIndex({
                                                                 <Check className="w-3.5 h-3.5" />
                                                                 <span>Ya / Tidak</span>
                                                             </button>
-                                                            <button
-                                                                type="button"
-                                                                onClick={() => {
-                                                                    setNewRowData({
-                                                                        ...newRowData,
-                                                                        measurement_type: 'quantitative',
-                                                                        target_value: 10,
-                                                                        unit: 'kali',
-                                                                    });
-                                                                    setNewRowTypePopover(false);
-                                                                }}
-                                                                className={`px-2.5 py-1.5 rounded-md text-xs font-medium text-left flex items-center gap-2 ${
-                                                                    newRowData.measurement_type === 'quantitative'
-                                                                        ? 'bg-amber-600 text-white'
-                                                                        : 'hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-700 dark:text-stone-300'
-                                                                }`}
-                                                            >
-                                                                <Hash className="w-3.5 h-3.5" />
-                                                                <span>Kuantitas Terukur</span>
-                                                            </button>
-                                                            <button
-                                                                type="button"
-                                                                onClick={() => {
-                                                                    setNewRowData({
-                                                                        ...newRowData,
-                                                                        measurement_type: 'duration',
-                                                                        target_value: 30,
-                                                                        unit: 'menit',
-                                                                    });
-                                                                    setNewRowTypePopover(false);
-                                                                }}
-                                                                className={`px-2.5 py-1.5 rounded-md text-xs font-medium text-left flex items-center gap-2 ${
-                                                                    newRowData.measurement_type === 'duration'
-                                                                        ? 'bg-amber-600 text-white'
-                                                                        : 'hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-700 dark:text-stone-300'
-                                                                }`}
-                                                            >
-                                                                <Clock className="w-3.5 h-3.5" />
-                                                                <span>Durasi Waktu</span>
-                                                            </button>
+
+                                                            {/* Option 2: Kuantitas Terukur (Nested on Hover) */}
+                                                            <div className="relative group/qty">
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => {
+                                                                        setNewRowData({
+                                                                            ...newRowData,
+                                                                            measurement_type: 'quantitative',
+                                                                            target_value: newRowData.measurement_type === 'quantitative' ? newRowData.target_value : 10,
+                                                                            unit: newRowData.measurement_type === 'quantitative' && newRowData.unit ? newRowData.unit : 'kali',
+                                                                        });
+                                                                    }}
+                                                                    className={`w-full px-2.5 py-1.5 rounded-md text-xs font-medium text-left flex items-center justify-between ${
+                                                                        newRowData.measurement_type === 'quantitative'
+                                                                            ? 'bg-amber-600 text-white'
+                                                                            : 'hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-700 dark:text-stone-300'
+                                                                    }`}
+                                                                >
+                                                                    <div className="flex items-center gap-2">
+                                                                        <Hash className="w-3.5 h-3.5" />
+                                                                        <span>Kuantitas Terukur</span>
+                                                                    </div>
+                                                                    <SubChevronRight className="w-3.5 h-3.5 opacity-60" />
+                                                                </button>
+
+                                                                {/* Nested Flyout Card on Hover */}
+                                                                <div className="hidden group-hover/qty:block absolute left-full top-0 ml-1.5 w-64 p-3 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl shadow-xl z-50 text-left space-y-2.5 animate-in fade-in">
+                                                                    <div className="text-[10px] font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider">
+                                                                        Konfigurasi Kuantitas
+                                                                    </div>
+                                                                    <div className="grid grid-cols-2 gap-2">
+                                                                        <div>
+                                                                            <label className="block text-[10px] font-medium text-stone-600 dark:text-stone-400 mb-1">
+                                                                                Target Angka
+                                                                            </label>
+                                                                            <input
+                                                                                type="number"
+                                                                                step="any"
+                                                                                min={1}
+                                                                                value={newRowData.measurement_type === 'quantitative' ? newRowData.target_value : 10}
+                                                                                onChange={(e) =>
+                                                                                    setNewRowData({
+                                                                                        ...newRowData,
+                                                                                        measurement_type: 'quantitative',
+                                                                                        target_value: Number(e.target.value) || 1,
+                                                                                    })
+                                                                                }
+                                                                                className="w-full text-xs bg-stone-50 dark:bg-stone-850 px-2 py-1 rounded border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-stone-100 focus:outline-none focus:border-amber-600"
+                                                                            />
+                                                                        </div>
+                                                                        <div>
+                                                                            <label className="block text-[10px] font-medium text-stone-600 dark:text-stone-400 mb-1">
+                                                                                Satuan
+                                                                            </label>
+                                                                            <input
+                                                                                type="text"
+                                                                                value={newRowData.measurement_type === 'quantitative' ? newRowData.unit : 'kali'}
+                                                                                onChange={(e) =>
+                                                                                    setNewRowData({
+                                                                                        ...newRowData,
+                                                                                        measurement_type: 'quantitative',
+                                                                                        unit: e.target.value,
+                                                                                    })
+                                                                                }
+                                                                                placeholder="kali, ml, hal"
+                                                                                className="w-full text-xs bg-stone-50 dark:bg-stone-850 px-2 py-1 rounded border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-stone-100 focus:outline-none focus:border-amber-600"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+
+                                                                    {/* Presets Satuan Cepat */}
+                                                                    <div>
+                                                                        <div className="text-[9px] font-medium text-stone-400 mb-1">Pilihan Cepat:</div>
+                                                                        <div className="flex flex-wrap gap-1">
+                                                                            {[
+                                                                                { label: '8 Gelas', val: 8, unit: 'gelas' },
+                                                                                { label: '2000 ml', val: 2000, unit: 'ml' },
+                                                                                { label: '10 Hal', val: 10, unit: 'halaman' },
+                                                                                { label: '5000 Langkah', val: 5000, unit: 'langkah' },
+                                                                            ].map((preset, idx) => (
+                                                                                <button
+                                                                                    key={idx}
+                                                                                    type="button"
+                                                                                    onClick={() => {
+                                                                                        setNewRowData({
+                                                                                            ...newRowData,
+                                                                                            measurement_type: 'quantitative',
+                                                                                            target_value: preset.val,
+                                                                                            unit: preset.unit,
+                                                                                        });
+                                                                                    }}
+                                                                                    className="px-1.5 py-0.5 text-[10px] rounded bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700"
+                                                                                >
+                                                                                    {preset.label}
+                                                                                </button>
+                                                                            ))}
+                                                                        </div>
+                                                                    </div>
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => {
+                                                                            setNewRowData({
+                                                                                ...newRowData,
+                                                                                measurement_type: 'quantitative',
+                                                                                target_value: newRowData.measurement_type === 'quantitative' ? newRowData.target_value : 10,
+                                                                                unit: newRowData.measurement_type === 'quantitative' && newRowData.unit ? newRowData.unit : 'kali',
+                                                                            });
+                                                                            setNewRowTypePopover(false);
+                                                                        }}
+                                                                        className="w-full py-1 text-center text-xs font-semibold rounded bg-amber-600 text-white hover:bg-amber-700 transition"
+                                                                    >
+                                                                        Terapkan Kuantitas
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+
+                                                            {/* Option 3: Durasi Waktu (Nested on Hover) */}
+                                                            <div className="relative group/dur">
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => {
+                                                                        setNewRowData({
+                                                                            ...newRowData,
+                                                                            measurement_type: 'duration',
+                                                                            target_value: newRowData.measurement_type === 'duration' ? newRowData.target_value : 30,
+                                                                            unit: newRowData.measurement_type === 'duration' && newRowData.unit ? newRowData.unit : 'menit',
+                                                                        });
+                                                                    }}
+                                                                    className={`w-full px-2.5 py-1.5 rounded-md text-xs font-medium text-left flex items-center justify-between ${
+                                                                        newRowData.measurement_type === 'duration'
+                                                                            ? 'bg-amber-600 text-white'
+                                                                            : 'hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-700 dark:text-stone-300'
+                                                                    }`}
+                                                                >
+                                                                    <div className="flex items-center gap-2">
+                                                                        <Clock className="w-3.5 h-3.5" />
+                                                                        <span>Durasi Waktu</span>
+                                                                    </div>
+                                                                    <SubChevronRight className="w-3.5 h-3.5 opacity-60" />
+                                                                </button>
+
+                                                                {/* Nested Flyout Card on Hover */}
+                                                                <div className="hidden group-hover/dur:block absolute left-full top-0 ml-1.5 w-60 p-3 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl shadow-xl z-50 text-left space-y-2.5 animate-in fade-in">
+                                                                    <div className="text-[10px] font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider">
+                                                                        Konfigurasi Durasi
+                                                                    </div>
+                                                                    <div className="grid grid-cols-2 gap-2">
+                                                                        <div>
+                                                                            <label className="block text-[10px] font-medium text-stone-600 dark:text-stone-400 mb-1">
+                                                                                Target Durasi
+                                                                            </label>
+                                                                            <input
+                                                                                type="number"
+                                                                                step="any"
+                                                                                min={1}
+                                                                                value={newRowData.measurement_type === 'duration' ? newRowData.target_value : 30}
+                                                                                onChange={(e) =>
+                                                                                    setNewRowData({
+                                                                                        ...newRowData,
+                                                                                        measurement_type: 'duration',
+                                                                                        target_value: Number(e.target.value) || 1,
+                                                                                    })
+                                                                                }
+                                                                                className="w-full text-xs bg-stone-50 dark:bg-stone-850 px-2 py-1 rounded border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-stone-100 focus:outline-none focus:border-amber-600"
+                                                                            />
+                                                                        </div>
+                                                                        <div>
+                                                                            <label className="block text-[10px] font-medium text-stone-600 dark:text-stone-400 mb-1">
+                                                                                Satuan
+                                                                            </label>
+                                                                            <select
+                                                                                value={newRowData.measurement_type === 'duration' ? newRowData.unit : 'menit'}
+                                                                                onChange={(e) =>
+                                                                                    setNewRowData({
+                                                                                        ...newRowData,
+                                                                                        measurement_type: 'duration',
+                                                                                        unit: e.target.value,
+                                                                                    })
+                                                                                }
+                                                                                className="w-full text-xs bg-stone-50 dark:bg-stone-850 px-2 py-1 rounded border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-stone-100 focus:outline-none focus:border-amber-600"
+                                                                            >
+                                                                                <option value="menit">menit</option>
+                                                                                <option value="jam">jam</option>
+                                                                                <option value="detik">detik</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    {/* Presets Durasi Cepat */}
+                                                                    <div>
+                                                                        <div className="text-[9px] font-medium text-stone-400 mb-1">Pilihan Cepat:</div>
+                                                                        <div className="flex flex-wrap gap-1">
+                                                                            {[
+                                                                                { label: '15 Menit', val: 15, unit: 'menit' },
+                                                                                { label: '30 Menit', val: 30, unit: 'menit' },
+                                                                                { label: '45 Menit', val: 45, unit: 'menit' },
+                                                                                { label: '1 Jam', val: 1, unit: 'jam' },
+                                                                            ].map((preset, idx) => (
+                                                                                <button
+                                                                                    key={idx}
+                                                                                    type="button"
+                                                                                    onClick={() => {
+                                                                                        setNewRowData({
+                                                                                            ...newRowData,
+                                                                                            measurement_type: 'duration',
+                                                                                            target_value: preset.val,
+                                                                                            unit: preset.unit,
+                                                                                        });
+                                                                                    }}
+                                                                                    className="px-1.5 py-0.5 text-[10px] rounded bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700"
+                                                                                >
+                                                                                    {preset.label}
+                                                                                </button>
+                                                                            ))}
+                                                                        </div>
+                                                                    </div>
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => {
+                                                                            setNewRowData({
+                                                                                ...newRowData,
+                                                                                measurement_type: 'duration',
+                                                                                target_value: newRowData.measurement_type === 'duration' ? newRowData.target_value : 30,
+                                                                                unit: newRowData.measurement_type === 'duration' && newRowData.unit ? newRowData.unit : 'menit',
+                                                                            });
+                                                                            setNewRowTypePopover(false);
+                                                                        }}
+                                                                        className="w-full py-1 text-center text-xs font-semibold rounded bg-amber-600 text-white hover:bg-amber-700 transition"
+                                                                    >
+                                                                        Terapkan Durasi
+                                                                    </button>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 )}
@@ -1095,12 +1291,13 @@ export default function HabitsIndex({
                                                     {activeTypePopoverId === habit.id && (
                                                         <div
                                                             onClick={(e) => e.stopPropagation()}
-                                                            className="absolute left-1/2 -translate-x-1/2 top-full mt-1.5 w-56 p-3 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl shadow-lg z-50 text-left space-y-2.5"
+                                                            className="absolute left-1/2 -translate-x-1/2 top-full mt-1.5 w-60 p-3 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl shadow-lg z-50 text-left space-y-2"
                                                         >
                                                             <div className="text-[10px] font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider">
                                                                 Ganti Tipe Target
                                                             </div>
                                                             <div className="flex flex-col gap-1.5">
+                                                                {/* Option 1: Ya / Tidak */}
                                                                 <button
                                                                     type="button"
                                                                     onClick={() =>
@@ -1115,44 +1312,208 @@ export default function HabitsIndex({
                                                                     <Check className="w-3.5 h-3.5" />
                                                                     <span>Ya / Tidak</span>
                                                                 </button>
-                                                                <button
-                                                                    type="button"
-                                                                    onClick={() =>
-                                                                        saveInlineTarget(
-                                                                            habit,
-                                                                            'quantitative',
-                                                                            habit.target_value || 2000,
-                                                                            habit.unit || 'ml'
-                                                                        )
-                                                                    }
-                                                                    className={`px-2.5 py-1.5 rounded-md text-xs font-medium text-left flex items-center gap-2 ${
-                                                                        habit.measurement_type === 'quantitative'
-                                                                            ? 'bg-amber-600 text-white'
-                                                                            : 'hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-700 dark:text-stone-300'
-                                                                    }`}
-                                                                >
-                                                                    <Hash className="w-3.5 h-3.5" />
-                                                                    <span>Kuantitas Terukur</span>
-                                                                </button>
-                                                                <button
-                                                                    type="button"
-                                                                    onClick={() =>
-                                                                        saveInlineTarget(
-                                                                            habit,
-                                                                            'duration',
-                                                                            habit.target_value || 30,
-                                                                            habit.unit || 'menit'
-                                                                        )
-                                                                    }
-                                                                    className={`px-2.5 py-1.5 rounded-md text-xs font-medium text-left flex items-center gap-2 ${
-                                                                        habit.measurement_type === 'duration'
-                                                                            ? 'bg-amber-600 text-white'
-                                                                            : 'hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-700 dark:text-stone-300'
-                                                                    }`}
-                                                                >
-                                                                    <Clock className="w-3.5 h-3.5" />
-                                                                    <span>Durasi Waktu</span>
-                                                                </button>
+
+                                                                {/* Option 2: Kuantitas Terukur (Nested on Hover) */}
+                                                                <div className="relative group/editqty">
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() =>
+                                                                            saveInlineTarget(
+                                                                                habit,
+                                                                                'quantitative',
+                                                                                habit.measurement_type === 'quantitative' ? habit.target_value : 10,
+                                                                                habit.measurement_type === 'quantitative' && habit.unit ? habit.unit : 'kali'
+                                                                            )
+                                                                        }
+                                                                        className={`w-full px-2.5 py-1.5 rounded-md text-xs font-medium text-left flex items-center justify-between ${
+                                                                            habit.measurement_type === 'quantitative'
+                                                                                ? 'bg-amber-600 text-white'
+                                                                                : 'hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-700 dark:text-stone-300'
+                                                                        }`}
+                                                                    >
+                                                                        <div className="flex items-center gap-2">
+                                                                            <Hash className="w-3.5 h-3.5" />
+                                                                            <span>Kuantitas Terukur</span>
+                                                                        </div>
+                                                                        <SubChevronRight className="w-3.5 h-3.5 opacity-60" />
+                                                                    </button>
+
+                                                                    {/* Nested Flyout Card on Hover */}
+                                                                    <div className="hidden group-hover/editqty:block absolute left-full top-0 ml-1.5 w-64 p-3 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl shadow-xl z-50 text-left space-y-2.5 animate-in fade-in">
+                                                                        <div className="text-[10px] font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider">
+                                                                            Konfigurasi Kuantitas
+                                                                        </div>
+                                                                        <div className="grid grid-cols-2 gap-2">
+                                                                            <div>
+                                                                                <label className="block text-[10px] font-medium text-stone-600 dark:text-stone-400 mb-1">
+                                                                                    Target Angka
+                                                                                </label>
+                                                                                <input
+                                                                                    type="number"
+                                                                                    step="any"
+                                                                                    min={1}
+                                                                                    defaultValue={habit.measurement_type === 'quantitative' ? habit.target_value : 10}
+                                                                                    id={`qty-val-${habit.id}`}
+                                                                                    className="w-full text-xs bg-stone-50 dark:bg-stone-850 px-2 py-1 rounded border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-stone-100 focus:outline-none focus:border-amber-600"
+                                                                                />
+                                                                            </div>
+                                                                            <div>
+                                                                                <label className="block text-[10px] font-medium text-stone-600 dark:text-stone-400 mb-1">
+                                                                                    Satuan
+                                                                                </label>
+                                                                                <input
+                                                                                    type="text"
+                                                                                    defaultValue={habit.measurement_type === 'quantitative' && habit.unit ? habit.unit : 'kali'}
+                                                                                    id={`qty-unit-${habit.id}`}
+                                                                                    placeholder="kali, ml, hal"
+                                                                                    className="w-full text-xs bg-stone-50 dark:bg-stone-850 px-2 py-1 rounded border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-stone-100 focus:outline-none focus:border-amber-600"
+                                                                                />
+                                                                            </div>
+                                                                        </div>
+
+                                                                        {/* Presets Satuan Cepat */}
+                                                                        <div>
+                                                                            <div className="text-[9px] font-medium text-stone-400 mb-1">Pilihan Cepat:</div>
+                                                                            <div className="flex flex-wrap gap-1">
+                                                                                {[
+                                                                                    { label: '8 Gelas', val: 8, unit: 'gelas' },
+                                                                                    { label: '2000 ml', val: 2000, unit: 'ml' },
+                                                                                    { label: '10 Hal', val: 10, unit: 'halaman' },
+                                                                                    { label: '5000 Langkah', val: 5000, unit: 'langkah' },
+                                                                                ].map((preset, idx) => (
+                                                                                    <button
+                                                                                        key={idx}
+                                                                                        type="button"
+                                                                                        onClick={() => {
+                                                                                            const inputVal = document.getElementById(`qty-val-${habit.id}`) as HTMLInputElement;
+                                                                                            const inputUnit = document.getElementById(`qty-unit-${habit.id}`) as HTMLInputElement;
+                                                                                            if (inputVal) inputVal.value = String(preset.val);
+                                                                                            if (inputUnit) inputUnit.value = preset.unit;
+                                                                                        }}
+                                                                                        className="px-1.5 py-0.5 text-[10px] rounded bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700"
+                                                                                    >
+                                                                                        {preset.label}
+                                                                                    </button>
+                                                                                ))}
+                                                                            </div>
+                                                                        </div>
+                                                                        <button
+                                                                            type="button"
+                                                                            onClick={() => {
+                                                                                const inputVal = document.getElementById(`qty-val-${habit.id}`) as HTMLInputElement;
+                                                                                const inputUnit = document.getElementById(`qty-unit-${habit.id}`) as HTMLInputElement;
+                                                                                const tVal = Number(inputVal?.value) || 1;
+                                                                                const uVal = inputUnit?.value?.trim() || 'kali';
+                                                                                saveInlineTarget(habit, 'quantitative', tVal, uVal);
+                                                                            }}
+                                                                            className="w-full py-1 text-center text-xs font-semibold rounded bg-amber-600 text-white hover:bg-amber-700 transition"
+                                                                        >
+                                                                            Terapkan Kuantitas
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+
+                                                                {/* Option 3: Durasi Waktu (Nested on Hover) */}
+                                                                <div className="relative group/editdur">
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() =>
+                                                                            saveInlineTarget(
+                                                                                habit,
+                                                                                'duration',
+                                                                                habit.measurement_type === 'duration' ? habit.target_value : 30,
+                                                                                habit.measurement_type === 'duration' && habit.unit ? habit.unit : 'menit'
+                                                                            )
+                                                                        }
+                                                                        className={`w-full px-2.5 py-1.5 rounded-md text-xs font-medium text-left flex items-center justify-between ${
+                                                                            habit.measurement_type === 'duration'
+                                                                                ? 'bg-amber-600 text-white'
+                                                                                : 'hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-700 dark:text-stone-300'
+                                                                        }`}
+                                                                    >
+                                                                        <div className="flex items-center gap-2">
+                                                                            <Clock className="w-3.5 h-3.5" />
+                                                                            <span>Durasi Waktu</span>
+                                                                        </div>
+                                                                        <SubChevronRight className="w-3.5 h-3.5 opacity-60" />
+                                                                    </button>
+
+                                                                    {/* Nested Flyout Card on Hover */}
+                                                                    <div className="hidden group-hover/editdur:block absolute left-full top-0 ml-1.5 w-60 p-3 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl shadow-xl z-50 text-left space-y-2.5 animate-in fade-in">
+                                                                        <div className="text-[10px] font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider">
+                                                                            Konfigurasi Durasi
+                                                                        </div>
+                                                                        <div className="grid grid-cols-2 gap-2">
+                                                                            <div>
+                                                                                <label className="block text-[10px] font-medium text-stone-600 dark:text-stone-400 mb-1">
+                                                                                    Target Durasi
+                                                                                </label>
+                                                                                <input
+                                                                                    type="number"
+                                                                                    step="any"
+                                                                                    min={1}
+                                                                                    defaultValue={habit.measurement_type === 'duration' ? habit.target_value : 30}
+                                                                                    id={`dur-val-${habit.id}`}
+                                                                                    className="w-full text-xs bg-stone-50 dark:bg-stone-850 px-2 py-1 rounded border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-stone-100 focus:outline-none focus:border-amber-600"
+                                                                                />
+                                                                            </div>
+                                                                            <div>
+                                                                                <label className="block text-[10px] font-medium text-stone-600 dark:text-stone-400 mb-1">
+                                                                                    Satuan
+                                                                                </label>
+                                                                                <select
+                                                                                    defaultValue={habit.measurement_type === 'duration' && habit.unit ? habit.unit : 'menit'}
+                                                                                    id={`dur-unit-${habit.id}`}
+                                                                                    className="w-full text-xs bg-stone-50 dark:bg-stone-850 px-2 py-1 rounded border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-stone-100 focus:outline-none focus:border-amber-600"
+                                                                                >
+                                                                                    <option value="menit">menit</option>
+                                                                                    <option value="jam">jam</option>
+                                                                                    <option value="detik">detik</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        {/* Presets Durasi Cepat */}
+                                                                        <div>
+                                                                            <div className="text-[9px] font-medium text-stone-400 mb-1">Pilihan Cepat:</div>
+                                                                            <div className="flex flex-wrap gap-1">
+                                                                                {[
+                                                                                    { label: '15 Menit', val: 15, unit: 'menit' },
+                                                                                    { label: '30 Menit', val: 30, unit: 'menit' },
+                                                                                    { label: '45 Menit', val: 45, unit: 'menit' },
+                                                                                    { label: '1 Jam', val: 1, unit: 'jam' },
+                                                                                ].map((preset, idx) => (
+                                                                                    <button
+                                                                                        key={idx}
+                                                                                        type="button"
+                                                                                        onClick={() => {
+                                                                                            const inputVal = document.getElementById(`dur-val-${habit.id}`) as HTMLInputElement;
+                                                                                            const inputUnit = document.getElementById(`dur-unit-${habit.id}`) as HTMLSelectElement;
+                                                                                            if (inputVal) inputVal.value = String(preset.val);
+                                                                                            if (inputUnit) inputUnit.value = preset.unit;
+                                                                                        }}
+                                                                                        className="px-1.5 py-0.5 text-[10px] rounded bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700"
+                                                                                    >
+                                                                                        {preset.label}
+                                                                                    </button>
+                                                                                ))}
+                                                                            </div>
+                                                                        </div>
+                                                                        <button
+                                                                            type="button"
+                                                                            onClick={() => {
+                                                                                const inputVal = document.getElementById(`dur-val-${habit.id}`) as HTMLInputElement;
+                                                                                const inputUnit = document.getElementById(`dur-unit-${habit.id}`) as HTMLSelectElement;
+                                                                                const tVal = Number(inputVal?.value) || 1;
+                                                                                const uVal = inputUnit?.value || 'menit';
+                                                                                saveInlineTarget(habit, 'duration', tVal, uVal);
+                                                                            }}
+                                                                            className="w-full py-1 text-center text-xs font-semibold rounded bg-amber-600 text-white hover:bg-amber-700 transition"
+                                                                        >
+                                                                            Terapkan Durasi
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     )}
