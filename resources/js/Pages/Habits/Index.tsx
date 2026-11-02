@@ -122,12 +122,32 @@ export default function HabitsIndex({
     const [editingHabit, setEditingHabit] = useState<HabitItem | null>(null);
     const [activeMenuId, setActiveMenuId] = useState<number | null>(null);
 
-    // Inline Editing states
+    const [isCreatingInline, setIsCreatingInline] = useState(false);
     const [inlineNameId, setInlineNameId] = useState<number | null>(null);
     const [inlineNameValue, setInlineNameValue] = useState<string>('');
     const [activeStylePopoverId, setActiveStylePopoverId] = useState<number | null>(null);
     const [activeTypePopoverId, setActiveTypePopoverId] = useState<number | null>(null);
-    const [iconPickerTarget, setIconPickerTarget] = useState<'form' | HabitItem | null>(null);
+    const [iconPickerTarget, setIconPickerTarget] = useState<'form' | 'new_row' | HabitItem | null>(null);
+
+    // Quick inline new row state
+    const [newRowData, setNewRowData] = useState<{
+        name: string;
+        color: string;
+        icon: string;
+        measurement_type: 'boolean' | 'quantitative' | 'duration';
+        target_value: number;
+        unit: string;
+    }>({
+        name: '',
+        color: '#d97706',
+        icon: 'check',
+        measurement_type: 'boolean',
+        target_value: 1,
+        unit: '',
+    });
+    const [isSavingNewRow, setIsSavingNewRow] = useState(false);
+    const [newRowTypePopover, setNewRowTypePopover] = useState(false);
+    const [newRowStylePopover, setNewRowStylePopover] = useState(false);
 
     // Quick popover cell editor for quantitative / duration
     const [activeCellEdit, setActiveCellEdit] = useState<{
@@ -152,24 +172,53 @@ export default function HabitsIndex({
     });
 
     const openCreateModal = () => {
-        setEditingHabit(null);
-        clearErrors();
-        reset();
-        setData({
+        setIsCreatingInline(true);
+        setNewRowData({
             name: '',
-            description: '',
+            color: '#d97706',
+            icon: 'check',
             measurement_type: 'boolean',
             target_value: 1,
             unit: '',
-            frequency_type: 'daily',
-            scheduled_days: [1, 2, 3, 4, 5, 6, 7],
-            weekly_target_days: 5,
-            start_date: filter_date,
-            color: '#d97706',
-            icon: 'check',
-            time_of_day: '',
         });
-        setIsModalOpen(true);
+        setNewRowTypePopover(false);
+        setNewRowStylePopover(false);
+    };
+
+    const submitInlineNewRow = () => {
+        const trimmed = newRowData.name.trim();
+        if (!trimmed) {
+            setIsCreatingInline(false);
+            return;
+        }
+
+        setIsSavingNewRow(true);
+        router.post(
+            route('habits.store'),
+            {
+                name: trimmed,
+                measurement_type: newRowData.measurement_type,
+                target_value: newRowData.target_value,
+                unit: newRowData.measurement_type === 'boolean' ? '' : newRowData.unit || (newRowData.measurement_type === 'duration' ? 'menit' : 'kali'),
+                frequency_type: 'daily',
+                scheduled_days: [1, 2, 3, 4, 5, 6, 7],
+                weekly_target_days: 5,
+                start_date: filter_date,
+                color: newRowData.color,
+                icon: newRowData.icon,
+                time_of_day: '',
+            },
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    setIsCreatingInline(false);
+                    setIsSavingNewRow(false);
+                },
+                onError: () => {
+                    setIsSavingNewRow(false);
+                },
+            }
+        );
     };
 
     const openEditModal = (habit: HabitItem) => {
@@ -489,18 +538,20 @@ export default function HabitsIndex({
 
                 {/* WEEKLY MATRIX SPREADSHEET TABLE */}
                 {/* Global Click-Outside Backdrop for Inline Popovers */}
-                {(activeStylePopoverId !== null || activeTypePopoverId !== null || activeMenuId !== null) && (
+                {(activeStylePopoverId !== null || activeTypePopoverId !== null || activeMenuId !== null || newRowTypePopover || newRowStylePopover) && (
                     <div
                         className="fixed inset-0 z-30 bg-transparent"
                         onClick={() => {
                             setActiveStylePopoverId(null);
                             setActiveTypePopoverId(null);
                             setActiveMenuId(null);
+                            setNewRowTypePopover(false);
+                            setNewRowStylePopover(false);
                         }}
                     />
                 )}
 
-                {filteredHabits.length === 0 ? (
+                {filteredHabits.length === 0 && !isCreatingInline ? (
                     <div className="text-center py-12 bg-white dark:bg-stone-900 rounded-xl border border-stone-200 dark:border-stone-800">
                         <AlertCircle className="w-8 h-8 mx-auto text-stone-400 dark:text-stone-500" />
                         <h3 className="mt-2 text-sm font-semibold text-stone-800 dark:text-stone-200">
@@ -548,6 +599,278 @@ export default function HabitsIndex({
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-stone-100 dark:divide-stone-800/70 text-xs">
+                                    {/* Inline New Habit Row */}
+                                    {isCreatingInline && (
+                                        <tr className="bg-amber-500/[0.04] dark:bg-amber-500/[0.08] relative z-40 border-b border-amber-200 dark:border-amber-900/50">
+                                            {/* Kolom Info Habit: Icon/Warna Picker + Input Nama */}
+                                            <td className="py-2.5 pl-5 pr-4 relative">
+                                                <div className="flex items-center gap-2.5">
+                                                    {/* Color & Icon Trigger */}
+                                                    <div className="relative">
+                                                        <button
+                                                            type="button"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                setNewRowStylePopover(!newRowStylePopover);
+                                                                setNewRowTypePopover(false);
+                                                            }}
+                                                            title="Pilih icon & warna"
+                                                            className="w-7 h-7 rounded-lg flex items-center justify-center transition-opacity hover:opacity-90 flex-shrink-0"
+                                                            style={{ backgroundColor: newRowData.color }}
+                                                        >
+                                                            {renderHabitIcon(newRowData.icon)}
+                                                        </button>
+
+                                                        {newRowStylePopover && (
+                                                            <div
+                                                                onClick={(e) => e.stopPropagation()}
+                                                                className="absolute left-0 top-full mt-1.5 w-64 p-3 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl shadow-lg z-50 space-y-3"
+                                                            >
+                                                                <div>
+                                                                    <label className="text-[10px] font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 block mb-1.5">
+                                                                        Pilih Warna
+                                                                    </label>
+                                                                    <div className="flex items-center gap-1.5">
+                                                                        {COLOR_OPTIONS.map((c) => (
+                                                                            <button
+                                                                                key={c.value}
+                                                                                type="button"
+                                                                                onClick={() => {
+                                                                                    setNewRowData({ ...newRowData, color: c.value });
+                                                                                }}
+                                                                                className={`w-6 h-6 rounded-full ${c.bg} flex items-center justify-center transition-all ${
+                                                                                    newRowData.color === c.value ? 'ring-2 ring-offset-2 ' + c.ring : 'opacity-80'
+                                                                                }`}
+                                                                            >
+                                                                                {newRowData.color === c.value && (
+                                                                                    <Check className="w-3.5 h-3.5 text-white stroke-[3]" />
+                                                                                )}
+                                                                            </button>
+                                                                        ))}
+                                                                    </div>
+                                                                </div>
+
+                                                                <div>
+                                                                    <label className="text-[10px] font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 block mb-1.5">
+                                                                        Pilih Icon
+                                                                    </label>
+                                                                    <div className="grid grid-cols-4 gap-1.5 max-h-32 overflow-y-auto pr-1">
+                                                                        {[
+                                                                            'check',
+                                                                            'droplets',
+                                                                            'book-open',
+                                                                            'dumbbell',
+                                                                            'brain',
+                                                                            'sun',
+                                                                            'moon',
+                                                                            'heart',
+                                                                            'coffee',
+                                                                            'zap',
+                                                                            'activity',
+                                                                        ].map((iconKey) => {
+                                                                            const isSelected = newRowData.icon === iconKey;
+                                                                            return (
+                                                                                <button
+                                                                                    key={iconKey}
+                                                                                    type="button"
+                                                                                    onClick={() => {
+                                                                                        setNewRowData({ ...newRowData, icon: iconKey });
+                                                                                    }}
+                                                                                    className={`p-2 rounded-lg flex items-center justify-center border transition-all ${
+                                                                                        isSelected
+                                                                                            ? 'bg-amber-600 text-white border-amber-600'
+                                                                                            : 'bg-stone-50 dark:bg-stone-850 border-stone-200 dark:border-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-100'
+                                                                                    }`}
+                                                                                >
+                                                                                    <Icons name={iconKey} className="w-4 h-4" />
+                                                                                </button>
+                                                                            );
+                                                                        })}
+                                                                    </div>
+
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => {
+                                                                            setIconPickerTarget('new_row');
+                                                                            setNewRowStylePopover(false);
+                                                                        }}
+                                                                        className="mt-2.5 w-full py-1.5 px-2.5 rounded-lg text-[11px] font-semibold text-stone-700 dark:text-stone-300 bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-750 border border-stone-200 dark:border-stone-700 transition flex items-center justify-center gap-1.5"
+                                                                    >
+                                                                        <Search className="w-3.5 h-3.5" />
+                                                                        <span>Cari Icon Lainnya...</span>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                    </div>
+
+                                                    {/* Text Input Nama Habit */}
+                                                    <div className="flex-1">
+                                                        <input
+                                                            type="text"
+                                                            autoFocus
+                                                            value={newRowData.name}
+                                                            onChange={(e) =>
+                                                                setNewRowData({ ...newRowData, name: e.target.value })
+                                                            }
+                                                            onKeyDown={(e) => {
+                                                                if (e.key === 'Enter') submitInlineNewRow();
+                                                                if (e.key === 'Escape') setIsCreatingInline(false);
+                                                            }}
+                                                            placeholder="Ketik nama habit baru... (tekan Enter untuk simpan)"
+                                                            className="w-full text-xs font-medium text-stone-900 dark:text-stone-100 bg-white dark:bg-stone-900 px-2.5 py-1.5 rounded-md border border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 placeholder:text-stone-400"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                            {/* Kolom Tipe / Target Selector */}
+                                            <td className="py-2.5 px-3 text-center relative">
+                                                <button
+                                                    type="button"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setNewRowTypePopover(!newRowTypePopover);
+                                                        setNewRowStylePopover(false);
+                                                    }}
+                                                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-medium bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 transition"
+                                                >
+                                                    {newRowData.measurement_type === 'boolean' && (
+                                                        <>
+                                                            <Check className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                                                            <span>Ya/Tidak</span>
+                                                        </>
+                                                    )}
+                                                    {newRowData.measurement_type === 'quantitative' && (
+                                                        <>
+                                                            <Hash className="w-3 h-3 text-amber-600 dark:text-amber-400" />
+                                                            <span>
+                                                                {newRowData.target_value} {newRowData.unit || 'kali'}
+                                                            </span>
+                                                        </>
+                                                    )}
+                                                    {newRowData.measurement_type === 'duration' && (
+                                                        <>
+                                                            <Clock className="w-3 h-3 text-stone-600 dark:text-stone-400" />
+                                                            <span>
+                                                                {newRowData.target_value} {newRowData.unit || 'menit'}
+                                                            </span>
+                                                        </>
+                                                    )}
+                                                </button>
+
+                                                {newRowTypePopover && (
+                                                    <div
+                                                        onClick={(e) => e.stopPropagation()}
+                                                        className="absolute left-1/2 -translate-x-1/2 top-full mt-1.5 w-56 p-3 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl shadow-lg z-50 text-left space-y-2.5"
+                                                    >
+                                                        <div className="text-[10px] font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider">
+                                                            Pilih Tipe Target
+                                                        </div>
+                                                        <div className="flex flex-col gap-1.5">
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => {
+                                                                    setNewRowData({
+                                                                        ...newRowData,
+                                                                        measurement_type: 'boolean',
+                                                                        target_value: 1,
+                                                                        unit: '',
+                                                                    });
+                                                                    setNewRowTypePopover(false);
+                                                                }}
+                                                                className={`px-2.5 py-1.5 rounded-md text-xs font-medium text-left flex items-center gap-2 ${
+                                                                    newRowData.measurement_type === 'boolean'
+                                                                        ? 'bg-amber-600 text-white'
+                                                                        : 'hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-700 dark:text-stone-300'
+                                                                }`}
+                                                            >
+                                                                <Check className="w-3.5 h-3.5" />
+                                                                <span>Ya / Tidak</span>
+                                                            </button>
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => {
+                                                                    setNewRowData({
+                                                                        ...newRowData,
+                                                                        measurement_type: 'quantitative',
+                                                                        target_value: 10,
+                                                                        unit: 'kali',
+                                                                    });
+                                                                    setNewRowTypePopover(false);
+                                                                }}
+                                                                className={`px-2.5 py-1.5 rounded-md text-xs font-medium text-left flex items-center gap-2 ${
+                                                                    newRowData.measurement_type === 'quantitative'
+                                                                        ? 'bg-amber-600 text-white'
+                                                                        : 'hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-700 dark:text-stone-300'
+                                                                }`}
+                                                            >
+                                                                <Hash className="w-3.5 h-3.5" />
+                                                                <span>Kuantitas Terukur</span>
+                                                            </button>
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => {
+                                                                    setNewRowData({
+                                                                        ...newRowData,
+                                                                        measurement_type: 'duration',
+                                                                        target_value: 30,
+                                                                        unit: 'menit',
+                                                                    });
+                                                                    setNewRowTypePopover(false);
+                                                                }}
+                                                                className={`px-2.5 py-1.5 rounded-md text-xs font-medium text-left flex items-center gap-2 ${
+                                                                    newRowData.measurement_type === 'duration'
+                                                                        ? 'bg-amber-600 text-white'
+                                                                        : 'hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-700 dark:text-stone-300'
+                                                                }`}
+                                                            >
+                                                                <Clock className="w-3.5 h-3.5" />
+                                                                <span>Durasi Waktu</span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </td>
+
+                                            {/* 7 Days Empty Placeholder Cells */}
+                                            {week_days.map((wd) => (
+                                                <td key={wd.date} className="py-2.5 px-1 text-center align-middle text-stone-300 dark:text-stone-700">
+                                                    <span className="inline-block w-8 text-center text-xs select-none">-</span>
+                                                </td>
+                                            ))}
+
+                                            {/* Progress Placeholder */}
+                                            <td className="py-2.5 px-3 text-center text-stone-300 dark:text-stone-700">
+                                                <span className="text-xs select-none">-</span>
+                                            </td>
+
+                                            {/* Aksi: Simpan / Batal */}
+                                            <td className="py-2.5 pr-4 pl-2 text-center whitespace-nowrap">
+                                                <div className="flex items-center justify-center gap-1">
+                                                    <button
+                                                        type="button"
+                                                        onClick={submitInlineNewRow}
+                                                        disabled={isSavingNewRow}
+                                                        title="Simpan (Enter)"
+                                                        className="p-1 rounded-md text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 transition disabled:opacity-50"
+                                                    >
+                                                        <Check className="w-4 h-4 stroke-[2.5]" />
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setIsCreatingInline(false)}
+                                                        disabled={isSavingNewRow}
+                                                        title="Batal (Esc)"
+                                                        className="p-1 rounded-md text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800 transition"
+                                                    >
+                                                        <X className="w-4 h-4" />
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    )}
+
                                     {filteredHabits.map((habit) => {
                                         // Count week completions
                                         let weekCompleted = 0;
@@ -1415,10 +1738,18 @@ export default function HabitsIndex({
             <IconPickerModal
                 show={iconPickerTarget !== null}
                 onClose={() => setIconPickerTarget(null)}
-                currentIcon={iconPickerTarget === 'form' ? data.icon : iconPickerTarget?.icon}
+                currentIcon={
+                    iconPickerTarget === 'form'
+                        ? data.icon
+                        : iconPickerTarget === 'new_row'
+                        ? newRowData.icon
+                        : iconPickerTarget?.icon
+                }
                 onSelect={(chosenIcon) => {
                     if (iconPickerTarget === 'form') {
                         setData('icon', chosenIcon);
+                    } else if (iconPickerTarget === 'new_row') {
+                        setNewRowData({ ...newRowData, icon: chosenIcon });
                     } else if (iconPickerTarget) {
                         saveInlineStyle(iconPickerTarget, undefined, chosenIcon);
                     }
