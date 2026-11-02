@@ -528,6 +528,18 @@ export default function HabitsIndex({
                 </div>
 
                 {/* WEEKLY MATRIX SPREADSHEET TABLE */}
+                {/* Global Click-Outside Backdrop for Inline Popovers */}
+                {(activeStylePopoverId !== null || activeTypePopoverId !== null || activeMenuId !== null) && (
+                    <div
+                        className="fixed inset-0 z-30 bg-transparent"
+                        onClick={() => {
+                            setActiveStylePopoverId(null);
+                            setActiveTypePopoverId(null);
+                            setActiveMenuId(null);
+                        }}
+                    />
+                )}
+
                 {filteredHabits.length === 0 ? (
                     <div className="text-center py-16 bg-white dark:bg-stone-900/60 rounded-2xl border border-stone-200/80 dark:border-stone-800">
                         <AlertCircle className="w-10 h-10 mx-auto text-stone-400 dark:text-stone-500" />
@@ -548,8 +560,8 @@ export default function HabitsIndex({
                         )}
                     </div>
                 ) : (
-                    <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200/90 dark:border-stone-800 shadow-sm overflow-hidden">
-                        <div className="overflow-x-auto">
+                    <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-200/90 dark:border-stone-800 shadow-sm">
+                        <div className="overflow-x-auto min-h-[380px] pb-28">
                             <table className="w-full text-left border-collapse">
                                 <thead>
                                     <tr className="border-b border-stone-200/90 dark:border-stone-800 bg-stone-50/80 dark:bg-stone-850/60 text-[11px] font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider">
@@ -595,22 +607,24 @@ export default function HabitsIndex({
                                                 key={habit.id}
                                                 className={`transition-colors ${
                                                     isRowActive
-                                                        ? 'relative z-30 bg-stone-50/80 dark:bg-stone-850/60'
+                                                        ? 'relative z-40 bg-stone-50/90 dark:bg-stone-850/80 shadow-sm'
                                                         : 'hover:bg-stone-50/50 dark:hover:bg-stone-850/30'
                                                 }`}
                                             >
                                                 {/* Kolom Info Habit (Inline Edit Icon, Warna & Nama) */}
-                                                <td className="py-3.5 pl-5 pr-4">
+                                                <td className={`py-3.5 pl-5 pr-4 ${activeStylePopoverId === habit.id ? 'relative z-50' : ''}`}>
                                                     <div className="flex items-center gap-2.5 relative">
                                                         {/* Icon & Color Trigger Button */}
                                                         <div className="relative">
                                                             <button
                                                                 type="button"
-                                                                onClick={() => {
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
                                                                     setActiveStylePopoverId(
                                                                         activeStylePopoverId === habit.id ? null : habit.id
                                                                     );
                                                                     setActiveTypePopoverId(null);
+                                                                    setActiveMenuId(null);
                                                                 }}
                                                                 title="Ubah icon & warna habit"
                                                                 className="w-7 h-7 rounded-xl flex items-center justify-center shadow-sm hover:scale-105 transition-transform"
@@ -621,7 +635,10 @@ export default function HabitsIndex({
 
                                                             {/* Popover Icon & Color Picker */}
                                                             {activeStylePopoverId === habit.id && (
-                                                                <div className="absolute left-0 top-9 w-60 p-3 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl shadow-2xl z-50 space-y-3">
+                                                                <div
+                                                                    onClick={(e) => e.stopPropagation()}
+                                                                    className="absolute left-0 top-full mt-2 w-64 p-3 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl shadow-2xl z-50 space-y-3"
+                                                                >
                                                                     <div>
                                                                         <label className="text-[10px] font-bold uppercase tracking-wider text-stone-400 block mb-1.5">
                                                                             Pilih Warna
@@ -722,14 +739,16 @@ export default function HabitsIndex({
                                                 </td>
 
                                                 {/* Kolom Tipe / Target (Inline Popover Editor) */}
-                                                <td className="py-3.5 px-3 text-center relative">
+                                                <td className={`py-3.5 px-3 text-center ${activeTypePopoverId === habit.id ? 'relative z-50' : 'relative'}`}>
                                                     <button
                                                         type="button"
-                                                        onClick={() => {
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
                                                             setActiveTypePopoverId(
                                                                 activeTypePopoverId === habit.id ? null : habit.id
                                                             );
                                                             setActiveStylePopoverId(null);
+                                                            setActiveMenuId(null);
                                                         }}
                                                         title="Klik untuk ubah tipe atau target"
                                                         className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-bold bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-750 transition"
@@ -760,7 +779,10 @@ export default function HabitsIndex({
 
                                                     {/* Popover Inline Target Editor */}
                                                     {activeTypePopoverId === habit.id && (
-                                                        <div className="absolute left-1/2 -translate-x-1/2 top-11 w-56 p-3 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl shadow-2xl z-50 text-left space-y-2.5">
+                                                        <div
+                                                            onClick={(e) => e.stopPropagation()}
+                                                            className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-56 p-3 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl shadow-2xl z-50 text-left space-y-2.5"
+                                                        >
                                                             <div className="text-[10px] font-bold text-stone-400 uppercase tracking-wider">
                                                                 Ganti Tipe Target
                                                             </div>
@@ -891,18 +913,24 @@ export default function HabitsIndex({
                                                 </td>
 
                                                 {/* Aksi Menu */}
-                                                <td className="py-3.5 pr-4 pl-2 text-center relative">
+                                                <td className={`py-3.5 pr-4 pl-2 text-center ${activeMenuId === habit.id ? 'relative z-50' : 'relative'}`}>
                                                     <button
-                                                        onClick={() =>
-                                                            setActiveMenuId(activeMenuId === habit.id ? null : habit.id)
-                                                        }
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            setActiveMenuId(activeMenuId === habit.id ? null : habit.id);
+                                                            setActiveStylePopoverId(null);
+                                                            setActiveTypePopoverId(null);
+                                                        }}
                                                         className="p-1 rounded-lg text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800 transition"
                                                     >
                                                         <MoreVertical className="w-4 h-4" />
                                                     </button>
 
                                                     {activeMenuId === habit.id && (
-                                                        <div className="absolute right-4 mt-1 w-44 bg-white dark:bg-stone-850 border border-stone-200 dark:border-stone-800 rounded-xl shadow-lg z-50 py-1 text-xs text-left">
+                                                        <div
+                                                            onClick={(e) => e.stopPropagation()}
+                                                            className="absolute right-4 top-full mt-1 w-44 bg-white dark:bg-stone-850 border border-stone-200 dark:border-stone-800 rounded-xl shadow-2xl z-50 py-1 text-xs text-left"
+                                                        >
                                                             <button
                                                                 onClick={() => openEditModal(habit)}
                                                                 className="flex items-center gap-2 w-full px-3 py-2 text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800"
