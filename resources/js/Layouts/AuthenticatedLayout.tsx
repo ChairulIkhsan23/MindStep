@@ -9,6 +9,7 @@ import {
     Calendar,
     CheckSquare,
     ChevronDown,
+    Flame,
     LayoutDashboard,
     LogOut,
     Menu,
@@ -24,7 +25,7 @@ export default function AuthenticatedLayout({
     header,
     children,
 }: PropsWithChildren<{ header?: ReactNode }>) {
-    const user = usePage().props.auth.user;
+    const { user, streak } = usePage().props.auth;
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -196,6 +197,30 @@ export default function AuthenticatedLayout({
 
                     {/* Right Action Icons & User Dropdown */}
                     <div className="flex items-center gap-2 sm:gap-3">
+                        {/* Global User Daily Streak Badge */}
+                        <div
+                            title={
+                                streak?.today_perfect
+                                    ? `MindStep Day Streak: ${streak.current_streak} Hari (Hari ini tuntas sempurna: Semua habit + Jurnal selesai!)`
+                                    : `MindStep Day Streak: ${streak?.current_streak ?? 0} Hari (Selesaikan semua habit & minimal 1 jurnal hari ini untuk menambah streak)`
+                            }
+                            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border text-xs font-extrabold transition-all ${
+                                (streak?.current_streak ?? 0) > 0
+                                    ? 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800/60 shadow-sm'
+                                    : 'bg-stone-100 dark:bg-stone-850 text-stone-500 dark:text-stone-400 border-stone-200 dark:border-stone-800'
+                            }`}
+                        >
+                            <Flame
+                                className={`w-4 h-4 ${
+                                    (streak?.current_streak ?? 0) > 0
+                                        ? 'fill-amber-500 text-amber-500 animate-pulse'
+                                        : 'text-stone-400'
+                                }`}
+                            />
+                            <span>{streak?.current_streak ?? 0}</span>
+                            <span className="hidden md:inline font-bold text-[11px] opacity-80">Hari</span>
+                        </div>
+
                         <Link
                             href={route('habits.index')}
                             className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
@@ -249,6 +274,18 @@ export default function AuthenticatedLayout({
                         </div>
                     </div>
                 </header>
+
+                {/* Global Streak Alert Banner */}
+                {streak?.is_at_risk && (
+                    <div className="bg-amber-500/10 dark:bg-amber-500/15 border-b border-amber-200 dark:border-amber-800/60 px-4 py-2.5 sm:px-6">
+                        <div className="max-w-[1400px] mx-auto flex items-center gap-2 text-xs text-amber-900 dark:text-amber-200">
+                            <Flame className="w-4 h-4 text-amber-600 dark:text-amber-400 fill-amber-600 shrink-0 animate-bounce" />
+                            <span>
+                                <strong>Lanjutkan Runtunan Anda!</strong> Segera catat habit dan jurnal Anda hari ini untuk memastikan runtutan tidak terputus.
+                            </span>
+                        </div>
+                    </div>
+                )}
 
                 {/* Page Content */}
                 <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-[1400px] w-full mx-auto">

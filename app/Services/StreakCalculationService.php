@@ -4,7 +4,9 @@ namespace App\Services;
 
 use App\Models\Habit;
 use App\Models\HabitLog;
+use App\Models\Journal;
 use App\Models\User;
+use App\Models\UserFreeze;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
@@ -13,6 +15,193 @@ class StreakCalculationService
     public const int MONTHLY_FREEZE_LIMIT = 2;
 
     public const int MAX_CONSECUTIVE_FREEZES = 2;
+
+    /**
+     * Calculate global daily streak for a user:
+     * A day is completed if:
+     * 1. User has at least 1 active scheduled habit, and ALL scheduled habits are 'completed' (or day has a 'freeze').
+     * 2. User has at least 1 journal entry on that date.
+     *
+     * @return array{
+     *     current_streak: int,
+     *     longest_streak: int,
+     *     today_perfect: bool,
+     *     today_habits_completed: int,
+     *     today_habits_total: int,
+     *     today_journal_completed: bool,
+     *     is_at_risk: bool,
+     *     streak_level: array{level: int, label: string, badge: string}
+     * }
+     */
+    public function calculateForUser(User $user, ?Carbon $referenceDate = null): array
+    {
+        $userTimezone = $user->timezone ?? 'UTC';
+        $today = $referenceDate ? $referenceDate->copy()->setTimezone($userTimezone) : Carbon::now($userTimezone);
+        $today = $today->startOfDay();
+
+        $habits = $user->habits()->where('is_archived', false)->get();
+        if ($habits->isEmpty()) {
+            return [
+                'current_streak' => 0,
+                'longest_streak' => 0,
+                'today_perfect' => false,
+                'today_habits_completed' => 0,
+                'today_habits_total' => 0,
+                'today_journal_completed' => false,
+                'is_at_risk' => false,
+                'streak_level' => $this->resolveStreakLevel(0),
+            ];
+        }
+
+        // Preload logs and journals
+        $earliestStart = $habits->min('start_date');
+        $earliestDate = $earliestStart ? Carbon::parse($earliestStart, $userTimezone)->startOfDay() : $today->copy()->subDays(60);
+
+        $habitLogs = HabitLog::query()
+            ->where('user_id', $user->id)
+            ->whereBetween('log_date', [$earliestDate->toDateString(), $today->toDateString()])
+            ->get()
+            ->groupBy(fn (HabitLog $log) => $log->log_date instanceof Carbon ? $log->log_date->toDateString() : (string) $log->log_date);
+
+        $journalsByDate = Journal::query()
+            ->where('user_id', $user->id)
+            ->whereBetween('entry_date', [$earliestDate->toDateString(), $today->toDateString()])
+            ->get()
+            ->groupBy(fn (Journal $j) => $j->entry_date instanceof Carbon ? $j->entry_date->toDateString() : (string) $j->entry_date);
+
+        $userFreezesByDate = UserFreeze::query()
+            ->where('user_id', $user->id)
+            ->whereBetween('freeze_date', [$earliestDate->toDateString(), $today->toDateString()])
+            ->get()
+            ->keyBy(fn (UserFreeze $f) => $f->freeze_date instanceof Carbon ? $f->freeze_date->toDateString() : (string) $f->freeze_date);
+
+        // Helper to evaluate a specific date
+        $evaluateDate = function (Carbon $date) use ($habits, $habitLogs, $journalsByDate, $userFreezesByDate) {
+            $dateStr = $date->toDateString();
+            $scheduledHabits = $habits->filter(function (Habit $h) use ($date) {
+                if ($date->lt($h->start_date->copy()->startOfDay())) {
+                    return false;
+                }
+                if ($h->end_date && $date->gt($h->end_date->copy()->endOfDay())) {
+                    return false;
+                }
+
+                return $this->isDayScheduled($h, $date);
+            });
+
+            $totalScheduled = $scheduledHabits->count();
+            if ($totalScheduled === 0) {
+                return ['completed' => false, 'freeze' => false, 'habits_completed' => 0, 'habits_total' => 0, 'journal_completed' => false];
+            }
+
+            $dateLogs = $habitLogs->get($dateStr, collect())->keyBy('habit_id');
+            $hasFreeze = $dateLogs->contains(fn ($l) => $l->status === 'freeze') || $userFreezesByDate->has($dateStr);
+
+            $completedHabits = 0;
+            foreach ($scheduledHabits as $habit) {
+                $log = $dateLogs->get($habit->id);
+                if ($log && $log->status === 'completed') {
+                    $completedHabits++;
+                }
+            }
+
+            $allHabitsDone = ($completedHabits === $totalScheduled);
+            $hasJournal = $journalsByDate->has($dateStr) && $journalsByDate->get($dateStr)->isNotEmpty();
+
+            $isPerfect = ($allHabitsDone && $hasJournal);
+
+            return [
+                'completed' => $isPerfect,
+                'freeze' => $hasFreeze,
+                'habits_completed' => $completedHabits,
+                'habits_total' => $totalScheduled,
+                'journal_completed' => $hasJournal,
+            ];
+        };
+
+        // Check Today
+        $todayEval = $evaluateDate($today);
+        $todayPerfect = $todayEval['completed'];
+        $currentStreak = 0;
+        $yesterdayMissed = false;
+
+        $cursor = $today->copy();
+        if ($todayPerfect) {
+            $currentStreak++;
+            $cursor->subDay();
+        } elseif ($todayEval['freeze']) {
+            $cursor->subDay();
+        } else {
+            $cursor->subDay();
+        }
+
+        // Auto-protect yesterday if missing, user has previous streak, and has available freeze credits
+        $yesterday = $today->copy()->subDay();
+        $hadStreakBefore = false;
+
+        if ($cursor->equalTo($yesterday)) {
+            $yesterdayEval = $evaluateDate($yesterday);
+            if (! $yesterdayEval['completed'] && ! $yesterdayEval['freeze']) {
+                // Check if user had an active streak before yesterday
+                $checkBefore = $yesterday->copy()->subDay();
+                while ($checkBefore->gte($earliestDate)) {
+                    $checkEval = $evaluateDate($checkBefore);
+                    if ($checkEval['completed']) {
+                        $hadStreakBefore = true;
+                        break;
+                    } elseif ($checkEval['freeze']) {
+                        $checkBefore->subDay();
+
+                        continue;
+                    }
+                    break;
+                }
+
+                // Yesterday is only considered missed if user had scheduled habits or had an active streak before
+                if ($yesterdayEval['habits_total'] > 0 || $hadStreakBefore) {
+                    $yesterdayMissed = true;
+                }
+
+                if ($hadStreakBefore && $this->getRemainingFreezeCredits($user, $yesterday) > 0) {
+                    UserFreeze::firstOrCreate([
+                        'user_id' => $user->id,
+                        'freeze_date' => $yesterday->toDateString(),
+                    ]);
+                    $userFreezesByDate->put($yesterday->toDateString(), new UserFreeze([
+                        'user_id' => $user->id,
+                        'freeze_date' => $yesterday->toDateString(),
+                    ]));
+                }
+            }
+        }
+
+        // Iterate backwards
+        while ($cursor->gte($earliestDate)) {
+            $eval = $evaluateDate($cursor);
+            if ($eval['completed']) {
+                $currentStreak++;
+            } elseif ($eval['freeze']) {
+                // Freeze holds streak
+            } else {
+                break;
+            }
+            $cursor->subDay();
+        }
+
+        // Alert banner only triggers if user had an ongoing streak to protect, missed yesterday, and has not finished today yet
+        $isAtRisk = $hadStreakBefore && $yesterdayMissed && ! $todayPerfect;
+
+        return [
+            'current_streak' => $currentStreak,
+            'longest_streak' => max($currentStreak, 0),
+            'today_perfect' => $todayPerfect,
+            'today_habits_completed' => $todayEval['habits_completed'],
+            'today_habits_total' => $todayEval['habits_total'],
+            'today_journal_completed' => $todayEval['journal_completed'],
+            'is_at_risk' => $isAtRisk,
+            'streak_level' => $this->resolveStreakLevel($currentStreak),
+        ];
+    }
 
     /**
      * Calculate streak metrics and status for a habit.
@@ -179,14 +368,23 @@ class StreakCalculationService
         $userTimezone = $user->timezone ?? 'UTC';
         $date = $referenceDate ? $referenceDate->copy()->setTimezone($userTimezone) : Carbon::now($userTimezone);
 
-        $usedCredits = HabitLog::query()
+        $usedHabitLogs = HabitLog::query()
             ->where('user_id', $user->id)
             ->where('status', 'freeze')
             ->whereYear('log_date', $date->year)
             ->whereMonth('log_date', $date->month)
+            ->distinct()
+            ->count('log_date');
+
+        $usedUserFreezes = UserFreeze::query()
+            ->where('user_id', $user->id)
+            ->whereYear('freeze_date', $date->year)
+            ->whereMonth('freeze_date', $date->month)
             ->count();
 
-        return max(0, self::MONTHLY_FREEZE_LIMIT - $usedCredits);
+        $totalUsed = max($usedHabitLogs, $usedUserFreezes);
+
+        return max(0, self::MONTHLY_FREEZE_LIMIT - $totalUsed);
     }
 
     /**
