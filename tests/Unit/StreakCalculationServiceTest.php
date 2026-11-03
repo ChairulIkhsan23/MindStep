@@ -329,6 +329,22 @@ class StreakCalculationServiceTest extends TestCase
         $this->assertFalse($metricsDay3AfterFill['is_at_risk']);
     }
 
+    public function test_new_user_without_prior_streak_is_not_at_risk(): void
+    {
+        $user = User::factory()->create(['timezone' => 'UTC']);
+        Habit::factory()->create([
+            'user_id' => $user->id,
+            'frequency_type' => 'daily',
+            'start_date' => Carbon::parse('2026-10-05'),
+        ]);
+
+        // User just created habit today (2026-10-05) and has not logged anything yet
+        $metrics = $this->service->calculateForUser($user, Carbon::parse('2026-10-05'));
+
+        $this->assertEquals(0, $metrics['current_streak']);
+        $this->assertFalse($metrics['is_at_risk']);
+    }
+
     public function test_streak_maturity_levels_mapping(): void
     {
         $this->assertEquals('Belum Dimulai', $this->service->resolveStreakLevel(0)['label']);

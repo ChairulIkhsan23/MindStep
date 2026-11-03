@@ -137,13 +137,13 @@ class StreakCalculationService
 
         // Auto-protect yesterday if missing, user has previous streak, and has available freeze credits
         $yesterday = $today->copy()->subDay();
+        $hadStreakBefore = false;
+
         if ($cursor->equalTo($yesterday)) {
             $yesterdayEval = $evaluateDate($yesterday);
             if (! $yesterdayEval['completed'] && ! $yesterdayEval['freeze']) {
-                $yesterdayMissed = true;
                 // Check if user had an active streak before yesterday
                 $checkBefore = $yesterday->copy()->subDay();
-                $hadStreakBefore = false;
                 while ($checkBefore->gte($earliestDate)) {
                     $checkEval = $evaluateDate($checkBefore);
                     if ($checkEval['completed']) {
@@ -155,6 +155,11 @@ class StreakCalculationService
                         continue;
                     }
                     break;
+                }
+
+                // Yesterday is only considered missed if user had scheduled habits or had an active streak before
+                if ($yesterdayEval['habits_total'] > 0 || $hadStreakBefore) {
+                    $yesterdayMissed = true;
                 }
 
                 if ($hadStreakBefore && $this->getRemainingFreezeCredits($user, $yesterday) > 0) {
@@ -183,8 +188,8 @@ class StreakCalculationService
             $cursor->subDay();
         }
 
-        // Alert banner only triggers if user missed yesterday and has not finished today yet
-        $isAtRisk = $yesterdayMissed && ! $todayPerfect;
+        // Alert banner only triggers if user had an ongoing streak to protect, missed yesterday, and has not finished today yet
+        $isAtRisk = $hadStreakBefore && $yesterdayMissed && ! $todayPerfect;
 
         return [
             'current_streak' => $currentStreak,
